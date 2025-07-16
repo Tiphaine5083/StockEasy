@@ -165,7 +165,7 @@
     }
 }
 
-// === USER PAGES -> Create
+// === USER PAGES -> Create, List
 
 .user-create {
     &__form {
@@ -229,6 +229,63 @@
 
         .btn {
             min-width: 100px;
+        }
+    }
+}
+
+.user-list {
+    &__form {
+        width: 100%;
+        margin-top: 2rem;
+
+        form {
+            padding: 2rem;
+
+            @include mixins.tablet {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem 2rem;
+            }
+
+            @include mixins.desktop-lg {
+                padding: 3rem 5rem;
+            }
+
+            .form__group--buttons {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+
+                @include mixins.tablet {
+                    justify-content: flex-end;
+                }
+
+                .btn {
+                    min-width: 100px;
+                }
+            }
+        }
+    }
+
+    &__actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+
+        a.btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 0.8rem;
+            font-size: 1.4rem;
+
+            i {
+                pointer-events: none;
+            }
+        }
+
+        @include mixins.tablet {
+            justify-content: flex-start;
         }
     }
 }

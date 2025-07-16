@@ -1,8 +1,80 @@
-<?php if (isset($_GET['success']) || isset($_GET['error'])) { ?>
-    <div class="message">
-        <div class="message__modal <?= isset($_GET['success']) ? 'message__modal--success' : 'message__modal--error' ?>" role="alert" aria-live="assertive">
-            <button class="message__close" aria-label="Fermer le message">&times;</button>
-            <p><?= htmlspecialchars($_GET['success'] ?? $_GET['error']) ?></p>
-        </div>
+<?php
+$status = $_GET['status'] ?? 'active'; // sécurité minimale
+$title = ($status === 'inactive') ? 'Utilisateurs inactifs' : 'Utilisateurs actifs';
+$nameFilter = $_GET['name'] ?? '';
+$emailFilter = $_GET['email'] ?? '';
+$roleFilter = $_GET['role'] ?? '';
+?>
+
+<div class="page user-list">
+    <h1 class="user-list__title"><?= $title ?></h1>
+
+    <div class="user-list__form">
+        <form method="GET" action="index.php" class="form">
+            <input type="hidden" name="route" value="user-list">
+            <input type="hidden" name="status" value="<?= htmlspecialchars($status) ?>">
+
+            <div class="form__group">
+                <label for="name" class="form__label">Nom</label>
+                <input type="text" id="name" name="name" class="form__input" value="<?= htmlspecialchars($nameFilter) ?>">
+            </div>
+
+            <div class="form__group">
+                <label for="email" class="form__label">Email</label>
+                <input type="text" id="email" name="email" class="form__input" value="<?= htmlspecialchars($emailFilter) ?>">
+            </div>
+
+            <div class="form__group">
+                <label for="role" class="form__label">Rôle</label>
+                <select id="role" name="role" class="form__select">
+                    <option value="">-- Tous les rôles --</option>
+                    <?php foreach ($roles as $role) { ?>
+                        <option value="<?= htmlspecialchars($role['role_name']) ?>" <?= $roleFilter === $role['role_name'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($role['role_name']) ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </div>
+
+            <div class="form__group form__group--buttons">
+                <button type="submit" class="btn btn--dark">Rechercher</button>
+                <a href="index.php?route=user-list&status=<?= htmlspecialchars($status) ?>" class="btn btn--dark">Réinitialiser</a>
+            </div>
+        </form>
     </div>
-<?php } ?>
+    <section class="stock-page__table-wrapper">
+        <h2 class="sr-only">Résultats de la recherche</h2>
+        <table class="table">
+            <thead class="table__thead">
+                <tr class="table__tr">
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Dernière connexion</th>
+                    <th>Rôle</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($users)){ ?>
+                    <?php foreach ($users as $user) { ?>
+                        <tr class="table__tr">
+                            <td class="table__td" data-label="Nom"><?= htmlspecialchars($user['first_name']) ?> <?= htmlspecialchars($user['last_name']) ?></td>
+                            <td class="table__td" data-label="Email"><?= htmlspecialchars($user['email']) ?></td>
+                            <td class="table__td" data-label="Dernière connexion"><?= htmlspecialchars($user['last_login_date']) ?: '—' ?></td>
+                            <td class="table__td" data-label="Rôle"><?= htmlspecialchars($user['role']) ?></td>
+                            <td class="table__td"  data-label="Actions" class="user-list__actions">
+                                <a href="index.php?route=user-edit&id=<?= $user['id'] ?>" class="btn btn--small"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="index.php?route=user-delete&id=<?= $user['id'] ?>" class="btn btn--small"><i class="fa-solid fa-trash"></i></a>
+                                <a href="index.php?route=user-permissions&id=<?= $user['id'] ?>" class="btn btn--small"><i class="fa-solid fa-gear"></i></a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                <?php } else { ?>
+                    <tr>
+                        <td colspan="5">Aucun utilisateur trouvé pour ce statut.</td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,9 +1,7 @@
 @use './variables';
 @use './mixins';
 
-// =============================
-// FORM MODULE (BEM + MOBILE-FIRST)
-// =============================
+// === FORM MODULE (BEM + mobile-first)
 
 .form {
     &__grid {

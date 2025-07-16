@@ -1215,6 +1215,59 @@ td.disabled {
   min-width: 100px;
 }
 
+.user-list__form {
+  width: 100%;
+  margin-top: 2rem;
+}
+.user-list__form form {
+  padding: 2rem;
+}
+@media (min-width: 768px) {
+  .user-list__form form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 2rem;
+  }
+}
+@media (min-width: 1280px) {
+  .user-list__form form {
+    padding: 3rem 5rem;
+  }
+}
+.user-list__form form .form__group--buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .user-list__form form .form__group--buttons {
+    justify-content: flex-end;
+  }
+}
+.user-list__form form .form__group--buttons .btn {
+  min-width: 100px;
+}
+.user-list__actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+.user-list__actions a.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.8rem;
+  font-size: 1.4rem;
+}
+.user-list__actions a.btn i {
+  pointer-events: none;
+}
+@media (min-width: 768px) {
+  .user-list__actions {
+    justify-content: flex-start;
+  }
+}
+
 .login-body {
   margin: 0;
   font-family: "League Spartan", "Verdana", sans-serif, sans-serif;
@@ -1333,36 +1386,36 @@ td.disabled {
   nav {
     display: none !important;
   }
-  .stock-listing table,
-  .stock-listing thead,
-  .stock-listing tbody,
-  .stock-listing tr,
-  .stock-listing th,
-  .stock-listing td {
+  .stock-list table,
+  .stock-list thead,
+  .stock-list tbody,
+  .stock-list tr,
+  .stock-list th,
+  .stock-list td {
     all: revert !important;
     display: revert !important;
   }
-  .stock-listing table {
+  .stock-list table {
     border-collapse: collapse !important;
     width: 100% !important;
     border: 1px solid black !important;
   }
-  .stock-listing th {
+  .stock-list th {
     text-align: center;
   }
-  .stock-listing td {
+  .stock-list td {
     text-align: center !important;
     padding: 0.5rem;
     border: none;
     border-bottom: 1px solid #888 !important;
   }
-  .stock-listing td:first-child {
+  .stock-list td:first-child {
     text-align: left !important;
   }
-  .stock-listing tr:last-child td {
+  .stock-list tr:last-child td {
     border-bottom: none;
   }
-  .stock-listing td::before {
+  .stock-list td::before {
     display: none !important;
     content: none !important;
   }

@@ -21,42 +21,42 @@
         display: none !important;
     }
 
-    .stock-listing table,
-    .stock-listing thead,
-    .stock-listing tbody,
-    .stock-listing tr,
-    .stock-listing th,
-    .stock-listing td {
+    .stock-list table,
+    .stock-list thead,
+    .stock-list tbody,
+    .stock-list tr,
+    .stock-list th,
+    .stock-list td {
         all: revert !important;
         display: revert !important;
     }
 
-    .stock-listing table {
+    .stock-list table {
         border-collapse: collapse !important;
         width: 100% !important;
         border: 1px solid black !important;
     }
 
-    .stock-listing th {
+    .stock-list th {
         text-align: center;
     }
 
-    .stock-listing td {
+    .stock-list td {
         text-align: center !important;
         padding: 0.5rem;
         border: none;
         border-bottom: 1px solid #888 !important;
     }
 
-    .stock-listing td:first-child {
+    .stock-list td:first-child {
         text-align: left !important;
     }
 
-    .stock-listing tr:last-child td {
+    .stock-list tr:last-child td {
         border-bottom: none;
     }
 
-    .stock-listing td::before {
+    .stock-list td::before {
         display: none !important;
         content: none !important;
     }
