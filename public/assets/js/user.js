@@ -1,9 +1,7 @@
 // === VARIABLES ===
 
 
-
 // === FUNCTIONS ===
-
 
 
 // === DOM ===

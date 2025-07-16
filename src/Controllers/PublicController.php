@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\AbstractController;
 use App\Models\StockModel;
+use App\Models\UserModel;
 use App\Models\RoleModel;
 
 /**
@@ -20,8 +21,6 @@ class PublicController extends AbstractController
      */
     public function showHome(): void
     {
-        $this->template = __DIR__ . '/../Views/home.phtml';
-
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => null]
         ]);
@@ -38,22 +37,18 @@ class PublicController extends AbstractController
      */
     public function showUserHome(): void
     {
-        $this->template = __DIR__ . '/../Views/user/user-home.phtml';
-
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
             ['label' => 'Gestion des utilisateurs', 'url' => null]
         ]);
 
-        $this->display('user-home.phtml', [
+        $this->display('user/user-home.phtml', [
             'title' => 'Gestion des utilisateurs'
         ]);
     }
 
     public function showUserCreate(): void
     {
-        $this->template = __DIR__ . '/../Views/user/user-create.phtml';
-
         $roleModel = new RoleModel();
         $roles = $roleModel->findAll();
 
@@ -66,7 +61,7 @@ class PublicController extends AbstractController
         $formData = $_SESSION['form_data'] ?? [];
         unset($_SESSION['form_data']);
 
-        $this->display('user-create.phtml', [
+        $this->display('user/user-create.phtml', [
             'title' => 'Création nouvel utilisateur',
             'roles' => $roles,
             'formData' => $formData,
@@ -79,8 +74,15 @@ class PublicController extends AbstractController
         if (!in_array($status, ['active', 'inactive'])) {
             $status = 'active';
         }
-        $this->template = __DIR__ . '/../Views/user/user-list.phtml';
+
+        $active = ($status === 'active') ? 1 : 0;
         $label = $status === 'active' ? 'Utilisateurs actifs' : 'Utilisateurs désactivés';
+
+        $userModel = new UserModel();
+        $roleModel = new RoleModel();
+
+        $users = $userModel->findByStatusWithFilters($active, []);
+        $roles = $roleModel->findAll();
 
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
@@ -88,37 +90,41 @@ class PublicController extends AbstractController
             ['label' => $label, 'url' => null]
         ]);
 
-        $this->display('user-list.phtml', [
-            'title' => 'Utilisateurs ' . $status
+        $this->display('user/user-list.phtml', [
+            'title' => $label,
+            'status' => $status,
+            'users' => $users,
+            'roles' => $roles,
+            'filters' => [
+                'name' => '',
+                'email' => '',
+                'role' => ''
+            ]
         ]);
     }
 
     public function showUserRole(): void
     {
-        $this->template = __DIR__ . '/../Views/user/user-role.phtml';
-
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
             ['label' => 'Gestion des utilisateurs', 'url' => '?route=user-home'],
             ['label' => 'Rôles', 'url' => null]
         ]);
 
-        $this->display('user-role.phtml', [
+        $this->display('user/user-role.phtml', [
             'title' => 'Rôles'
         ]);
     }
 
     public function showUserPermission(): void
     {
-        $this->template = __DIR__ . '/../Views/user/user-permission.phtml';
-
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
             ['label' => 'Gestion des utilisateurs', 'url' => '?route=user-home'],
             ['label' => 'Permissions par utilisateur', 'url' => null]
         ]);
 
-        $this->display('user-permission.phtml', [
+        $this->display('user/user-permission.phtml', [
             'title' => 'Permissions par utilisateur'
         ]);
     }
@@ -130,14 +136,12 @@ class PublicController extends AbstractController
      */
     public function showStockHome(): void
     {
-        $this->template = __DIR__ . '/../Views/stock/stock-home.phtml';
-
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
             ['label' => 'Gestion du stock', 'url' => null]
         ]);
 
-        $this->display('stock-home.phtml', [
+        $this->display('stock/stock-home.phtml', [
             'title' => 'Gestion du stock'
         ]);
     }
@@ -149,8 +153,6 @@ class PublicController extends AbstractController
      */
     public function showStockList(): void
     {
-        $this->template = __DIR__ . '/../Views/stock/stock-list.phtml';
-
         $stockModel = new StockModel();
 
         $filter = $_GET['stockFilter'] ?? 'all';
@@ -168,7 +170,7 @@ class PublicController extends AbstractController
             ['label' => 'Inventaire', 'url' => null]
         ]);
 
-        $this->display('stock-list.phtml', [
+        $this->display('stock/stock-list.phtml', [
             'title' => 'Inventaire',
             'data' => $data,
             'nbDisplayed' => $nbDisplayed,
@@ -185,7 +187,6 @@ class PublicController extends AbstractController
      */
     public function showStockCreate(): void
     {
-        $this->template = __DIR__ . '/../Views/stock/stock-create.phtml';
         $stockModel = new StockModel();
         $todayTires = $stockModel->findTodayRegistered();
         $brands = $stockModel->getBrands();
@@ -196,7 +197,7 @@ class PublicController extends AbstractController
             ['label' => 'Création de stock', 'url' => null]
         ]);
 
-        $this->display('stock-create.phtml', [
+        $this->display('stock/stock-create.phtml', [
             'title' => 'Création de stock',
             'brands' => $brands,
             'todayTires' => $todayTires,
@@ -211,7 +212,6 @@ class PublicController extends AbstractController
     public function showStockSearch(): void
     {
         try {
-            $this->template = __DIR__ . '/../Views/stock/stock-search.phtml';
             $stockModel = new StockModel();
 
             $brand = trim($_GET['brand'] ?? '');
@@ -259,7 +259,7 @@ class PublicController extends AbstractController
                 ['label' => 'Recherche et Modification', 'url' => null]
             ]);
 
-            $this->display('stock-search.phtml', [
+            $this->display('stock/stock-search.phtml', [
                 'title' => 'Recherche de stock',
                 'brands' => $brands,
                 'criterias' => $criterias,
@@ -280,7 +280,6 @@ class PublicController extends AbstractController
     public function showStockEdit(): void
     {
         try {
-            $this->template = __DIR__ . '/../Views/stock/stock-edit.phtml';
             $tireId = $_GET['id'] ?? null;
 
             if ($tireId === null || !ctype_digit($tireId) || $tireId <= 0) {
@@ -305,7 +304,7 @@ class PublicController extends AbstractController
                 ['label' => 'Modifier un pneu', 'url' => null]
             ]);
 
-            $this->display('stock-edit.phtml', [
+            $this->display('stock/stock-edit.phtml', [
                 'title' => 'Modifier un pneu',
                 'tire' => $tire,
                 'brands' => $brands,

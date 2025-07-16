@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\AbstractController;
 use App\Models\UserModel;
+use App\Models\RoleModel;
 
 /**
  * UserController
@@ -90,5 +91,63 @@ class UserController extends AbstractController {
         }
     }
 
+    public function userSearch(): void
+    {
+        try {
+            $status = strtolower($_GET['status'] ?? 'active');
+            if (!in_array($status, ['active', 'inactive'])) {
+                $status = 'active';
+            }
+
+            $active = ($status === 'active') ? 1 : 0;
+
+            $filters = [
+                'name' => $_GET['name'] ?? '',
+                'email' => $_GET['email'] ?? '',
+                'role' => $_GET['role'] ?? '',
+            ];
+
+            $userModel = new UserModel();
+            $roleModel = new RoleModel();
+
+            $users = $userModel->findByStatusWithFilters($active, $filters);
+            $roles = $roleModel->findAll();
+
+            $this->display('user/user-list.phtml', [
+                'users' => $users,
+                'roles' => $roles,
+                'status' => $status,
+                'filters' => $filters
+            ]);
+
+        } catch (\Exception $e) {
+            $_SESSION['error'] = "Impossible d'afficher la liste des utilisateurs.";
+            $this->redirectToRoute('user-list&status=' . $status);
+        }
+    }
+
+    public function toggleStatus(): void
+    {
+        $id = $_POST['id'] ?? null;
+        $status = $_GET['status'] ?? 'active';
+        $route = 'user-list';
+
+        if (!$id || !ctype_digit($id)) {
+            $_SESSION['error'] = "ID utilisateur invalide.";
+            $this->redirectToRoute($route, ['status' => $status]);
+            exit;
+        }
+
+        $userModel = new UserModel();
+        $success = $userModel->toggleActiveStatus((int)$id);
+
+        if ($success) {
+            $_SESSION['success'] = "Statut utilisateur modifié avec succès";
+        } else {
+            $_SESSION['error'] = "Impossible de changer le statut de l’utilisateur";
+        }
+
+        $this->redirectToRoute($route, ['status' => $status]);
+    }
 
 }

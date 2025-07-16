@@ -38,5 +38,8 @@ $router->addRoute('user-list', \App\Controllers\PublicController::class . '::sho
 $router->addRoute('user-role', \App\Controllers\PublicController::class . '::showUserRole');
 $router->addRoute('user-permission', \App\Controllers\PublicController::class . '::showUserPermission');
 $router->addRoute('user-create-submit', \App\Controllers\UserController::class . '::userCreate');
+$router->addRoute('user-search', \App\Controllers\UserController::class . '::userSearch');
+$router->addRoute('toggle-status', \App\Controllers\UserController::class . '::toggleStatus');
+
 
 $router->startRouting();

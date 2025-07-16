@@ -11,7 +11,7 @@ $roleFilter = $_GET['role'] ?? '';
 
     <div class="user-list__form">
         <form method="GET" action="index.php" class="form">
-            <input type="hidden" name="route" value="user-list">
+            <input type="hidden" name="route" value="user-search">
             <input type="hidden" name="status" value="<?= htmlspecialchars($status) ?>">
 
             <div class="form__group">
@@ -47,6 +47,7 @@ $roleFilter = $_GET['role'] ?? '';
         <table class="table">
             <thead class="table__thead">
                 <tr class="table__tr">
+                    <th>Statut</th>
                     <th>Nom</th>
                     <th>Email</th>
                     <th>Dernière connexion</th>
@@ -58,11 +59,24 @@ $roleFilter = $_GET['role'] ?? '';
                 <?php if (!empty($users)){ ?>
                     <?php foreach ($users as $user) { ?>
                         <tr class="table__tr">
+                            <td class="table__td" data-label="Statut">
+                                <form method="POST" action="index.php?route=toggle-status&status=<?= htmlspecialchars($status) ?>" class="status-toggle-form">
+                                    <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                                    <button type="submit"
+                                            class="btn btn-icon"
+                                            title="<?= $user['active'] ? 'Désactiver' : 'Activer' ?>"
+                                            aria-pressed="<?= $user['active'] ? 'true' : 'false' ?>"
+                                            aria-label="<?= $user['active'] ? 'Utilisateur actif, cliquer pour désactiver' : 'Utilisateur inactif, cliquer pour activer' ?>"
+                                    >
+                                        <i class="fa-solid <?= $user['active'] ? 'fa-toggle-on' : 'fa-toggle-off' ?>"></i>
+                                    </button>
+                                </form>
+                            </td>
                             <td class="table__td" data-label="Nom"><?= htmlspecialchars($user['first_name']) ?> <?= htmlspecialchars($user['last_name']) ?></td>
                             <td class="table__td" data-label="Email"><?= htmlspecialchars($user['email']) ?></td>
-                            <td class="table__td" data-label="Dernière connexion"><?= htmlspecialchars($user['last_login_date']) ?: '—' ?></td>
-                            <td class="table__td" data-label="Rôle"><?= htmlspecialchars($user['role']) ?></td>
-                            <td class="table__td"  data-label="Actions" class="user-list__actions">
+                            <td class="table__td" data-label="Dernière connexion"><?= $user['last_login_date'] !== null ? htmlspecialchars($user['last_login_date']) : '—' ?></td>
+                            <td class="table__td" data-label="Rôle"><?= htmlspecialchars($user['role_name']) ?></td>
+                            <td class="table__td user-list__actions"  data-label="Actions">
                                 <a href="index.php?route=user-edit&id=<?= $user['id'] ?>" class="btn btn--small"><i class="fa-solid fa-pen-to-square"></i></a>
                                 <a href="index.php?route=user-delete&id=<?= $user['id'] ?>" class="btn btn--small"><i class="fa-solid fa-trash"></i></a>
                                 <a href="index.php?route=user-permissions&id=<?= $user['id'] ?>" class="btn btn--small"><i class="fa-solid fa-gear"></i></a>

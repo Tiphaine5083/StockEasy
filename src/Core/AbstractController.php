@@ -10,7 +10,7 @@ namespace App\Core;
 abstract class AbstractController
 {
     /** @var string|null The view template to render */
-    protected ?string $template = null;
+    protected ?string $template = '';
 
     /** @var array The breadcrumb trail for the current page */
     protected array $breadcrumb = [];
@@ -33,6 +33,10 @@ abstract class AbstractController
 
         $data['breadcrumb'] = $this->breadcrumb;
         extract($data);
+
+        if (!empty($view)) {
+            $this->template = __DIR__ . '/../Views/' . $view;
+        }
 
         require __DIR__ . '/../Views/layout.phtml';
     }
