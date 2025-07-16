@@ -1,0 +1,152 @@
+@use './variables';
+@use './mixins';
+
+// =============================
+// FORM MODULE (BEM + MOBILE-FIRST)
+// =============================
+
+.form {
+    &__grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    &__group--inline {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    &__fieldset {
+        border: none;
+        padding: 0;
+        margin: 0;
+        
+
+        .form__legend {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            @include mixins.responsive-font(1.1rem, 1.3rem, 1.4rem);
+        }
+
+        .form__group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.3rem;
+            width: 100%;
+        }
+
+        .form__label {
+            @include mixins.responsive-font(1rem, 1.1rem, 1.2rem);
+        }
+    }
+
+    &__actions {
+        display: flex;
+        flex-direction: column;
+        // align-items: center;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+
+        button {
+            width: 100%;
+            padding: 0.6rem 1.2rem;
+        }
+
+        @include mixins.tablet {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            width: 100%;
+        }
+    }
+
+    &__inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: center;
+
+        .form__checkbox-wrapper,
+        .form__radio-wrapper {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form__checkbox,
+        .form__radio {
+            position: relative;
+            display: inline-block;
+
+            .form__input.visually-hidden {
+                position: absolute;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .form__label {
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 3rem; 
+                height: 3rem;
+                border-radius: 50%;
+                background: white;
+                color: variables.$dark-blue;
+                transition: background 0.3s;
+
+                i {
+                    font-size: 1.4rem;
+                }
+            }
+
+            .form__input:checked + .form__label {
+                background: variables.$dark-blue;
+                color: white;
+            }
+        }
+    }
+
+    &__input,
+    &__select,
+    &__textarea {
+        display: block;
+        background-color: white;
+        color: variables.$dark-blue;
+        border: 1px solid variables.$dark-blue;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.8rem;
+        font-family: inherit;
+        width: 100%;
+
+        @include mixins.responsive-font(0.9rem, 1.1rem, 1.2rem);
+        @include mixins.desktop {
+            padding: 0.6rem 1rem;
+        }
+
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 0.2rem variables.$pastel-yellow;
+        }
+    }
+
+    &__textarea {
+        min-height: 1rem;
+        resize: vertical;
+        line-height: 1.4;
+    }
+}
+
+// Désactivation
+td.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+    cursor: not-allowed;
+}

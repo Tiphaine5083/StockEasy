@@ -1,0 +1,52 @@
+// Couleurs
+
+$dark-blue:     #2C3258;   
+// $saffron:       #E4B61A;   
+$saffron :      #F7C503;
+$light-yellow:  #FEE970;   
+$pearl-grey:    #DBD7D4;   
+$beige:         #9B9183;   
+
+$light-blue:    #CACEE4;   
+$light-saffron:  #F9EFCF;   
+$pastel-yellow: #FFFAD9;   
+$pearl-white:   #F1F0EF;   
+$light-beige:   #D9D6D1;   
+
+// Couleurs logiques
+$light-bg: $pearl-white;
+$text:     $dark-blue;
+$accent:   $saffron;
+$focus:    $light-yellow;
+$border:   $pearl-grey;
+
+// Couleurs fonctionnelles
+$success: #198754;
+$error: #DC3545;
+$warning: #FFC107;
+$info: #0DCAF0;
+
+// Polices
+
+@font-face {
+  font-family: 'Work Sans';
+  src: url('/assets/fonts/WorkSans.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+$title-font: 'League Spartan', 'Verdana', sans-serif;
+$text-font:  'Work Sans', 'Verdana', sans-serif;
+
+
+// Z-Index
+
+$z-header: 10;
+$z-modal:  100;
+
+// Height : header and footer
+
+$header-height-desktop: 118px;
+$header-height-desktop-lg: 138px;
+$footer-height: 35px;

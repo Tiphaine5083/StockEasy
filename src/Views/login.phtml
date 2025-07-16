@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <?php $pageTitle = $title ?? 'Page'; ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>StockEasy - <?= htmlspecialchars($pageTitle) ?></title>
+
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stockeasy/public/assets/css/app.css">
+
+    <script src="https://kit.fontawesome.com/8adc571076.js" crossorigin="anonymous"></script>
+</head>
+<body class="login-body">
+    <?php if (isset($_GET['success']) || isset($_GET['error'])) { ?>
+        <div class="message-overlay">
+            <div class="message-modal <?= isset($_GET['success']) ? 'success' : 'error' ?>">
+                <button class="message-close">&times;</button>
+                <p><?= htmlspecialchars($_GET['success'] ?? $_GET['error']) ?></p>
+            </div>
+        </div>
+    <?php } ?>
+    <main class="login-wrapper">
+        <div class="login-container">
+            <div class="logo-band">
+                <img src="/stockeasy/public/assets/img/logos/logo-fond-bleu.webp" alt="logo du logiciel StockEasy avec une écriture stylisée blanche et safran sur un fond bleu nuit accompagné d'un pneu pour l'englober" class="logo-login">
+                <h1>Connexion</h1>
+            </div>
+                <h2>Bienvenue</h2>
+            <form id="loginForm" method="POST" action="index.php?route=login-post">
+                <div class="form-group">
+                    <label for="email">Identifiant</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-login">Se connecter</button>
+            </form>
+        </div>
+    </main>
+    <footer class=login-footer>
+        <p><em>© 2025 StockEasy — Designed and powered by Tiphaine LE CAM</em></p>
+    </footer>
+    <script src="/stockeasy/public/assets/js/app.js" defer></script>
+</body>
+</html>

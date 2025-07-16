@@ -1,0 +1,117 @@
+@use './variables';
+@use './mixins';
+
+// === TABLE MODULE (BEM + MOBILE-FIRST) ===
+
+.stock-page__table-wrapper {
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+.table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border: 1px solid variables.$light-blue;
+    font-family: 'Work Sans', sans-serif;
+    color: variables.$dark-blue;
+
+    // === Mobile stacked block ===
+    &__thead {
+        display: none;
+    }
+
+    &__tr {
+        display: block;
+        padding: 1rem;
+        background-color: white;
+
+        &.highlight {
+            border: 4px solid variables.$saffron;
+        }
+
+        &:nth-child(even) {
+            background-color: variables.$light-blue;
+        }
+
+        .table__td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0.6rem 1rem;
+
+            &::before {
+                content: attr(data-label);
+                font-weight: bold;
+                font-family: 'League Spartan', sans-serif;
+                color: variables.$dark-blue;
+                @include mixins.responsive-font(1.2rem, 1.3rem, 1.4rem);
+            }
+        }
+    }
+
+    // === Desktop classic table ===
+    @include mixins.desktop {
+        &__thead {
+            display: table-header-group;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            font-family: 'League Spartan', sans-serif;
+            background-color: variables.$dark-blue;
+            color: white;
+            font-weight: bold;
+
+            .table__th {
+                padding: 1rem;
+                white-space: normal;
+                word-break: break-word;
+                @include mixins.responsive-font(0.8rem, 1rem, 1rem);
+            }
+        }
+
+        &__tr {
+            display: table-row;
+            background-color: transparent;
+            padding: 0;
+
+            &:nth-child(even) {
+                background-color: variables.$light-blue;
+            }
+
+            .table__td {
+                display: table-cell;
+                padding: 1rem;
+                font-size: 0.8rem;
+
+                @include mixins.responsive-font (0.8rem, 1rem, 1rem);
+
+                &::before {
+                    content: none;
+                }
+            }
+        }
+
+        &__th,
+        &__td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        // === Exemple de largeur : 1ère colonne plus large ===
+        &__th:nth-child(1),
+        &__td:nth-child(1) {
+            width: 25%;
+            text-align: left;
+        }
+
+        &__th:not(:nth-child(1)),
+        &__td:not(:nth-child(1)) {
+            width: calc(75% / 6);
+            text-align: center;
+        }
+        
+    }
+}

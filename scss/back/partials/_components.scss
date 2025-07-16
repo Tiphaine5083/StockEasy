@@ -1,0 +1,244 @@
+@use './variables';
+@use './mixins';
+
+// === CARDS ===
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    text-align: center;
+    text-decoration: none;
+    color: variables.$dark-blue;
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem variables.$pastel-yellow;
+    }
+
+    &__icon {
+        width: 8rem;
+        height: 8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: variables.$pearl-grey;
+        border-radius: 50%;
+
+        i {
+            font-size: 4rem;
+            color: variables.$dark-blue;
+        }
+    }
+
+    &__text {
+        font-weight: bold;
+        @include mixins.responsive-font(1.4rem, 1.6rem, 1.8rem);
+    }
+}
+
+.cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+
+    .card {
+        width: 100%;
+
+        @include mixins.tablet {
+            width: calc(50% - 1rem);
+        }
+
+        @include mixins.desktop {
+            width: 20rem;
+        }
+
+        @include mixins.desktop-lg {
+            width: 28rem;
+        }
+    }
+}
+
+// === BUTTONS ===
+
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    text-align: center;
+    font-family: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    transition: all 0.2s ease;
+
+    @include mixins.responsive-font(1.2rem, 1.4rem, 1.4rem);
+
+    &--dark {
+        background-color: variables.$dark-blue;
+        color: white;
+        border: 0.1rem solid white;
+
+        &:hover {
+            background-color: white;
+            color: variables.$dark-blue;
+        }
+    }
+
+    &--saffron {
+        background-color: variables.$saffron;
+        color: variables.$dark-blue;
+
+        &:hover {
+            filter: brightness(1.05);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0.5rem 1rem variables.$pastel-yellow;
+        }
+    }
+
+    &--ghost {
+        background: none;
+        color: white;
+        border: 0.1rem solid white;
+
+        &:hover {
+            background-color: variables.$saffron;
+            color: variables.$dark-blue;
+        }
+    }
+
+    &--small {
+        padding: 0.3rem 0.8rem;
+        border-radius: 0.3rem;
+
+        @include mixins.responsive-font(1rem, 1.2rem, 1.4rem);
+    }
+
+    &--icon {
+        background: none;
+        border: 1px solid variables.$dark-blue;
+        border-radius: 0.5rem;
+        padding: 0.6rem;
+        color: variables.$dark-blue;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+            color: white;
+            background: variables.$dark-blue;
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        i {
+            @include mixins.responsive-font(1rem, 1.4em, 2rem);
+        }
+    }
+}
+
+// === MODAL ===
+
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__content {
+        background: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+    }
+
+    &__close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 2rem;
+        cursor: pointer;
+        color: variables.$dark-blue;
+    }
+
+    &__actions {
+        margin-top: 1rem;
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+}
+
+// === MESSAGE ===
+
+.message {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+
+    &__modal {
+        background: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        max-width: 500px;
+        width: 90%;
+        font-weight: bold;
+        text-align: center;
+        position: relative;
+
+        &--success {
+            border: 1px solid #c3e6cb;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        &--error {
+            border: 1px solid #f5c6cb;
+            background: #f8d7da;
+            color: #721c24;
+        }
+    }
+
+    &__close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 2rem;
+        cursor: pointer;
+        color: variables.$dark-blue;
+    }
+
+    &__info {
+        font-size: 1.2rem;
+        font-style: italic;
+        color: #666;
+        margin-top: 0.5rem;
+    }
+}

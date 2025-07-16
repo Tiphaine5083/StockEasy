@@ -1,0 +1,8 @@
+<?php if (isset($_GET['success']) || isset($_GET['error'])) { ?>
+    <div class="message">
+        <div class="message__modal <?= isset($_GET['success']) ? 'message__modal--success' : 'message__modal--error' ?>" role="alert" aria-live="assertive">
+            <button class="message__close" aria-label="Fermer le message">&times;</button>
+            <p><?= htmlspecialchars($_GET['success'] ?? $_GET['error']) ?></p>
+        </div>
+    </div>
+<?php } ?>

@@ -1,0 +1,375 @@
+@use './variables';
+@use './mixins';
+
+// === LAYOUT PRINCIPAL ===
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: variables.$light-bg;
+    color: variables.$dark-blue;
+}
+
+// === BREADCRUMB BAR ===
+.header__breadcrumb-bar {
+    background-color: variables.$light-beige;
+    color: variables.$dark-blue;
+    padding: 0.5rem 2rem;
+    font-size: 1.2rem;
+
+    .header__breadcrumb {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+
+        a {
+            color: variables.$dark-blue;
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+                text-decoration: underline;
+            }
+        }
+
+        .breadcrumb__separator {
+            margin: 0 0.5rem;
+        }
+
+        .breadcrumb__current {
+            font-weight: bold;
+        }
+    }
+}
+
+// === HEADER MAIN ===
+.header__main {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    background-color: variables.$dark-blue;
+    color: white;
+    padding: 1rem 2rem;
+
+    @include mixins.tablet {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 4rem;
+    }
+
+    .header__branding {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        img {
+            max-height: 6rem;
+            height: auto;
+
+            @include mixins.desktop-lg {
+                max-height: 8rem;
+            }
+        }
+    }
+
+    .header__title {
+        font-family: "League Spartan", sans-serif;
+        font-weight: bold;
+        font-size: 1.8rem;
+
+        @include mixins.desktop {
+            font-size: 2.2rem;
+        }
+    }
+
+    .header__toggle {
+    position: static;
+    background: none;
+    border: none;
+    font-size: 2.8rem;
+    color: white;
+    cursor: pointer;
+
+    .fa-xmark {
+        display: none;
+    }
+
+    &.open {
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        z-index: 2001;
+
+        .fa-bars {
+        display: none;
+        }
+
+        .fa-xmark {
+        display: inline;
+        }
+    }
+
+    @include mixins.tablet {
+        display: none;
+    }
+
+    @include mixins.desktop {
+        position: static;
+        font-size: 2.4rem;
+    }
+    }
+
+    .header__logout {
+        display: none;
+
+        @include mixins.desktop {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+// === BURGER OVERLAY ===
+.burger__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(variables.$dark-blue, 0.95);
+    color: white;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    a {
+        color: white;
+        font-size: 2.4rem;
+        margin: 1.5rem 0;
+        text-decoration: none;
+
+        i {
+            margin-right: 0.5rem;
+        }
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
+
+        &.is-active {
+            background: white;
+            color: variables.$dark-blue;
+            padding: 0.5rem 1rem;
+            border-radius: 0.4rem;
+        }
+    }
+
+    &.is-open {
+        display: flex;
+    }
+
+    @include mixins.desktop {
+        display: none !important;
+    }
+}
+
+// === BODY WRAPPER ===
+.layout__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    @include mixins.tablet {
+        flex-direction: row;
+    }
+}
+
+// === SIDEBAR ===
+.layout__sidebar {
+    background-color: variables.$saffron;
+    color: variables.$dark-blue;
+    width: 250px;
+    padding: 2rem;
+    display: none;
+    flex-direction: column;
+    height: 100%;
+
+    &.is-open {
+        display: flex;
+    }
+
+    @include mixins.tablet {
+        display: flex;
+    }
+
+    .sidebar__nav {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .sidebar__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar__item {
+        margin-bottom: 1rem;
+
+        .sidebar__link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: inherit;
+            font-weight: bold;
+
+            &:hover,
+            &:focus {
+                text-decoration: underline;
+            }
+
+            &.is-active {
+                background: variables.$dark-blue;
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 0.4rem;
+            }
+        }
+
+        .sidebar__submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            list-style: none;
+            padding-left: 1.5rem;
+
+            @include mixins.tablet {
+                max-height: none !important;
+
+                .sidebar__subitem--home {
+                    display: none;
+                }
+            }
+
+            .sidebar__subitem {
+                margin: 0.5rem 0;
+
+                .sidebar__sublink {
+                    display: block;
+                    text-decoration: none;
+                    color: inherit;
+                    font-size: 1.4rem;
+                    padding-left: 1rem;
+
+                    &:hover,
+                    &:focus {
+                        text-decoration: underline;
+                    }
+
+                    &.is-active {
+                        background: variables.$dark-blue;
+                        color: white;
+                        padding: 0.5rem 1rem;
+                        border-radius: 0.4rem;
+                    }
+                }
+            }
+        }
+    }
+
+    .sidebar__extras {
+        margin-top: auto;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.2);
+
+        .sidebar__list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar__item {
+            margin-bottom: 1rem;
+
+            .sidebar__link {
+                font-weight: normal;
+
+                &:hover,
+                &:focus {
+                    text-decoration: underline;
+                }
+
+                &.is-active {
+                    background: variables.$dark-blue;
+                    color: white;
+                    padding: 0.5rem 1rem;
+                    border-radius: 0.4rem;
+                }
+            }
+        }
+
+        .sidebar__logout {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: inherit;
+
+            &:hover,
+            &:focus {
+                text-decoration: underline;
+            }
+
+            @include mixins.desktop-lg {
+                display: none;
+            }
+        }
+    }
+}
+
+// === MAIN CONTENT ===
+.layout {
+    &__content {
+        flex: 1;
+    }
+
+    &__wrapper {
+        background-color: white;
+        width: calc(100% - 4rem);
+        margin: 2rem;
+        height: auto;
+        overflow: auto; 
+        border-radius: 0.8rem; 
+
+        @include mixins.desktop {
+            height: calc(100vh - variables.$header-height-desktop - variables.$footer-height - 2rem);
+        }
+
+        @include mixins.desktop-lg {
+            height: calc(100vh - variables.$header-height-desktop-lg - variables.$footer-height - 2rem);
+        }
+    }
+
+    &__footer {
+        background-color: variables.$dark-blue;
+        color: white;
+        text-align: center;
+        padding: 1rem;
+        margin-top: auto;
+        font-size: 0.8rem;
+
+        @include mixins.responsive-font (0.8rem, 1rem, 1rem)
+    }
+}

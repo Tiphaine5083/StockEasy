@@ -1,0 +1,263 @@
+<?php
+    $highlightId = null;
+    if (isset($_GET['highlight_id'])) {
+        $highlightId = (int) $_GET['highlight_id'];
+    }
+?>
+
+<div class="page stock-page">
+    <h1 class="stock-page__title">Recherche et modification de stock</h1>
+    
+    <div class="layout__wrapper">
+        <div class="stock-page__content">
+            <aside class="stock-page__form">
+                <form method="GET" action="index.php" class="form">
+                <input type="hidden" name="route" class="form__input" value="stock-search">
+                    <fieldset class="form__fieldset">
+                        <legend class="sr-only">Renseignez les champs de recherche</legend>
+                        <div class="form__grid">
+                            <div class="form__group">
+                                <label class="form__label" for="brand">Marque</label>
+                                <select class="form__select" name="brand" id="brand">
+                                    <option value="" <?php if (!isset($_GET['brand']) || $_GET['brand'] === '') { echo 'selected'; } ?>>Choisir dans la liste</option>
+                                    <?php foreach($brands as $brand) { ?>
+                                                <option value="<?= $brand ?>" 
+                                                    <?php if (isset($_GET['brand']) && $_GET['brand'] === $brand) { echo 'selected'; } ?>>
+                                                    <?= $brand ?>
+                                                </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="form__group">
+                                <label class="form__label" for="width">Largeur</label>
+                                <input type="text" id="width" name="width" inputmode="numeric" placeholder="Largeur" class="form__input" 
+                                    value="<?= htmlspecialchars($_GET['width'] ?? '') ?>" />
+                            </div>
+                            
+                            <div class="form__group">
+                                <label class="form__label" for="height">Hauteur</label>
+                                <input type="text" id="height" name="height" placeholder="Hauteur" class="form__input" 
+                                value="<?= htmlspecialchars($_GET['height'] ?? '') ?>" />
+                            </div>
+
+                            <div class="form__group">
+                                <label class="form__label" for="diameter">Diamètre</label>
+                                <input type="text" id="diameter" name="diameter" inputmode="numeric" placeholder="Diamètre" class="form__input"
+                                value="<?= htmlspecialchars($_GET['diameter'] ?? '') ?>" />
+                            </div>
+
+                            <div class="form__group">
+                                <label class="form__label" for="load_index">Charge</label>
+                                <input type="text" id="load_index" name="load_index" inputmode="numeric" placeholder="Charge" class="form__input"
+                                value="<?= htmlspecialchars($_GET['load_index'] ?? '') ?>" />
+                            </div>
+
+                            <div class="form__group">
+                                <label class="form__label" for="speed_index">Vitesse</label>
+                                <input type="text" id="speed_index" name="speed_index" placeholder="Vitesse" class="form__input"
+                                value="<?= htmlspecialchars($_GET['speed_index'] ?? '') ?>" />
+                            </div>
+
+                        </div>
+                        <div class="form__inline">
+                            <fieldset class="form__fieldset">
+                                <legend class="form__legend">Saison</legend>
+                                <div class="form__checkbox-wrapper">
+                                    <div class="form__checkbox">
+                                        <input type="checkbox" id="season-ete" name="season[]" value="ETE" class="form__input visually-hidden"
+                                        <?php if (isset($_GET['season']) && in_array('ETE', $_GET['season'])) { echo 'checked'; } ?> />
+                                        <label class="form__label" for="season-ete" aria-label="Été" title="Été"><i class="fa-solid fa-sun" aria-hidden="true"></i></label>
+                                    </div>
+                                    <div class="form__checkbox">
+                                        <input type="checkbox" id="season-4s" name="season[]" value="4S" class="form__input visually-hidden" 
+                                        <?php if (isset($_GET['season']) && in_array('4S', $_GET['season'])) { echo 'checked'; } ?> />
+                                        <label class="form__label" for="season-4s" aria-label="4 saisons" title="4 Saisons"><i class="fa-solid fa-cloud-sun-rain" aria-hidden="true"></i></label>
+                                    </div>
+                                    <div class="form__checkbox">
+                                        <input type="checkbox" id="season-hiver" name="season[]" value="HIVER" class="form__input visually-hidden" 
+                                        <?php if (isset($_GET['season']) && in_array('HIVER', $_GET['season'])) { echo 'checked'; } ?> />
+                                        <label class="form__label" for="season-hiver" aria-label="Hiver" title="Hiver"><i class="fa-solid fa-cloud-showers-heavy" aria-hidden="true"></i></label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset class="form__fieldset">
+                                <legend class="form__legend">État</legend>
+                                <div class="form__checkbox-wrapper">
+                                    <div class="form__checkbox">
+                                        <input type="checkbox" id="quality-neuf" name="quality[]" value="NEUF" class="form__input visually-hidden" 
+                                        <?php if (isset($_GET['quality']) && in_array('NEUF', $_GET['quality'])) { echo 'checked'; } ?> />
+                                        <label class="form__label" for="quality-neuf"><i class="fa-solid fa-n" aria-hidden="true"></i></label>
+                                    </div>
+                                    <div class="form__checkbox">
+                                        <input type="checkbox" id="quality-tb" name="quality[]" value="TB" class="form__input visually-hidden"
+                                        <?php if (isset($_GET['quality']) && in_array('TB', $_GET['quality'])) { echo 'checked'; } ?> />
+                                        <label class="form__label" for="quality-tb"><i class="fa-solid fa-t" aria-hidden="true"></i><i class="fa-solid fa-b" aria-hidden="true"></i></label>
+                                    </div>
+                                    <div class="form__checkbox">
+                                        <input type="checkbox" id="quality-moy" name="quality[]" value="MOY" class="form__input visually-hidden"
+                                        <?php if (isset($_GET['quality']) && in_array('MOY', $_GET['quality'])) { echo 'checked'; } ?> />
+                                        <label class="form__label" for="quality-moy"><i class="fa-solid fa-m" aria-hidden="true"></i></label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="form__actions">
+                            <button type="submit" class="btn btn--dark">Afficher les résultats</button>
+                            <a href="index.php?route=stock-search" class="btn btn--dark">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                            </a>
+                        </div>
+                    </fieldset>
+                </form>
+            </aside>
+            <section class="stock-page__table">
+                <h3 class="sr-only">Liste des résultats de la recherche de stock</h3>
+                <div class="stock-page__table-wrapper">
+                    <table class="table">
+                        <thead class="table__thead">
+                            <tr class="table__tr">
+                                <th class="table__th"data-label = "Marque">Marque</th>
+                                <th class="table__th"data-label = "Taille commerciale">Taille commerciale</th>
+                                <th class="table__th"data-label = "Charge/Vitesse">Charge / Vitesse</th>
+                                <th class="table__th"data-label = "Saison">Saison</th>
+                                <th class="table__th"data-label="DOT">DOT</th>
+                                <th class="table__th"data-label = "État">État</th>
+                                <th class="table__th"data-label = "Quantité">Quantité</th>
+                                <th class="table__th"data-label = "Prix unitaire H.T.">Prix unitaire H.T.</th>
+                                <th class="table__th"data-label = "Modifier">Modifier</th>
+                                <th class="table__th"data-label = "Supprimer">Supprimer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($criterias)) { ?>
+                                <tr class="table__tr">
+                                    <td class="table__td" colspan="9">Aucun résultat trouvé pour cette recherche.</td>
+                                </tr>
+                            <?php } else { ?>
+                                <?php foreach($criterias as $key => $value) { ?>
+                                    <tr class="table__tr" data-id="<?= $value['id'] ?>" <?php if ($value['id'] == $highlightId) echo 'class="highlight"'; ?>>
+                                        <td class="table__td" data-label = "Marque"><?= $value['brand'] ?></td>
+                                        <td class="table__td" data-label = "Taille commerciale"><?= $value['width'] ?>/<?= $value['height'] ?>/<?= $value['diameter'] ?></td> 
+                                        <td class="table__td" data-label = "Charge/Vitesse"><?= $value['load_index'] ?><?= $value['speed_index'] ?></td>
+                                        <td class="table__td" data-label = "Saison"><?= $value['season'] ?></td>
+                                        <td class="table__td" data-label="DOT"><?= $value['dot'] ?></td>
+                                        <td class="table__td" data-label = "État"><?= $value['quality'] ?></td>
+                                        <td class="table__td" data-label = "Quantité"><?= $value['quantity_available'] ?></td>
+                                        <td class="table__td" data-label = "Prix unitaire H.T."><?= $value['unit_price_excluding_tax'] ?> €</td>
+                                        <td class="table__td" data-label="Modifier" class="modify-btn">
+                                            <?php
+                                                $editUrl = 'index.php?route=stock-edit&id=' . urlencode($value['id']);
+                                                if (!empty($_GET['brand'])) { $editUrl .= '&brand=' . urlencode($_GET['brand']); }
+                                                if (!empty($_GET['width'])) { $editUrl .= '&width=' . urlencode($_GET['width']); }
+                                                if (!empty($_GET['height'])) { $editUrl .= '&height=' . urlencode($_GET['height']); }
+                                                if (!empty($_GET['diameter'])) { $editUrl .= '&diameter=' . urlencode($_GET['diameter']); }
+                                                if (!empty($_GET['load_index'])) { $editUrl .= '&load_index=' . urlencode($_GET['load_index']); }
+                                                if (!empty($_GET['speed_index'])) { $editUrl .= '&speed_index=' . urlencode($_GET['speed_index']); }
+                                                if (!empty($_GET['season'])) {
+                                                    foreach($_GET['season'] as $season) {
+                                                        $editUrl .= '&season[]=' . urlencode($season);
+                                                    }
+                                                }
+                                                if (!empty($_GET['quality'])) {
+                                                    foreach($_GET['quality'] as $quality) {
+                                                        $editUrl .= '&quality[]=' . urlencode($quality);
+                                                    }
+                                                }
+                                            ?>
+                                            <?php if ($value['quantity_available'] > 0) { ?>
+                                                <a href="<?= $editUrl ?>">
+                                                    <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                                                </a>
+                                            <?php } else { ?>
+                                                <span class="disabled">
+                                                    <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                                                </span>
+                                            <?php } ?>
+                                        </td>
+                                        <td class="table__td" data-label="Supprimer">
+                                            <button class="<?php if ($value['quantity_available'] <= 0) { echo ' disabled'; } ?>"
+                                                <?php if ($value['quantity_available'] > 0) { ?>
+                                                    data-id="<?= $value['id'] ?>"
+                                                <?php } ?>>
+                                                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+    </div>
+    <div id="deleteModal" class="modal is-hidden">
+        <div class="modal__content">
+            <h2 id="modalTitle">Supprimer ou archiver ce pneu ?</h2>
+            <p id="modalText">Que voulez-vous faire ?</p>
+
+            <form method="POST" action="index.php">
+                <input class="form__input" type="hidden" name="route" value="stock-delete">
+                <input class="form__input" type="hidden" name="product_id" id="modal_product_id">
+                <input class="form__input" type="hidden" name="delete_action" id="modal_delete_action">
+
+                <?php if (!empty($_GET['brand'])) { ?>
+                    <input type="hidden" name="search_brand" class="form__input" value="<?= htmlspecialchars($_GET['brand']) ?>">
+                <?php }; ?>
+                <?php if (!empty($_GET['width'])) { ?>
+                    <input type="hidden" name="search_width" class="form__input" value="<?= htmlspecialchars($_GET['width']) ?>">
+                <?php }; ?>
+                <?php if (!empty($_GET['height'])) { ?>
+                    <input type="hidden" name="search_height" class="form__input" value="<?= htmlspecialchars($_GET['height']) ?>">
+                <?php }; ?>
+                <?php if (!empty($_GET['diameter'])) { ?>
+                    <input type="hidden" name="search_diameter" class="form__input" value="<?= htmlspecialchars($_GET['diameter']) ?>">
+                <?php }; ?>
+                <?php if (!empty($_GET['load_index'])) { ?>
+                    <input type="hidden" name="search_load_index" class="form__input" value="<?= htmlspecialchars($_GET['load_index']) ?>">
+                <?php }; ?>
+                <?php if (!empty($_GET['speed_index'])) { ?>
+                    <input type="hidden" name="search_speed_index" class="form__input" value="<?= htmlspecialchars($_GET['speed_index']) ?>">
+                <?php }; ?>
+
+                <?php if (!empty($_GET['season'])) {
+                    foreach ($_GET['season'] as $season) { ?>
+                    <input type="hidden" name="search_season[]" class="form__input" value="<?= htmlspecialchars($season) ?>">
+                <?php }; }; ?>
+
+                <?php if (!empty($_GET['quality'])) {
+                    foreach ($_GET['quality'] as $quality) { ?>
+                    <input type="hidden" name="search_quality[]" class="form__input" value="<?= htmlspecialchars($quality) ?>">
+                <?php }; }; ?>
+
+                <div id="modal_reason_wrapper" class="is-hidden">
+                    <label class="form__label" for="movement_reason">Motif</label>
+                    <select class="form__select" name="movement_reason" id="movement_reason">
+                        <option value="" disabled selected hidden>Choisir un motif</option>
+                        <?php foreach ($reasons as $reason) { ?>
+                            <option value="<?= $reason ?>"><?= ucfirst($reason) ?></option>
+                        <?php } ?>
+                    </select>
+
+                    <div id="modal_reason_detail_wrapper" class="is-hidden">
+                        <label class="form__label" for="reason_detail">Détail du motif</label>
+                        <textarea class="form__textarea" name="reason_detail" id="reason_detail" placeholder="Précisez ici..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal__actions">
+                    <div class="modal__choice">
+                        <button type="button" class="btn btn--dark" id="modalDeleteBtn">Supprimer définitivement</button>
+                        <button type="button" class="btn btn--dark" id="modalArchiveBtn">Archiver</button>
+                    </div>
+                    <div class="modal__validate is-hidden">
+                        <button type="submit" class="btn btn--dark" id="modalConfirmBtn">Valider</button>
+                    </div>
+                    <button type="button" class="btn btn--dark" id="modalCancelBtn">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

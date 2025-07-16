@@ -1,0 +1,101 @@
+@use './variables';
+@use './mixins';
+
+.login-body {
+    margin: 0;
+    font-family: variables.$title-font, sans-serif;
+    background-color: variables.$pearl-white;
+    color: variables.$dark-blue;
+    display: flex;
+    flex-direction: column; // Pour sticky footer
+    min-height: 100vh;
+}
+
+.login-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.login-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+
+    .logo-band {
+        background-color: variables.$dark-blue;
+        padding: 1rem 2.5rem;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 600;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        margin: -2rem -2rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+
+        .logo-login {
+            height: 5rem;
+            max-width: 100%;
+            vertical-align: middle;
+        }
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+
+        label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 1.1rem;
+        background-color: variables.$dark-blue;
+        border: none;
+        color: white;
+        font-size: 1.6rem;
+        font-weight: bold;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: variables.$saffron;
+            color: variables.$dark-blue;
+        }
+    }
+}
+
+.login-footer {
+    background: none;
+    color: variables.$beige;
+    text-align: center;
+    padding: 1rem;
+
+    @include mixins.responsive-font(0.6rem, 0.8rem, 1rem);
+}

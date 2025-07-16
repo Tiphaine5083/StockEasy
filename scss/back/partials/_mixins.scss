@@ -1,0 +1,54 @@
+// Breakpoints 
+
+@mixin tablet {
+    @media (min-width: 768px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin desktop-lg {
+    @media (min-width: 1280px) {
+        @content;
+    }
+}
+
+@mixin responsive-font($mobile, $tablet, $desktop, $desktop-lg: null) {
+    
+    @include tablet {
+        font-size: $tablet;
+    }
+
+    @include desktop {
+        font-size: $desktop;
+    }
+
+    @if $desktop-lg != null {
+        @include desktop-lg {
+            font-size: $desktop-lg;
+        }
+    }
+}
+
+@mixin responsive-height($mobile, $tablet, $desktop, $desktop-lg: null) {
+    height: $mobile;
+
+    @include tablet {
+        height: $tablet;
+    }
+
+    @include desktop {
+        height: $desktop;
+    }
+
+    @if $desktop-lg != null {
+        @include desktop-lg {
+            height: $desktop-lg;
+        }
+    }
+}

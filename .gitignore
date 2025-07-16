@@ -1,0 +1,14 @@
+# === ENV & Config ===
+.env
+
+# === SASS/SCSS Artifacts ===
+*.css.map
+
+# === System Files ===
+Thumbs.db
+
+# === IDE Files ===
+.vscode/
+
+# === Logs & Debug ===
+*.log
