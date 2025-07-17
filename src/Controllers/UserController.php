@@ -7,12 +7,18 @@ use App\Models\UserModel;
 use App\Models\RoleModel;
 
 /**
- * UserController
+ * Controller responsible for user-related actions in the back office.
  *
- * Handles all user-related operations for data display, CRUD, and sync.
+ * Handles listing, creation, editing, deletion, and role-based logic.
  */
-class UserController extends AbstractController {
+class UserController extends AbstractController 
+{
 
+    /**
+     * Handle the creation of a new user from the back office.
+     *
+     * @return void
+     */
     public function userCreate(): void
     {
         try
@@ -86,20 +92,26 @@ class UserController extends AbstractController {
             }
         } catch (\Exception $e) {
             $_SESSION['error'] = $e->getMessage();
-            $_SESSION['form_data'] = $_POST;
+            $_SESSION['form_data_user_create'] = $_POST;
             $this->redirectToRoute('user-create');
         }
     }
 
+    /**
+     * Search and display users with optional filters and status.
+     *
+     * @return void
+     */
     public function userSearch(): void
     {
+        $status = $_GET['status'] ?? 'active'; // brut, pour redirection
         try {
-            $status = strtolower($_GET['status'] ?? 'active');
-            if (!in_array($status, ['active', 'inactive'])) {
-                $status = 'active';
+            $validatedStatus = strtolower($status);
+            if (!in_array($validatedStatus, ['active', 'inactive'])) {
+                $validatedStatus = 'active';
             }
 
-            $active = ($status === 'active') ? 1 : 0;
+            $active = ($validatedStatus === 'active') ? 1 : 0;
 
             $filters = [
                 'name' => $_GET['name'] ?? '',
@@ -116,16 +128,21 @@ class UserController extends AbstractController {
             $this->display('user/user-list.phtml', [
                 'users' => $users,
                 'roles' => $roles,
-                'status' => $status,
+                'status' => $validatedStatus,
                 'filters' => $filters
             ]);
 
         } catch (\Exception $e) {
             $_SESSION['error'] = "Impossible d'afficher la liste des utilisateurs.";
-            $this->redirectToRoute('user-list&status=' . $status);
+            $this->redirectToRoute('user-list', ['status' => $status]);
         }
     }
 
+    /**
+     * Toggle the active status of a user (via POST).
+     *
+     * @return void
+     */
     public function toggleStatus(): void
     {
         $id = $_POST['id'] ?? null;
@@ -133,7 +150,7 @@ class UserController extends AbstractController {
         $route = 'user-list';
 
         if (!$id || !ctype_digit($id)) {
-            $_SESSION['error'] = "ID utilisateur invalide.";
+            $_SESSION['error'] = "ID utilisateur invalide";
             $this->redirectToRoute($route, ['status' => $status]);
             exit;
         }
@@ -148,6 +165,104 @@ class UserController extends AbstractController {
         }
 
         $this->redirectToRoute($route, ['status' => $status]);
+    }
+
+    /**
+     * Delete a user and their permissions if allowed.
+     *
+     * @return void
+     */
+    public function userDelete(): void
+    {
+        $id = $_GET['id'] ?? null;
+        $status = $_GET['status'] ?? 'active';
+
+        if (!$id || !ctype_digit($id)) {
+            $_SESSION['error'] = "ID utilisateur invalide";
+            $this->redirectToRoute('user-list', ['status' => $status]);
+            exit;
+        }
+
+        $userModel = new UserModel();
+        
+        if ($userModel->deleteUserWithPermissions((int)$id)) {
+            $_SESSION['success'] = "Utilisateur supprimé avec succès";
+        } else {
+            $_SESSION['error'] = "Suppression impossible : cet utilisateur ne peut pas être supprimé, ou une erreur est survenue";
+        }
+
+        $this->redirectToRoute('user-list', ['status' => $status]);
+    }
+
+    /**
+     * Update an existing user with validated form data.
+     *
+     * @return void
+     */
+    public function userUpdate(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $_SESSION['error'] = 'Méthode non autorisée';
+            $this->redirectToRoute('user-list');
+            exit;
+        }
+
+        $id = $_POST['id'] ?? null;
+        $status = $_GET['status'] ?? 'active';
+
+        if (!$id || !ctype_digit($id)) {
+            $_SESSION['error'] = 'ID utilisateur invalide';
+            $this->redirectToRoute('user-list');
+            exit;
+        }
+
+        $data = [
+            'id' => (int)$id,
+            'first_name' => trim($_POST['first_name'] ?? ''),
+            'last_name' => trim($_POST['last_name'] ?? ''),
+            'email' => trim($_POST['email'] ?? ''),
+            'id_role' => (int)($_POST['id_role'] ?? 0),
+            'password' => $_POST['password'] ?? '',
+        ];
+
+        if (empty($data['first_name']) || empty($data['last_name']) || empty($data['email']) || $data['id_role'] === 0) {
+            $_SESSION['error'] = 'Tous les champs obligatoires doivent être remplis';
+            $_SESSION['form_data_user_update'] = $_POST;
+            $this->redirectToRoute('user-edit', ['id' => $id, 'status' => $status]);
+            exit;
+        }
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['error'] = 'Adresse email invalide';
+            $_SESSION['form_data_user_update'] = $_POST;
+            $this->redirectToRoute('user-edit', ['id' => $id, 'status' => $status]);
+            exit;
+        }
+        if (!empty($data['password'])) {
+            if (
+                strlen($data['password']) < 12
+                || !preg_match('/[A-Z]/', $data['password'])
+                || !preg_match('/[a-z]/', $data['password'])
+                || !preg_match('/\d/', $data['password'])
+                || !preg_match('/[\W_]/', $data['password'])
+            ) {
+                $_SESSION['error'] = 'Le mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.';
+                $_SESSION['form_data_user_update'] = $_POST;
+                $this->redirectToRoute('user-edit', ['id' => $id, 'status' => $status]);
+                exit;
+            }
+        }
+
+        $userModel = new UserModel();
+        $success = $userModel->updateUserInformations($data);
+
+        if ($success) {
+            $_SESSION['success'] = 'Utilisateur mis à jour avec succès.';
+            $this->redirectToRoute('user-list', ['status' => $status]);
+        } else {
+            $_SESSION['error'] = 'Erreur lors de la mise à jour.';
+            $_SESSION['form_data_user_update'] = $_POST;
+            $this->redirectToRoute('user-edit', ['id' => $id, 'status' => $status]);
+        }
     }
 
 }

@@ -24,7 +24,8 @@ STOCKEASY/
 │ │ ├── js/
 │ │ │ ├── burger.js
 │ │ │ ├── generic.js
-│ │ │ └── stock.js
+│ │ │ ├── stock.js
+│ │ │ └── user.js
 │ │ └── video/
 │ ├── .htaccess
 │ └── index.php
@@ -84,8 +85,8 @@ STOCKEASY/
 │ │ │ ├── user-edit.phtml
 │ │ │ ├── user-home.phtml
 │ │ │ ├── user-list.phtml
-│ │ │ ├── user-role.phtml
-│ │ │ └── user-permission.phtml
+│ │ │ ├── user-permission.phtml
+│ │ │ └── user-role.phtml
 │ │ ├── home.phtml
 │ │ ├── layout.phtml
 │ │ ├── login.phtml
@@ -97,147 +98,144 @@ STOCKEASY/
 
 ---
 
-## Implemented Features
+## General Features
 
-- **Create Stock**
-    - Form with all required fields (`detail_tire`)
-    - Insert into `detail_tire`
-    - Insert into `catalog` with auto name & description
-    - Insert into `stock_movement` for initial entry
+StockEasy V2 is a fully ACID-compliant application built in pure PHP with a custom MVC architecture.  
+It includes:
 
-- **Update Stock**
-    - Full update with unit price & quantity
-    - Automatic stock movement logging for any quantity change
-    - Sync with `catalog`
-
-- **Delete / Archive Stock**
-    - Archive for invoiced tires
-    - Permanent deletion for non-invoiced tires
-    - Always logs a `stock_movement` when archiving with leftover quantity
-
-- **Search Stock**
-    - Dynamic search form with multiple filters
-    - Results with `highlight_id` for context
-    - Integrated breadcrumb navigation
-
-- **Flash Messages — Uniform Session-Based System**
-    - All success and error messages are now handled via `$_SESSION`, not `GET` parameters.
-    - The layout (`layout.phtml`) includes a reusable message overlay block that displays:
-        - Success messages (`$_SESSION['success']`)
-        - Error messages (`$_SESSION['error']`)
-    - Messages are automatically flushed (`unset`) after being displayed.
-    - Controllers set messages like this:
-        ```php
-        $_SESSION['success'] = 'Item created successfully';
-        $_SESSION['error'] = 'An error occurred';
-        $this->redirectToRoute('some-route');
-        ```
-    - This approach ensures consistency, security, and compatibility with form repopulation via `$_SESSION['form_data']`.
-    - Example integration at the top of `layout.phtml`:
-        ```php
-        <?php
-            $success = $_SESSION['success'] ?? null;
-            $error = $_SESSION['error'] ?? null;
-            unset($_SESSION['success'], $_SESSION['error']);
-
-            if ($success || $error): ?>
-            <div class="message">
-                <div class="message__modal <?= $success ? 'message__modal--success' : 'message__modal--error' ?>" role="alert" aria-live="assertive">
-                    <button class="message__close" aria-label="Fermer le message">&times;</button>
-                    <p><?= htmlspecialchars($success ?? $error) ?></p>
-                </div>
-            </div>
-        <?php endif; ?>
-        ```
-
-- **ACID Compliance**
-    - Critical operations (`createFullStock`, `updateFullStock`, `archiveTire`, `deleteTireCompletely`) use `beginTransaction` and `commit/rollback`
-    - Any error automatically triggers a `rollback` to ensure no partial write occurs.
-    - All multi-table changes are atomic
+- A robust routing system (`index.php` → `Router.php`)
+- Clear separation between front and back interfaces
+- SCSS modular structure with responsive-first design
+- - Flash messages are stored in `$_SESSION` and displayed in the layout with automatic flush
+- Full PHPDoc coverage for every class and method
+- Role-based access control system (super-admin, admin, secretary, user, intern, guest) — fine-grained permissions planned for V2
+- Strong focus on UX for low-tech users (clear labels, modals, keyboard access)
+- All sensitive operations are wrapped in transactions (`beginTransaction` / `commit` / `rollback`)
 
 ---
 
-## Duplicate Control — V1 (Final)
+## Implemented Modules
 
-This version implements full duplicate control for tire creation.  
-When adding a new tire, the system automatically:
+### Stock Management
 
-1. **Detects any duplicate** using `StockModel::existsDuplicate()`.  
-2. **Redirects** the user back to the creation page with a `duplicate_id` if a match is found.  
-3. **Displays a confirmation modal**, pre-filled with the duplicate ID.  
-4. Lets the user decide:
-    - **Increment stock** → triggers `StockController::stockIncrement()` with proper `stock_movement` logging (`entrée`, `reason: achat`).
-    - **Cancel** → closes the modal, keeps the form untouched.
-    - **Reset manually** → handled by the separate reset button on the main form.
+**Create**
+- Full form with all `detail_tire` fields
+- Inserts in:  
+  - `detail_tire`  
+  - `catalog` (auto-name & description)  
+  - `stock_movement` (type: `entry`, reason: `purchase`)
 
-### Technical Flow
+**Update**
+- Unit price & quantity update
+- Any change in quantity logs a new `stock_movement`
+- Catalog remains in sync
 
-- **Backend**
-    - `StockController::stockCreate()` checks for duplicates **before inserting**.
-    - If duplicate ➜ redirects with `duplicate_id` in GET.
-    - `StockController::stockIncrement()` updates `quantity_available` and creates a new `stock_movement` record.
-    - All changes are wrapped in a transaction (`updateFullStock`).
+**Delete / Archive**
+- Permanent delete (if not invoiced)
+- Archive with leftover quantity logs a `stock_movement`
+- No orphaned data allowed
 
-- **Frontend**
-    - `app.js` reads `duplicate_id` from URL.
-    - Opens the duplicate modal automatically if found.
-    - The modal uses a simple hidden `<form>` to POST the `product_id` + `added_quantity` back to `stock-increment` route.
-    - No AJAX here — full page reload ensures consistent state and shows the flash message overlay.
+**Search**
+- Dynamic search with multiple filters
+- Highlight current result (`highlight_id`)
+- Breadcrumb integration for navigation context
 
-- **UX**
-    - Users always see a clear success/error message through the existing modal overlay (`success` or `error` from GET).
-    - No unexpected silent insert or overwrite.
+**Duplicate Control**
+- Automatic detection before insert
+- Modal with 2 options:  
+  1. **Increase stock** (adds to quantity + logs movement)  
+  2. **Cancel** (keeps form as-is)  
+- Fully wrapped in transaction
+- Flash messages ensure transparent UX
 
 ---
 
-**Duplicate control** is now fully ACID-compliant, user-friendly, and tested for real-world scenarios.
+### User Management
+
+**Create / Edit / Delete**
+- Full form with role selection and active status
+- Password hashed with `password_hash()` (PASSWORD_DEFAULT)
+- Email is unique and replaces former "login" field
+- Role management is handled via `user_role`. Fine-grained permissions are planned for V2.
+
+**Search & Filter**
+- Search by name, email, or role
+- Filters for active/inactive status
+
+**Form UX**
+- Mobile-first responsive grid
+- Real-time JS validation for required fields
+- Flash messages shown on success/error
+
+**Security & Architecture**
+- All CRUD actions secured with transactions and try/catch blocks
+- Access restricted to admin users only
+
 
 ---
 
 ## Next Steps
 
-The following functional blocks will be completed to finalize StockEasy V2:
+The following functional blocks are planned and will follow the same secure, documented, and modular approach:
 
-- **Authentication**
-    - Secure user login with role management (admin, employee).
-    - Session handling, restricted areas.
-    - Full PHPDoc coverage.
+### Users 
+- Permissions UI planned in `user-permission.phtml`
 
-- **Client Management**
-    - CRUD for client database.
-    - Validation rules and search filters.
-    - ACID-compliant operations with transaction support.
-    - Complete documentation and error handling.
+### Clients
+- CRUD with validation and search
+- Relation to invoices and appointments
+- Logging of modifications
+- Fully transactional
 
-- **Accounting**
-    - Basic invoicing logic.
-    - Stock usage tracking linked to invoices.
-    - Consistent stock movements for all financial operations.
-    - Prepared for multi-table updates with rollback on failure.
+### Accounting
+- Invoice creation (HT by default)
+- Support for credit notes and deposits
+- Stock usage linked to invoices
+- Generates PDF invoices stored in `/storage/pdf/invoices/`
 
-- **Document Management**
-    - Generation and download of stock reports (PDF).
-    - Potential future integration with invoicing.
-    - File consistency checks.
+### Invoices (linked to accounting)
+- Secure invoice creation with linked products
+- Calculation rules based on company VAT status
+- Includes downloadable PDF files for each invoice
 
-**All blocks will:**
-    - Use the same MVC base (`Controller`, `Model`, `View`).
-    - Be documented with clear PHPDoc blocks.
-    - Rely on ACID transactions for critical multi-table logic.
-    - Be tested with real scenarios.
-    - Be presented in slides during the final demonstration.
+### Document Management
+- Centralized storage for all generated documents: invoices, stock listings, credits, quotations
+- Files organized in `/storage/pdf/...`
+- Future export/email integration planned
+
+### Authentication
+- Secure login with role system
+- Session persistence and protection
+- Error feedback and PHPDoc coverage
+
+### Audit & Logging
+- Create `system_log` and `modification_log` tables
+- Log key user actions (create/update/delete)
+- Allow administrators to review recent changes and system events
+
+---
+
+## Planned Features (V2+)
+
+These features are planned for a future release after V2 delivery:
+
+- Fine-grained permissions per action (edit stock, delete user, etc.)
+- Multi-rate VAT support depending on product type
+- Scheduled stock alerts and appointment reminders (email/SMS)
+- Client portal with downloadable invoice history
+- Data anonymization and GDPR log tracking
 
 ---
 
 ## Documentation
 
-All PHP files are fully commented using PHPDoc blocks.  
-Each class, method, parameter, and return type is described for clarity and maintenance.
+All PHP classes and methods include PHPDoc annotations for better readability and maintenance.  
+Comments follow professional standards and reflect real application use cases.
 
 ---
 
 ## Author
 
-This module is maintained by [Tiphaine LE CAM] as part of the **StockEasy V2** refactoring.
+This module is maintained by [Tiphaine LE CAM] as part of the **StockEasy** refactoring project.
 
 ---

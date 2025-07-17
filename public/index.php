@@ -35,11 +35,14 @@ $router->addRoute('stock-increment', \App\Controllers\StockController::class . '
 $router->addRoute('user-home', \App\Controllers\PublicController::class . '::showUserHome');
 $router->addRoute('user-create', \App\Controllers\PublicController::class . '::showUserCreate');
 $router->addRoute('user-list', \App\Controllers\PublicController::class . '::showUserListByFilter');
-$router->addRoute('user-role', \App\Controllers\PublicController::class . '::showUserRole');
-$router->addRoute('user-permission', \App\Controllers\PublicController::class . '::showUserPermission');
+$router->addRoute('user-edit', \App\Controllers\PublicController::class . '::showUserEdit');
+// $router->addRoute('user-role', \App\Controllers\PublicController::class . '::showUserRole');                 Coming soon
+// $router->addRoute('user-permission', \App\Controllers\PublicController::class . '::showUserPermission');     Coming soon
 $router->addRoute('user-create-submit', \App\Controllers\UserController::class . '::userCreate');
 $router->addRoute('user-search', \App\Controllers\UserController::class . '::userSearch');
 $router->addRoute('toggle-status', \App\Controllers\UserController::class . '::toggleStatus');
+$router->addRoute('user-delete', \App\Controllers\UserController::class . '::userDelete');
+$router->addRoute('user-update-submit', \App\Controllers\UserController::class . '::userUpdate');
 
-
+// En route mauvaise troupe !
 $router->startRouting();

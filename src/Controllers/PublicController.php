@@ -31,7 +31,9 @@ class PublicController extends AbstractController
     }
 
     /**
-     * Display the stock management home page.
+     * Displays the main user management dashboard.
+     *
+     * Sets the breadcrumb navigation and passes a title to the view.
      *
      * @return void
      */
@@ -47,6 +49,11 @@ class PublicController extends AbstractController
         ]);
     }
 
+    /**
+     * Display the user creation form.
+     *
+     * @return void
+     */
     public function showUserCreate(): void
     {
         $roleModel = new RoleModel();
@@ -58,8 +65,8 @@ class PublicController extends AbstractController
             ['label' => 'Création d\'un nouvel utilisateur', 'url' => null]
         ]);
 
-        $formData = $_SESSION['form_data'] ?? [];
-        unset($_SESSION['form_data']);
+        $formData = $_SESSION['form_data_user_create'] ?? [];
+        unset($_SESSION['form_data_user_create']);
 
         $this->display('user/user-create.phtml', [
             'title' => 'Création nouvel utilisateur',
@@ -68,6 +75,11 @@ class PublicController extends AbstractController
         ]);
     }
 
+    /**
+     * Display the filtered user list based on status (active/inactive).
+     *
+     * @return void
+     */    
     public function showUserListByFilter(): void
     {
         $status = strtolower($_GET['status'] ?? 'active');
@@ -103,6 +115,61 @@ class PublicController extends AbstractController
         ]);
     }
 
+    /**
+     * Display the user edit form with current data or session fallback.
+     *
+     * @return void
+     */ 
+    public function showUserEdit(): void
+    {
+        $id = $_GET['id'] ?? null;
+
+        if (!$id || !ctype_digit($id)) {
+            $_SESSION['error'] = "ID utilisateur invalide.";
+            $this->redirectToRoute('user-list');
+            exit;
+        }
+
+        $userModel = new UserModel();
+        $user = $userModel->find((int)$id);
+
+        if (!$user) {
+            $_SESSION['error'] = "Utilisateur introuvable.";
+            $this->redirectToRoute('user-list');
+            exit;
+        }
+
+        $formData = $_SESSION['form_data_user_update'] ?? [
+            'id' => $user['id'],
+            'first_name' => $user['first_name'],
+            'last_name' => $user['last_name'],
+            'email' => $user['email'],
+            'id_role' => $user['id_role'],
+        ];
+        unset($_SESSION['form_data_user_update']);
+
+        $roleModel = new RoleModel();
+        $roles = $roleModel->findAll();
+
+        $this->setBreadcrumb([
+            ['label' => 'Accueil', 'url' => '?route=home'],
+            ['label' => 'Gestion des utilisateurs', 'url' => '?route=user-home'],
+            ['label' => 'Modification utilisateur', 'url' => null]
+        ]);
+
+        $this->display('user/user-edit.phtml', [
+            'title' => 'Modification utilisateur',
+            'formData' => $formData,
+            'roles' => $roles,
+        ]);
+    }
+
+    // TODO: Implement detailed roles management
+    /**
+     * Display the user roles management page.
+     *
+     * @return void
+     */
     public function showUserRole(): void
     {
         $this->setBreadcrumb([
@@ -116,6 +183,12 @@ class PublicController extends AbstractController
         ]);
     }
 
+    // TODO: Implement detailed permission management
+    /**
+     * Display the user permissions management page.
+     *
+     * @return void
+     */    
     public function showUserPermission(): void
     {
         $this->setBreadcrumb([
