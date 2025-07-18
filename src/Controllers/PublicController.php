@@ -6,6 +6,7 @@ use App\Core\AbstractController;
 use App\Models\StockModel;
 use App\Models\UserModel;
 use App\Models\RoleModel;
+use App\Models\LogModel;
 
 /**
  * PublicController
@@ -27,6 +28,85 @@ class PublicController extends AbstractController
 
         $this->display('home.phtml', [
             'title' => 'Accueil'
+        ]);
+    }
+
+    public function ShowLogHome(): void
+    {
+        // if (
+        //     empty($_SESSION['user']) ||
+        //     ($_SESSION['user']['role'] ?? '') !== 'super-admin'
+        // ) {
+        //     $this->redirectToRoute('error/404');
+        // }
+
+        $this->setBreadcrumb([
+            ['label' => 'Accueil', 'url' => '?route=home'],
+            ['label' => 'Gestion des logs', 'url' => null],
+        ]);
+
+        $this->display('log/log-home.phtml', [
+            'title' => 'Gestion des logs'
+        ]);
+    }
+
+    /**
+     * Display all system logs.
+     * Access restricted to users with role 'super-admin'.
+     *
+     * @return void
+     */
+    public function showSystemLogs(): void
+    {
+        // if (
+        //     empty($_SESSION['user']) ||
+        //     ($_SESSION['user']['role'] ?? '') !== 'super-admin'
+        // ) {
+        //     $this->redirectToRoute('error/404');
+        // }
+
+        $logModel = new LogModel();
+        $logs = $logModel->getAllSystemLogs();
+
+        $this->setBreadcrumb([
+            ['label' => 'Accueil', 'url' => '?route=home'],            
+            ['label' => 'Gestion des logs', 'url' => '?route=log-home'],
+            ['label' => 'System Logs', 'url' => null]
+        ]);
+
+        $this->display('log/system.phtml', [
+            'title' => 'System Logs',
+            'logs'  => $logs
+        ]);
+    }
+
+    /**
+     * Display all modification logs.
+     * Access restricted to users with role 'super-admin'.
+     *
+     * @return void
+     */
+    public function showModificationLogs(): void
+    {
+        // if (
+        //     empty($_SESSION['user']) ||
+        //     ($_SESSION['user']['role'] ?? '') !== 'super-admin'
+        // ) {
+        //     $this->redirectToRoute('error/404');
+        // }
+
+        $logModel = new LogModel();
+        $logs = $logModel->getAllModificationLogs();
+
+        $this->setBreadcrumb([
+            ['label' => 'Accueil', 'url' => '?route=home'],
+            ['label' => 'Gestion des logs', 'url' => '?route=log-home'],
+            ['label' => 'Modification Logs', 'url' => null]
+        ]);
+
+        $this->display('log/modification.phtml', [
+            'title' => 'Modification Logs',
+            'logs'  => $logs
         ]);
     }
 

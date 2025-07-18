@@ -261,9 +261,6 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   height: 100%;
 }
-.layout__sidebar.is-open {
-  display: flex;
-}
 @media (min-width: 768px) {
   .layout__sidebar {
     display: flex;
@@ -305,14 +302,6 @@ h1, h2, h3, h4, h5, h6 {
   transition: max-height 0.3s ease;
   list-style: none;
   padding-left: 1.5rem;
-}
-@media (min-width: 768px) {
-  .layout__sidebar .sidebar__item .sidebar__submenu {
-    max-height: none !important;
-  }
-  .layout__sidebar .sidebar__item .sidebar__submenu .sidebar__subitem--home {
-    display: none;
-  }
 }
 .layout__sidebar .sidebar__item .sidebar__submenu .sidebar__subitem {
   margin: 0.5rem 0;

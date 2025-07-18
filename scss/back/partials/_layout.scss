@@ -204,10 +204,6 @@
     flex-direction: column;
     height: 100%;
 
-    &.is-open {
-        display: flex;
-    }
-
     @include mixins.tablet {
         display: flex;
     }
@@ -254,14 +250,6 @@
             transition: max-height 0.3s ease;
             list-style: none;
             padding-left: 1.5rem;
-
-            @include mixins.tablet {
-                max-height: none !important;
-
-                .sidebar__subitem--home {
-                    display: none;
-                }
-            }
 
             .sidebar__subitem {
                 margin: 0.5rem 0;

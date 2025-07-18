@@ -55,6 +55,9 @@
         <a href="/stockeasy/public/index.php?route=user-admin">
             <i class="fa-solid fa-users" aria-hidden="true"></i> Utilisateurs
         </a>
+        <a href="/stockeasy/public/index.php?route=log-home">
+            <i class="fa-solid fa-database" aria-hidden="true"></i> Logs
+        </a>
         <a href="/stockeasy/public/index.php?route=home">
             <i class="fa-solid fa-house" aria-hidden="true"></i> Accueil
         </a>
@@ -101,12 +104,12 @@
 
                     <!-- Bloc STOCK -->
                     <li class="sidebar__item">
-                        <a href="/stockeasy/public/index.php?route=stock-home" class="sidebar__link">
+                        <a href="/stockeasy/public/index.php?route=stock-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-stock">
                             <i class="fa-solid fa-warehouse" aria-hidden="true"></i> Stock
                         </a>
-                        <ul class="sidebar__submenu">
+                        <ul class="sidebar__submenu" id="submenu-stock" aria-hidden="true">
                             <li class="sidebar__subitem sidebar__subitem--home">
-                                <a href="/stockeasy/public/index.php?route=stock-home" class="sidebar__sublink">Accueil Stock</a>
+                                <a href="/stockeasy/public/index.php?route=stock-home" class="sidebar__sublink" >Accueil Stock</a>
                             </li>
                             <li class="sidebar__subitem">
                                 <a href="/stockeasy/public/index.php?route=stock-create" class="sidebar__sublink">Créer</a>
@@ -122,10 +125,10 @@
 
                     <!-- Bloc CUSTOMER -->
                     <li class="sidebar__item">
-                        <a href="/stockeasy/public/index.php?route=construction" class="sidebar__link">
+                        <a href="/stockeasy/public/index.php?route=construction" class="sidebar__link" aria-expanded="false" aria-controls="submenu-customers">
                             <i class="fa-solid fa-address-book" aria-hidden="true"></i> Clients
                         </a>
-                        <ul class="sidebar__submenu">
+                        <ul class="sidebar__submenu" id="submenu-customers" aria-hidden="true">
                             <li class="sidebar__subitem sidebar__subitem--home">
                                 <a href="/stockeasy/public/index.php?route=construction" class="sidebar__sublink">Accueil Clients</a>
                             </li>
@@ -140,12 +143,12 @@
 
                     
                     <!-- Bloc USERS (super_admin seulement) -->
-                    <!-- Ici le code PHP pour dire si isset session et si session === super_admin -->
+                    <!-- TODO : Restreindre à super-admin uniquement (si isset session et si session === super_admin) -->
                     <li class="sidebar__item">
-                        <a href="/stockeasy/public/index.php?route=user-home" class="sidebar__link">
+                        <a href="/stockeasy/public/index.php?route=user-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-users">
                             <i class="fa-solid fa-users" aria-hidden="true"></i> Utilisateurs
                         </a>
-                        <ul class="sidebar__submenu">
+                        <ul class="sidebar__submenu" id="submenu-users" aria-hidden="true">
                             <li class="sidebar__subitem sidebar__subitem--home">
                                 <a href="/stockeasy/public/index.php?route=user-home" class="sidebar__sublink">Accueil Utilisateurs</a>
                             </li>
@@ -168,6 +171,26 @@
                             </li>
                         </ul>
                     </li>
+
+                    <!-- Bloc LOGS (super_admin seulement) -->
+                    <!-- TODO: Restreindre à super-admin uniquement (si isset session et si session === super_admin)  -->
+                    <li class="sidebar__item">
+                        <a href="/stockeasy/public/index.php?route=log-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-logs">
+                            <i class="fa-solid fa-database" aria-hidden="true"></i> Logs
+                        </a>
+                        <ul class="sidebar__submenu" id="submenu-logs" aria-hidden="true">
+                            <li class="sidebar__subitem sidebar__subitem--home">
+                                <a href="/stockeasy/public/index.php?route=log-home" class="sidebar__sublink">Accueil Logs</a>
+                            </li>
+                            <li class="sidebar__subitem">
+                                <a href="/stockeasy/public/index.php?route=log-modif" class="sidebar__sublink">Modification Logs</a>
+                            </li>
+                            <li class="sidebar__subitem">
+                                <a href="/stockeasy/public/index.php?route=log-sys" class="sidebar__sublink">System Logs</a>
+                            </li>
+                        </ul>
+                    </li>
+
                 </ul>
 
                 <!-- Extras sticky bas -->

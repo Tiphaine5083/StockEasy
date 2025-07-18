@@ -11,6 +11,11 @@ $router = new Router();
 $router->addRoute('error404', \App\Controllers\PartialsController::class . '::notFound');
 $router->addRoute('construction', \App\Controllers\PartialsController::class . '::underConstruction');
 
+// === Log Routes
+$router->addRoute('log-home', \App\Controllers\PublicController::class . '::showLogHome');
+$router->addRoute('log-sys', \App\Controllers\PublicController::class . '::showSystemLogs');
+$router->addRoute('log-modif', \App\Controllers\PublicController::class . '::showModificationLogs');
+
 // === Generic Route
 $router->addRoute('home', \App\Controllers\PublicController::class . '::showHome');
 

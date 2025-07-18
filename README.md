@@ -67,10 +67,14 @@ STOCKEASY/
 │ │ ├── Database.php
 │ │ └── Router.php
 │ ├── Models/
+│ │ ├── LogModel.php
 │ │ ├── RoleModel.php
 │ │ ├── StockModel.php
 │ │ └── UserModel.php
 │ ├── Views/
+│ │ ├── logs/
+│ │ │ ├── modification.phtml
+│ │ │ └── system.phtml
 │ │ ├── partials/
 │ │ │ ├── construction.phtml
 │ │ │ └── error404.phtml
