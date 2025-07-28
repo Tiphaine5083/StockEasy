@@ -1,7 +1,7 @@
 <?php
     namespace App\Controllers;
 
-use App\Controllers\PublicController as ControllersPublicController;
+use App\Controllers\PublicController;
 use App\Core\AbstractController;
 use App\Models\UserModel;
 
@@ -9,7 +9,7 @@ use App\Models\UserModel;
     {
         public function showLogin() {
             if (isset($_SESSION['user'])) {
-                $pc = new ControllersPublicController();
+                $pc = new PublicController();
                 $pc->showStockHome();
                 return;
             } else {
@@ -17,37 +17,42 @@ use App\Models\UserModel;
             }
         }
 
-        public function login() {
-            if (isset($_POST['email']) && isset($_POST['password'])) {
-                if (!empty(trim($_POST['email'])) && !empty(trim($_POST['password']))) {
-                    $email = trim($_POST['email']);
-                    $password = trim($_POST['password']);
+        public function login()
+        {
+            if (isset($_POST['email'], $_POST['password'])) {
+                $email = trim($_POST['email']);
+                $password = trim($_POST['password']);
 
+                if (!empty($email) && !empty($password)) {
                     $userModel = new UserModel();
                     $user = $userModel->findByEmail($email);
 
                     if ($user === null || !$user['active'] || !password_verify($password, $user['password'])) {
-                        header('Location: index.php?route=login&error=Identifiants invalides');
-                        exit();
-                    } else {
-                        $_SESSION['user'] = [
-                            'id' => $user['id'],
-                            'first_name' => $user['first_name'],
-                            'email' => $user['email'],
-                            'role' => $user['id_role'],
-                            ];
-                        
-                        header('Location: index.php?route=stock-home');
+                        $_SESSION['error'] = 'Identifiants invalides.';
+                        header('Location: index.php?route=login');
                         exit();
                     }
-                } else {
-                    header('Location: index.php?route=login&error=Paramètres manquants');
+
+                    $_SESSION['user'] = [
+                        'id'         => $user['id'],
+                        'first_name'=> $user['first_name'],
+                        'email'     => $user['email'],
+                        'role'      => $user['role_name'],
+                    ];
+
+                    // $_SESSION['success'] = 'Connexion réussie.';
+                    header('Location: index.php?route=home');
                     exit();
                 }
-            } else {
-                header('Location: index.php?route=login&error=Paramètres manquants');
+
+                $_SESSION['error'] = 'Paramètres manquants.';
+                header('Location: index.php?route=login');
                 exit();
             }
+
+            $_SESSION['error'] = 'Paramètres manquants.';
+            header('Location: index.php?route=login');
+            exit();
         }
         
         public function logout() {

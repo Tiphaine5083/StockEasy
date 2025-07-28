@@ -29,7 +29,11 @@ class UserModel extends AbstractModel
      */
     public function findByEmail(string $email): ?array 
     {
-        $sql = 'SELECT * FROM user WHERE email = :email LIMIT 1';
+        $sql = 'SELECT user.*, role.role_name
+                FROM user 
+                JOIN role ON user.id_role = role.id
+                WHERE user.email = :email 
+                LIMIT 1';
         try {
             $query = $this->getPdo()->prepare($sql);
             $query->execute([

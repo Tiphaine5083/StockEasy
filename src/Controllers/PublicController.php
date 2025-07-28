@@ -7,6 +7,7 @@ use App\Models\StockModel;
 use App\Models\UserModel;
 use App\Models\RoleModel;
 use App\Models\LogModel;
+use App\Core\Access;
 
 /**
  * PublicController
@@ -31,7 +32,7 @@ class PublicController extends AbstractController
         ]);
     }
 
-    public function ShowLogHome(): void
+    public function showLogHome(): void
     {
         // if (
         //     empty($_SESSION['user']) ||

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Core;
+use App\Core\Access;
 
 class Router
 {
@@ -24,6 +25,14 @@ class Router
 
         if($route && array_key_exists($route, $this->routes)) {
             $routeHandler = $this->routes[$route];
+
+            $publicRoutes = ['login', 'login-post', 'error404', 'construction'];
+            if (!in_array($route, $publicRoutes, true) && !Access::isLoggedIn()) {
+                $_SESSION['error'] = 'Veuillez vous connecter pour accéder à l’application.';
+                header('Location: index.php?route=login');
+                exit;
+            }
+
             $explodedHandler = explode( '::', $routeHandler ); // ['Controller\PublicController', 'showHome']
 
             if (count($explodedHandler) === 2) {

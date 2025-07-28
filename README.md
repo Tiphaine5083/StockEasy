@@ -33,7 +33,6 @@ STOCKEASY/
 ├── scss/
 │ ├── back/
 │ │ ├── partials/
-│ │ │ ├── _accessibility.scss
 │ │ │ ├── _base.scss
 │ │ │ ├── _components.scss
 │ │ │ ├── _forms.scss
@@ -73,6 +72,7 @@ STOCKEASY/
 │ │ └── UserModel.php
 │ ├── Views/
 │ │ ├── logs/
+│ │ │ ├── log-home.phtml
 │ │ │ ├── modification.phtml
 │ │ │ └── system.phtml
 │ │ ├── partials/
@@ -110,11 +110,32 @@ It includes:
 - A robust routing system (`index.php` → `Router.php`)
 - Clear separation between front and back interfaces
 - SCSS modular structure with responsive-first design
-- - Flash messages are stored in `$_SESSION` and displayed in the layout with automatic flush
+- Flash messages are stored in `$_SESSION` and displayed in the layout with automatic flush
 - Full PHPDoc coverage for every class and method
 - Role-based access control system (super-admin, admin, secretary, user, intern, guest) — fine-grained permissions planned for V2
 - Strong focus on UX for low-tech users (clear labels, modals, keyboard access)
 - All sensitive operations are wrapped in transactions (`beginTransaction` / `commit` / `rollback`)
+
+---
+
+## Layout & Navigation
+
+**Structure**
+- Shared layout file: `layout.phtml` with modular zones (header, sidebar, content, footer)
+- Sidebar rendered on all back-office views
+- Header includes logo, breadcrumb, and logout
+
+**Sidebar**
+- Mobile-first accordion navigation
+- Fully collapsible/expandable via JS (`burger.js`)
+- Each main menu has ARIA attributes (`aria-expanded`, `aria-controls`)
+- Submenus use `max-height` animation for smooth toggling
+- Extra links (logout, home) fixed at bottom
+
+**Accessibility**
+- Keyboard navigation and semantic landmarks
+- ARIA roles and states implemented across layout
+- Breadcrumb supports screen readers via `aria-current` and `aria-label`
 
 ---
 
@@ -175,6 +196,23 @@ It includes:
 - All CRUD actions secured with transactions and try/catch blocks
 - Access restricted to admin users only
 
+---
+
+### Logs Management
+
+- Fully accessible only to `super-admin`
+- Views: `log-home.phtml`, `system.phtml`, `modification.phtml`
+
+**System Logs**
+- Centralized view of all backend-level logs
+- Accessible via route `log-sys`
+
+**Modification Logs**
+- Lists all create/update/delete/archive operations  
+- Includes user ID, action type, and timestamps
+
+**Architecture & Access**
+- Navigation handled in `PublicController`
 
 ---
 
@@ -213,8 +251,7 @@ The following functional blocks are planned and will follow the same secure, doc
 - Error feedback and PHPDoc coverage
 
 ### Audit & Logging
-- Create `system_log` and `modification_log` tables
-- Log key user actions (create/update/delete)
+- Complete log triggers across all critical methods
 - Allow administrators to review recent changes and system events
 
 ---
