@@ -9,6 +9,7 @@ $router = new Router();
 
 // === Partials Routes
 $router->addRoute('error404', \App\Controllers\PartialsController::class . '::notFound');
+$router->addRoute('error403', \App\Controllers\PartialsController::class . '::forbidden');
 $router->addRoute('construction', \App\Controllers\PartialsController::class . '::underConstruction');
 
 // === Log Routes

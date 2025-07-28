@@ -32,14 +32,19 @@ class PublicController extends AbstractController
         ]);
     }
 
+    /**
+     * Display the main log management page.
+     *
+     * Only accessible to users with the 'super-admin' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * @return void
+     */
     public function showLogHome(): void
     {
-        // if (
-        //     empty($_SESSION['user']) ||
-        //     ($_SESSION['user']['role'] ?? '') !== 'super-admin'
-        // ) {
-        //     $this->redirectToRoute('error/404');
-        // }
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }
 
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
@@ -53,18 +58,16 @@ class PublicController extends AbstractController
 
     /**
      * Display all system logs.
-     * Access restricted to users with role 'super-admin'.
+     * Only accessible to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
      *
      * @return void
      */
     public function showSystemLogs(): void
     {
-        // if (
-        //     empty($_SESSION['user']) ||
-        //     ($_SESSION['user']['role'] ?? '') !== 'super-admin'
-        // ) {
-        //     $this->redirectToRoute('error/404');
-        // }
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }
 
         $logModel = new LogModel();
         $logs = $logModel->getAllSystemLogs();
@@ -83,18 +86,16 @@ class PublicController extends AbstractController
 
     /**
      * Display all modification logs.
-     * Access restricted to users with role 'super-admin'.
+    * Only accessible to users with the 'super_admin' role.
+    * Redirects to a 403 error page if access is denied.
      *
      * @return void
      */
     public function showModificationLogs(): void
     {
-        // if (
-        //     empty($_SESSION['user']) ||
-        //     ($_SESSION['user']['role'] ?? '') !== 'super-admin'
-        // ) {
-        //     $this->redirectToRoute('error/404');
-        // }
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }        
 
         $logModel = new LogModel();
         $logs = $logModel->getAllModificationLogs();
@@ -114,12 +115,16 @@ class PublicController extends AbstractController
     /**
      * Displays the main user management dashboard.
      *
-     * Sets the breadcrumb navigation and passes a title to the view.
+     * Only accessible to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
      *
      * @return void
      */
     public function showUserHome(): void
     {
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }        
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
             ['label' => 'Gestion des utilisateurs', 'url' => null]
@@ -133,10 +138,19 @@ class PublicController extends AbstractController
     /**
      * Display the user creation form.
      *
+     * Only accessible to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * Retrieves available roles for the select input and any
+     * previously submitted form data stored in session.
+     *
      * @return void
      */
     public function showUserCreate(): void
     {
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }
         $roleModel = new RoleModel();
         $roles = $roleModel->findAll();
 
@@ -159,10 +173,19 @@ class PublicController extends AbstractController
     /**
      * Display the filtered user list based on status (active/inactive).
      *
+     * Only accessible to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * Retrieves users by status and passes filters and roles to the view.
+     *
      * @return void
-     */    
+     */
     public function showUserListByFilter(): void
     {
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }
+
         $status = strtolower($_GET['status'] ?? 'active');
         if (!in_array($status, ['active', 'inactive'])) {
             $status = 'active';
@@ -199,10 +222,20 @@ class PublicController extends AbstractController
     /**
      * Display the user edit form with current data or session fallback.
      *
+     * Only accessible to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * Retrieves the user by ID and populates the form with either session data
+     * (in case of previous error) or current user data from database.
+     *
      * @return void
-     */ 
+     */
     public function showUserEdit(): void
     {
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }
+
         $id = $_GET['id'] ?? null;
 
         if (!$id || !ctype_digit($id)) {
@@ -245,14 +278,22 @@ class PublicController extends AbstractController
         ]);
     }
 
-    // TODO: Implement detailed roles management
     /**
      * Display the user roles management page.
+     *
+     * Only accessible to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * This page is intended for managing roles and permissions (V2 feature).
      *
      * @return void
      */
     public function showUserRole(): void
     {
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }
+
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
             ['label' => 'Gestion des utilisateurs', 'url' => '?route=user-home'],
@@ -264,14 +305,22 @@ class PublicController extends AbstractController
         ]);
     }
 
-    // TODO: Implement detailed permission management
     /**
      * Display the user permissions management page.
      *
+     * Only accessible to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * This page is intended for detailed permission management (planned for V2).
+     *
      * @return void
-     */    
+     */
     public function showUserPermission(): void
     {
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }
+
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
             ['label' => 'Gestion des utilisateurs', 'url' => '?route=user-home'],
@@ -286,10 +335,17 @@ class PublicController extends AbstractController
     /**
      * Display the stock management home page.
      *
+     * Accessible to all users except those with the 'guest' role.
+     * Redirects to a 403 error page if access is denied.
+     *
      * @return void
      */
     public function showStockHome(): void
     {
+        if (Access::hasRole('guest')) {
+            $this->redirectToRoute('error403');
+        }
+
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
             ['label' => 'Gestion du stock', 'url' => null]
@@ -303,10 +359,17 @@ class PublicController extends AbstractController
     /**
      * Display the stock inventory list with optional filter.
      *
+     * Accessible to all users except those with the 'guest' role.
+     * Redirects to a 403 error page if access is denied.
+     *
      * @return void
      */
     public function showStockList(): void
     {
+        if (Access::hasRole('guest')) {
+            $this->redirectToRoute('error403');
+        }
+
         $stockModel = new StockModel();
 
         $filter = $_GET['stockFilter'] ?? 'all';
@@ -337,10 +400,17 @@ class PublicController extends AbstractController
     /**
      * Display the stock creation form and today's registered tires.
      *
+     * Accessible to all users except those with 'guest' or 'interne' roles.
+     * Redirects to a 403 error page if access is denied.
+     *
      * @return void
      */
     public function showStockCreate(): void
     {
+        if (Access::hasOneRole(['guest', 'interne'])) {
+            $this->redirectToRoute('error403');
+        }
+
         $stockModel = new StockModel();
         $todayTires = $stockModel->findTodayRegistered();
         $brands = $stockModel->getBrands();
@@ -361,10 +431,17 @@ class PublicController extends AbstractController
     /**
      * Display the stock search page with filters and results.
      *
+     * Accessible to all users except those with the 'guest' role.
+     * Redirects to a 403 error page if access is denied.
+     *
      * @return void
      */
     public function showStockSearch(): void
     {
+        if (Access::hasRole('guest')) {
+            $this->redirectToRoute('error403');
+        }
+
         try {
             $stockModel = new StockModel();
 
@@ -429,10 +506,17 @@ class PublicController extends AbstractController
     /**
      * Display the stock edit form for an existing tire.
      *
+     * Accessible to all users except those with 'guest' or 'interne' roles.
+     * Redirects to a 403 error page if access is denied.
+     *
      * @return void
      */
     public function showStockEdit(): void
     {
+        if (Access::hasOneRole(['guest', 'interne'])) {
+            $this->redirectToRoute('error403');
+        }
+
         try {
             $tireId = $_GET['id'] ?? null;
 

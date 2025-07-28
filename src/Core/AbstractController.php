@@ -86,24 +86,23 @@ abstract class AbstractController
     }
 
     /**
-     * Check if a user is authenticated.
+     * Redirect to the 403 Forbidden error page.
      *
-     * @return bool True if the user is authenticated.
+     * This method sends a 403 HTTP status code and displays the custom
+     * error403.phtml view, just like error404 does for 404 errors.
+     * Use this to deny access when the user does not have sufficient permissions.
+     *
+     * @return void
      */
-    protected function isAuthenticated(): bool
+    protected function redirectToError403(): void
     {
-        // TODO: Implement real authentication logic.
-        return false;
+        http_response_code(403);
+
+        $this->display('partials/error403.phtml', [
+            'title' => 'Accès refusé',
+        ]);
+
+        exit();
     }
 
-    /**
-     * Check if the current user is an admin.
-     *
-     * @return bool True if the user is authenticated and an admin.
-     */
-    protected function isAdmin(): bool
-    {
-        // TODO: Implement real admin check.
-        return false;
-    }
 }

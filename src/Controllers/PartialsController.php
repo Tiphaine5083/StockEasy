@@ -6,7 +6,7 @@ use App\Core\AbstractController;
 
 class PartialsController extends AbstractController
 {
-        /**
+    /**
      * Display the "error404" page.
      *
      * @return void
@@ -17,6 +17,19 @@ class PartialsController extends AbstractController
             'title' => 'Page non trouvée'
         ]);
     }
+
+    /**
+     * Display the "error403" page.
+     *
+     * @return void
+     */
+    public function forbidden(): void
+    {
+        $this->display('partials/error403.phtml', [
+            'title' => 'Accès refusé'
+        ]);
+    }
+
 
     /**
      * Display the "under contruction" page.

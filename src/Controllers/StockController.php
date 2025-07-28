@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\AbstractController;
 use App\Models\StockModel;
+use App\Core\Access;
 
 /**
  * StockController
@@ -14,13 +15,19 @@ class StockController extends AbstractController {
 
     /**
      * Output stock list rows as HTML table rows.
-     * 
-     * This is typically called via Ajax to dynamically render stock data.
+     *
+     * Only accessible to users except those with 'guest' or 'interne' roles.
+     * Typically called via Ajax to dynamically render stock data.
+     * Redirects to a 403 error page if access is denied.
      *
      * @return void
      */
-    public function stockListData() 
+    public function stockListData(): void
     {
+        if (Access::hasOneRole(['guest', 'interne'])) {
+            $this->redirectToRoute('error403');
+        }
+
         $filter = $_GET['stockFilter'] ?? 'all';
 
         if (isset($_GET['limit'])) {
@@ -51,6 +58,9 @@ class StockController extends AbstractController {
     /**
      * Update an existing tire stock.
      *
+     * Only accessible to users with roles other than 'guest' and 'interne'.
+     * Redirects to a 403 error page if access is denied.
+     *
      * Handles:
      * - Basic data validation (IDs, quantities, prices)
      * - Restriction for invoiced tires (brand/dimensions lock)
@@ -62,6 +72,10 @@ class StockController extends AbstractController {
      */
     public function stockUpdate(): void
     {
+        if (Access::hasOneRole(['guest', 'interne'])) {
+            $this->redirectToRoute('error403');
+        }
+
         try {
             $tireId = $_POST['product_id'] ?? null;
 
@@ -192,6 +206,9 @@ class StockController extends AbstractController {
     /**
      * Delete or archive a tire.
      *
+     * Accessible only to 'super_admin', 'admin', or 'secretary' roles.
+     * Redirects to a 403 error page if access is denied.
+     *
      * Handles:
      * - Direct deletion if the tire is not invoiced
      * - Forced archive if the tire is invoiced
@@ -202,6 +219,10 @@ class StockController extends AbstractController {
      */
     public function stockDelete(): void
     {
+        if (!Access::hasOneRole(['super_admin', 'admin', 'secretary'])) {
+            $this->redirectToRoute('error403');
+        }
+
         try {
             $tireId = $_POST['product_id'] ?? null;
             $action = $_POST['delete_action'] ?? null;
@@ -224,6 +245,10 @@ class StockController extends AbstractController {
             $isInvoiced = $stockModel->hasInvoiceLine($tireId);
             if ($isInvoiced) {
                 $action = 'archive'; 
+            }
+
+            if ($action === 'delete' && $_SESSION['user']['role'] === 'secretary') {
+                throw new \Exception('Suppression interdite pour ce rôle.');
             }
 
             $reason = $_POST['movement_reason'] ?? null;
@@ -281,6 +306,9 @@ class StockController extends AbstractController {
     /**
      * Create a new tire stock entry.
      *
+     * Accessible to all authenticated users except those with 'guest' or 'interne' roles.
+     * Redirects to a 403 error page if access is denied.
+     *
      * Validates all fields:
      * - Brand, dimensions, indices, DOT, season, quality, price
      * - Ensures valid numerical values
@@ -293,6 +321,10 @@ class StockController extends AbstractController {
      */
     public function stockCreate(): void
     {
+        if (Access::hasOneRole(['guest', 'interne'])) {
+            $this->redirectToRoute('error403');
+        }
+
         try {
             $brand = trim($_POST['brand'] ?? '');
             $brandOther = trim($_POST['brand_other'] ?? '');
@@ -426,6 +458,9 @@ class StockController extends AbstractController {
     /**
      * Output today's created tires as HTML table rows.
      *
+     * Accessible to all authenticated users except those with 'guest' or 'interne' roles.
+     * Redirects to a 403 error page if access is denied.
+     *
      * Typically called via Ajax to refresh the create page data table.
      * Escapes all values for safety.
      *
@@ -433,6 +468,10 @@ class StockController extends AbstractController {
      */
     public function stockCreateData(): void
     {
+        if (Access::hasOneRole(['guest', 'interne'])) {
+            $this->redirectToRoute('error403');
+        }
+        
         $stockModel = new StockModel();
         $tires = $stockModel->findTodayRegistered();
 
@@ -454,12 +493,19 @@ class StockController extends AbstractController {
     /**
      * Increment stock quantity for an existing tire.
      *
-     * Adds quantity and records the stock movement.
+     * Accessible to all authenticated users except those with 'guest' or 'interne' roles.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * Adds quantity and records the stock movement as an 'entrée' with reason 'achat'.
      *
      * @return void
      */
     public function stockIncrement(): void
     {
+        if (Access::hasOneRole(['guest', 'interne'])) {
+            $this->redirectToRoute('error403');
+        }
+    
         try {
             $tireId = $_POST['product_id'] ?? null;
             $addedQty = $_POST['added_quantity'] ?? null;
