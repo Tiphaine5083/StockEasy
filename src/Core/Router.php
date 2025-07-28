@@ -28,12 +28,15 @@ class Router
 
             $publicRoutes = ['login', 'login-post', 'error404', 'construction'];
             if (!in_array($route, $publicRoutes, true) && !Access::isLoggedIn()) {
-                $_SESSION['error'] = 'Veuillez vous connecter pour accéder à l’application.';
+                if (!isset($_SESSION['user'])) {
+                    $_SESSION['error'] = 'Veuillez vous connecter pour accéder à l’application.';
+                }
+                
                 header('Location: index.php?route=login');
                 exit;
             }
 
-            $explodedHandler = explode( '::', $routeHandler ); // ['Controller\PublicController', 'showHome']
+            $explodedHandler = explode( '::', $routeHandler ); 
 
             if (count($explodedHandler) === 2) {
                 [$controller, $method] = $explodedHandler;
