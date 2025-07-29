@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\AbstractController;
 use App\Models\UserModel;
 use App\Models\RoleModel;
+use App\Core\Access;
 
 /**
  * Controller responsible for user-related actions in the back office.
@@ -15,12 +16,23 @@ class UserController extends AbstractController
 {
 
     /**
-     * Handle the creation of a new user from the back office.
+     * Create a new user account from the back office.
+     *
+     * Accessible only to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * Validates and sanitizes form data, hashes the password,
+     * and inserts the user into the database.
+     * On success or failure, redirects with appropriate feedback.
      *
      * @return void
      */
     public function userCreate(): void
     {
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }
+
         try
         {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -100,10 +112,20 @@ class UserController extends AbstractController
     /**
      * Search and display users with optional filters and status.
      *
+     * Accessible only to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * Accepts GET parameters to filter users by name, email, and role.
+     * Displays active or inactive users based on status.
+     *
      * @return void
      */
     public function userSearch(): void
     {
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }
+        
         $status = $_GET['status'] ?? 'active'; // brut, pour redirection
         try {
             $validatedStatus = strtolower($status);
@@ -139,12 +161,22 @@ class UserController extends AbstractController
     }
 
     /**
-     * Toggle the active status of a user (via POST).
+     * Toggle the active/inactive status of a user.
+     *
+     * Accessible only to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * Accepts a user ID via POST and toggles their `active` field.
+     * Redirects back to the user list with a success or error message.
      *
      * @return void
      */
     public function toggleStatus(): void
     {
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }
+        
         $id = $_POST['id'] ?? null;
         $status = $_GET['status'] ?? 'active';
         $route = 'user-list';
@@ -168,12 +200,22 @@ class UserController extends AbstractController
     }
 
     /**
-     * Delete a user and their permissions if allowed.
+     * Delete a user and their associated permissions.
+     *
+     * Accessible only to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * Accepts a user ID via GET.
+     * Performs deletion and redirects with feedback.
      *
      * @return void
      */
     public function userDelete(): void
     {
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }
+        
         $id = $_GET['id'] ?? null;
         $status = $_GET['status'] ?? 'active';
 
@@ -195,12 +237,22 @@ class UserController extends AbstractController
     }
 
     /**
-     * Update an existing user with validated form data.
+     * Update an existing user's information.
+     *
+     * Accessible only to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * Validates submitted data and optionally updates the password.
+     * Redirects with success or error feedback.
      *
      * @return void
      */
     public function userUpdate(): void
     {
+        if (!Access::hasRole('super_admin')) {
+            $this->redirectToRoute('error403');
+        }
+        
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $_SESSION['error'] = 'Méthode non autorisée';
             $this->redirectToRoute('user-list');
