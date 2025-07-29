@@ -242,4 +242,40 @@ class UserModel extends AbstractModel
         }
     }
 
+    /**
+     * Update the user's password and set the password update timestamp.
+     *
+     * @param int $userId The ID of the user to update.
+     * @param string $newHashedPassword The new hashed password to store.
+     * @return bool True on success, false on failure.
+     * @method getPdo() 
+     */
+    public function updatePassword(int $userId, string $newHashedPassword): bool
+    {
+        $sql = 'UPDATE user 
+                SET password = :password, last_password_update = NOW() 
+                WHERE id = :id';
+        try {
+            $query = $this->getPdo()->prepare($sql);
+
+            return $query->execute([
+                ':password' => $newHashedPassword,
+                ':id' => $userId
+            ]);
+        } catch (\PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function updateLastLogin(int $id): bool
+    {
+        $sql='UPDATE user SET last_login = NOW() WHERE id = :id';
+        try {
+            $query = $this->getPdo()->prepare($sql);
+            return $query->execute([':id' => $id]);
+        } catch (\PDOException $e) {
+            return false;
+        }
+    }
+
 }

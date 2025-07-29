@@ -317,4 +317,69 @@ class UserController extends AbstractController
         }
     }
 
+    /**
+     * Process the password reset form for users with temporary passwords.
+     *
+     * @return void
+     */
+    public function passwordReset(): void
+    {
+        if (!isset($_SESSION['user'])) {
+            $this->redirectToRoute('login');
+            return;
+        }
+
+        try {
+            $userModel = new UserModel();
+            $user = $userModel->find((int)$_SESSION['user']['id']);
+
+            if (!$user) {
+                throw new \Exception('Utilisateur introuvable.');
+            }
+
+            $currentPassword = $_POST['current_password'] ?? '';
+            $newPassword = $_POST['new_password'] ?? '';
+            $confirmPassword = $_POST['confirm_password'] ?? '';
+
+            if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
+                throw new \Exception('Tous les champs sont obligatoires.');
+            }
+
+            if (!password_verify($currentPassword, $user['password'])) {
+                throw new \Exception('Mot de passe actuel incorrect.');
+            }
+
+            if ($newPassword !== $confirmPassword) {
+                throw new \Exception('Les mots de passe ne correspondent pas.');
+            }
+
+            if (
+                strlen($newPassword) < 12 ||
+                !preg_match('/[A-Z]/', $newPassword) ||
+                !preg_match('/[a-z]/', $newPassword) ||
+                !preg_match('/\d/', $newPassword) ||
+                !preg_match('/[\W_]/', $newPassword)
+            ) {
+                throw new \Exception("Le mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.");
+            }
+
+            $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+
+            $success = $userModel->updatePassword($user['id'], $hash);
+
+            if (!$success) {
+                throw new \Exception('Erreur lors de la mise à jour du mot de passe.');
+            }
+
+            session_destroy();
+            session_start();
+            $_SESSION['success'] = 'Mot de passe modifié avec succès. Veuillez vous reconnecter.';
+            $this->redirectToRoute('login');
+
+        } catch (\Exception $e) {
+            $_SESSION['error'] = $e->getMessage();
+            $this->redirectToRoute('password-reset');
+        }
+    }
+
 }

@@ -24,6 +24,7 @@ $router->addRoute('home', \App\Controllers\PublicController::class . '::showHome
 $router->addRoute('login', \App\Controllers\AuthController::class . '::showLogin');
 $router->addRoute('login-post', \App\Controllers\AuthController::class . '::login');
 $router->addRoute('logout', \App\Controllers\AuthController::class . '::logout');
+$router->addRoute('password-reset', \App\Controllers\AuthController::class . '::showPasswordReset');
 
 // === Stock Routes
 $router->addRoute('stock-home', \App\Controllers\PublicController::class . '::showStockHome');

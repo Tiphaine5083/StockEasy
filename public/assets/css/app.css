@@ -806,6 +806,27 @@ td.disabled {
   cursor: not-allowed;
 }
 
+.form__hint {
+  display: block;
+  margin-top: 0.3rem;
+}
+@media (min-width: 768px) {
+  .form__hint {
+    font-size: 1.1rem;
+  }
+}
+@media (min-width: 1024px) {
+  .form__hint {
+    font-size: 1.2rem;
+  }
+}
+.form__hint--valid {
+  color: green;
+}
+.form__hint--error {
+  color: red;
+}
+
 .stock-page__table-wrapper {
   overflow-y: auto;
   max-height: 80vh;
@@ -1170,19 +1191,6 @@ td.disabled {
 .user-create__form form .form__group .form__input,
 .user-create__form form .form__group .form__select {
   width: 100%;
-}
-.user-create__form form .form__group .form__hint {
-  margin-top: 0.3rem;
-}
-@media (min-width: 768px) {
-  .user-create__form form .form__group .form__hint {
-    font-size: 1.1rem;
-  }
-}
-@media (min-width: 1024px) {
-  .user-create__form form .form__group .form__hint {
-    font-size: 1.2rem;
-  }
 }
 @media (min-width: 768px) {
   .user-create__form form .form__group--full {

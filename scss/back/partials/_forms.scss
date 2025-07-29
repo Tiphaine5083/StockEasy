@@ -148,3 +148,18 @@ td.disabled {
     opacity: 0.4;
     cursor: not-allowed;
 }
+
+// hints
+.form__hint {
+    display: block;
+    margin-top: 0.3rem;
+    @include mixins.responsive-font(0.9rem, 1.1rem, 1.2rem);
+
+    &--valid {
+        color: green;
+    }
+
+    &--error {
+        color: red;
+    }
+}
