@@ -267,9 +267,17 @@ class UserModel extends AbstractModel
         }
     }
     
+    /**
+     * Update the last login date of a given user.
+     *
+     * This method sets the 'last_login_date' column to NOW() for the specified user ID.
+     *
+     * @param int $id The ID of the user to update.
+     * @return bool True if the update was successful, false otherwise.
+    */
     public function updateLastLogin(int $id): bool
     {
-        $sql='UPDATE user SET last_login = NOW() WHERE id = :id';
+        $sql='UPDATE user SET last_login_date = NOW() WHERE id = :id';
         try {
             $query = $this->getPdo()->prepare($sql);
             return $query->execute([':id' => $id]);
@@ -278,4 +286,36 @@ class UserModel extends AbstractModel
         }
     }
 
+    /**
+     * Update the user's password and login date in a single atomic transaction.
+     *
+     * This method ensures ACID compliance by updating both the password and the
+     * 'last_login_date' field within a database transaction. If either update fails,
+     * the transaction is rolled back.
+     *
+     * @param int $userId The ID of the user to update.
+     * @param string $newHashedPassword The new password, already hashed.
+     * @return bool True if both operations were successful and committed, false otherwise.
+     */
+    public function updatePasswordWithLoginDate(int $userId, string $newHashedPassword): bool
+    {
+        try {
+            $this->getPdo()->beginTransaction();
+
+            $passwordOk = $this->updatePassword($userId, $newHashedPassword);
+            $loginOk = $this->updateLastLogin($userId);
+
+            if (!$passwordOk || !$loginOk) {
+                $this->getPdo()->rollBack();
+                return false;
+            }
+
+            $this->getPdo()->commit();
+            return true;
+
+        } catch (\PDOException $e) {
+            $this->getPdo()->rollBack();
+            return false;
+        }
+    }
 }

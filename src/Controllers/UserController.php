@@ -318,12 +318,28 @@ class UserController extends AbstractController
     }
 
     /**
-     * Process the password reset form for users with temporary passwords.
+     * Handle the password reset form submission.
+     *
+     * This method verifies the current password, validates the new password
+     * according to security policy, checks the CSRF token, and updates the password
+     * in the database if all checks pass. On success, the user session is destroyed
+     * and a new one is started to display a success message on login.
+     *
+     * On failure, the user is redirected back to the reset form with an error message.
      *
      * @return void
      */
     public function passwordReset(): void
     {
+        if (Access::hasRole('guest')) {
+            $this->redirectToRoute('error403');
+        }
+                
+        $csrfToken = $_POST['csrf_token'] ?? '';
+        if (empty($csrfToken) || $csrfToken !== ($_SESSION['csrf_token'] ?? '')) {
+            throw new \Exception('Jeton CSRF invalide.');
+        }
+
         if (!isset($_SESSION['user'])) {
             $this->redirectToRoute('login');
             return;
@@ -334,7 +350,7 @@ class UserController extends AbstractController
             $user = $userModel->find((int)$_SESSION['user']['id']);
 
             if (!$user) {
-                throw new \Exception('Utilisateur introuvable.');
+                throw new \Exception('Utilisateur introuvable');
             }
 
             $currentPassword = $_POST['current_password'] ?? '';
@@ -342,15 +358,19 @@ class UserController extends AbstractController
             $confirmPassword = $_POST['confirm_password'] ?? '';
 
             if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
-                throw new \Exception('Tous les champs sont obligatoires.');
+                throw new \Exception('Tous les champs sont obligatoires');
             }
 
             if (!password_verify($currentPassword, $user['password'])) {
-                throw new \Exception('Mot de passe actuel incorrect.');
+                throw new \Exception('Mot de passe actuel incorrect');
+            }
+
+            if (password_verify($newPassword, $user['password'])) {
+                throw new \Exception('Le nouveau mot de passe ne peut pas être identique à l\'ancien.');
             }
 
             if ($newPassword !== $confirmPassword) {
-                throw new \Exception('Les mots de passe ne correspondent pas.');
+                throw new \Exception('Les mots de passe ne correspondent pas');
             }
 
             if (
@@ -360,17 +380,22 @@ class UserController extends AbstractController
                 !preg_match('/\d/', $newPassword) ||
                 !preg_match('/[\W_]/', $newPassword)
             ) {
-                throw new \Exception("Le mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.");
+                throw new \Exception("Le mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial");
             }
 
             $hash = password_hash($newPassword, PASSWORD_DEFAULT);
 
-            $success = $userModel->updatePassword($user['id'], $hash);
-
-            if (!$success) {
-                throw new \Exception('Erreur lors de la mise à jour du mot de passe.');
+            if (!$hash) {
+                throw new \Exception('Échec lors du hashage du mot de passe');
             }
 
+            $success = $userModel->updatePasswordWithLoginDate($user['id'], $hash);
+
+            if (!$success) {
+                throw new \Exception('Erreur transactionnelle : le mot de passe n\'a pas été mis à jour.');
+            }
+
+            unset($_SESSION['csrf_token']);
             session_destroy();
             session_start();
             $_SESSION['success'] = 'Mot de passe modifié avec succès. Veuillez vous reconnecter.';

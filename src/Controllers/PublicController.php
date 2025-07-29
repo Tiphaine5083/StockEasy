@@ -23,6 +23,11 @@ class PublicController extends AbstractController
      */
     public function showHome(): void
     {
+        if (!Access::isLoggedIn() || Access::hasRole('guest')) {
+            $this->redirectToRoute('login');
+            return;
+        }
+
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => null]
         ]);

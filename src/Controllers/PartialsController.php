@@ -25,9 +25,8 @@ class PartialsController extends AbstractController
      */
     public function forbidden(): void
     {
-        $this->display('partials/error403.phtml', [
-            'title' => 'Accès refusé'
-        ]);
+        $title = 'Erreur 403 - Accès interdit';
+        require_once __DIR__ . '/../Views/partials/error403.phtml';
     }
 
 
