@@ -16,7 +16,7 @@ class StockController extends AbstractController {
     /**
      * Output stock list rows as HTML table rows.
      *
-     * Only accessible to users except those with 'guest' or 'interne' roles.
+     * Only accessible to users except those with 'guest' or 'intern' roles.
      * Typically called via Ajax to dynamically render stock data.
      * Redirects to a 403 error page if access is denied.
      *
@@ -24,8 +24,8 @@ class StockController extends AbstractController {
      */
     public function stockListData(): void
     {
-        if (Access::hasOneRole(['guest', 'interne'])) {
-            $this->redirectToRoute('error403');
+        if (Access::hasOneRole(['guest', 'intern'])) {
+            $this->denyAccess("Refus d’accès à stockListData() : rôle guest ou stagiaire interdit");
         }
 
         $filter = $_GET['stockFilter'] ?? 'all';
@@ -58,7 +58,7 @@ class StockController extends AbstractController {
     /**
      * Update an existing tire stock.
      *
-     * Only accessible to users with roles other than 'guest' and 'interne'.
+     * Only accessible to users with roles other than 'guest' and 'intern'.
      * Redirects to a 403 error page if access is denied.
      *
      * Handles:
@@ -72,22 +72,22 @@ class StockController extends AbstractController {
      */
     public function stockUpdate(): void
     {
-        if (Access::hasOneRole(['guest', 'interne'])) {
-            $this->redirectToRoute('error403');
+        if (Access::hasOneRole(['guest', 'intern'])) {
+            $this->denyAccess("Refus d’accès à stockUpdate() : rôle guest ou stagiaire interdit");
         }
 
         try {
             $tireId = $_POST['product_id'] ?? null;
 
             if ($tireId === null || !ctype_digit($tireId) || $tireId <= 0) {
-                throw new \Exception('ID invalide : paramètre manquant ou incorrect.');
+                throw new \Exception('ID invalide : paramètre manquant ou incorrect');
             }
 
             $stockModel = new StockModel();
             $tire = $stockModel->find((int)$tireId);
 
             if (!$tire) {
-                throw new \Exception('Pneu introuvable.');
+                throw new \Exception('Pneu introuvable');
             }
 
             $isInvoiced = $stockModel->hasInvoiceLine($tireId);
@@ -137,10 +137,10 @@ class StockController extends AbstractController {
                 $reason = $_POST['movement_reason'] ?? null;
                 $reasonDetail = $_POST['reason_detail'] ?? null;
                 if (empty($reason)) {
-                    throw new \Exception('Le motif est obligatoire.');
+                    throw new \Exception('Le motif est obligatoire');
                 }
                 if ($reason === 'autre' && empty($reasonDetail)) {
-                    throw new \Exception('Merci de préciser le motif si vous choisissez Autre.');
+                    throw new \Exception('Merci de préciser le motif si vous choisissez Autre');
                 }
 
                 $success = $stockModel->updateFullStock(
@@ -157,7 +157,7 @@ class StockController extends AbstractController {
             }
 
             if (!$success) {
-                throw new \Exception('La mise à jour a échoué.');
+                throw new \Exception('La mise à jour a échoué');
             }
 
             $params = [
@@ -220,7 +220,7 @@ class StockController extends AbstractController {
     public function stockDelete(): void
     {
         if (!Access::hasOneRole(['super_admin', 'admin', 'secretary'])) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Refus d’accès à stockDelete() : rôle non autorisé");
         }
 
         try {
@@ -228,18 +228,18 @@ class StockController extends AbstractController {
             $action = $_POST['delete_action'] ?? null;
 
             if ($tireId === null || !ctype_digit($tireId) || $tireId <= 0) {
-                throw new \Exception('ID invalide.');
+                throw new \Exception('ID invalide');
             }
 
             if (!in_array($action, ['delete', 'archive'])) {
-                throw new \Exception('Action invalide.');
+                throw new \Exception('Action invalide');
             }
 
             $stockModel = new StockModel();
             $tire = $stockModel->find((int)$tireId);
 
             if (!$tire) {
-                throw new \Exception('Pneu introuvable.');
+                throw new \Exception('Pneu introuvable');
             }
 
             $isInvoiced = $stockModel->hasInvoiceLine($tireId);
@@ -248,7 +248,7 @@ class StockController extends AbstractController {
             }
 
             if ($action === 'delete' && $_SESSION['user']['role'] === 'secretary') {
-                throw new \Exception('Suppression interdite pour ce rôle.');
+                $this->denyAccess("Refus de suppression dans stockDelete() : rôle secretary interdit pour delete");
             }
 
             $reason = $_POST['movement_reason'] ?? null;
@@ -306,7 +306,7 @@ class StockController extends AbstractController {
     /**
      * Create a new tire stock entry.
      *
-     * Accessible to all authenticated users except those with 'guest' or 'interne' roles.
+     * Accessible to all authenticated users except those with 'guest' or 'intern' roles.
      * Redirects to a 403 error page if access is denied.
      *
      * Validates all fields:
@@ -321,8 +321,8 @@ class StockController extends AbstractController {
      */
     public function stockCreate(): void
     {
-        if (Access::hasOneRole(['guest', 'interne'])) {
-            $this->redirectToRoute('error403');
+        if (Access::hasOneRole(['guest', 'intern'])) {
+            $this->denyAccess("Refus d’accès à stockCreate() : rôle guest ou stagiaire interdit");
         }
 
         try {
@@ -458,7 +458,7 @@ class StockController extends AbstractController {
     /**
      * Output today's created tires as HTML table rows.
      *
-     * Accessible to all authenticated users except those with 'guest' or 'interne' roles.
+     * Accessible to all authenticated users except those with 'guest' or 'intern' roles.
      * Redirects to a 403 error page if access is denied.
      *
      * Typically called via Ajax to refresh the create page data table.
@@ -468,8 +468,8 @@ class StockController extends AbstractController {
      */
     public function stockCreateData(): void
     {
-        if (Access::hasOneRole(['guest', 'interne'])) {
-            $this->redirectToRoute('error403');
+        if (Access::hasOneRole(['guest', 'intern'])) {
+            $this->denyAccess("Refus d’accès à stockCreateData() : rôle guest ou stagiaire interdit");
         }
         
         $stockModel = new StockModel();
@@ -493,7 +493,7 @@ class StockController extends AbstractController {
     /**
      * Increment stock quantity for an existing tire.
      *
-     * Accessible to all authenticated users except those with 'guest' or 'interne' roles.
+     * Accessible to all authenticated users except those with 'guest' or 'intern' roles.
      * Redirects to a 403 error page if access is denied.
      *
      * Adds quantity and records the stock movement as an 'entrée' with reason 'achat'.
@@ -502,8 +502,8 @@ class StockController extends AbstractController {
      */
     public function stockIncrement(): void
     {
-        if (Access::hasOneRole(['guest', 'interne'])) {
-            $this->redirectToRoute('error403');
+        if (Access::hasOneRole(['guest', 'intern'])) {
+            $this->denyAccess("Refus d’accès à stockIncrement() : rôle guest ou stagiaire interdit");
         }
     
         try {

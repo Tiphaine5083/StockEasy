@@ -32,7 +32,7 @@ class AuthController extends AbstractController
                 return;
             }
 
-            $_SESSION['error'] = "Accès limité. Veuillez vous reconnecter avec un compte autorisé.";
+            $_SESSION['error'] = "Accès limité. Veuillez vous reconnecter avec un compte autorisé";
         }
 
         $title = 'Connexion';
@@ -54,7 +54,7 @@ class AuthController extends AbstractController
     public function showPasswordReset(): void
     {
         if (Access::hasRole('guest')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Tentative d'accès à la réinitialisation sans permission");
         }
 
         if (empty($_SESSION['csrf_token'])) {
@@ -100,13 +100,41 @@ class AuthController extends AbstractController
 
             if (!empty($email) && !empty($password)) {
                 $userModel = new UserModel();
+                $logModel = new LogModel();
                 $user = $userModel->findByEmail($email);
 
-                if ($user === null || !$user['active'] || !password_verify($password, $user['password'])) {
-                    $_SESSION['error'] = 'Identifiants invalides.';
-                    $this->redirectToRoute('login');
-                    return;
-                }
+            if ($user === null) {
+                $logModel->logSystem('login', "Échec de connexion : email inconnu ($email)");
+                $_SESSION['error'] = 'Identifiants invalides';
+                $this->redirectToRoute('login');
+                return;
+            }
+
+            if (!$user['active']) {
+                $logModel->logSystem(
+                    'login',
+                    "Échec de connexion : compte inactif ($email)",
+                    $user['id'],
+                    $user['first_name'],
+                    $user['last_name'] ?? null,
+                );
+                $_SESSION['error'] = 'Identifiants invalides';
+                $this->redirectToRoute('login');
+                return;
+            }
+
+            if (!password_verify($password, $user['password'])) {
+                $logModel->logSystem(
+                    'login',
+                    "Échec de connexion : mot de passe incorrect ($email)",
+                    $user['id'],
+                    $user['first_name'],
+                    $user['last_name'] ?? null,
+                );
+                $_SESSION['error'] = 'Identifiants invalides';
+                $this->redirectToRoute('login');
+                return;
+            }
 
                 if (empty($user['last_password_update'])) {
                     $userModel->updateLastLogin((int)$user['id']);
@@ -125,29 +153,29 @@ class AuthController extends AbstractController
                 $_SESSION['user'] = [
                     'id'          => $user['id'],
                     'first_name'  => $user['first_name'],
+                    'last_name'  => $user['last_name'],
                     'email'       => $user['email'],
                     'role'        => $user['role_name'],
                 ];
 
-                $logModel = new LogModel();
                 $logModel->logSystem(
                     'login',
                     'Connexion réussie',
                     $user['id'],
                     $user['first_name'],
-                    $user['last_name'] ?? null
+                    $user['last_name'] ?? null,
                 );
 
                 $this->redirectToRoute('home');
                 return;
             }
 
-            $_SESSION['error'] = 'Veuillez remplir tous les champs.';
+            $_SESSION['error'] = 'Veuillez remplir tous les champs';
             $this->redirectToRoute('login');
             return;
         }
 
-        $_SESSION['error'] = 'Paramètres manquants.';
+        $_SESSION['error'] = 'Paramètres manquants';
         $this->redirectToRoute('login');
     }
 
@@ -162,20 +190,25 @@ class AuthController extends AbstractController
      */
     public function logout(): void
     {
-        $logModel = new LogModel();
-        $logModel->logSystem(
-            'logout',
-            'Déconnexion réussie',
-            $_SESSION['user']['id'] ?? null,
-            $_SESSION['user']['first_name'] ?? null,
-            $_SESSION['user']['last_name'] ?? null
-        );
-        
+        if (isset($_SESSION['user'])) {
+            $userId    = $_SESSION['user']['id'] ?? null;
+            $firstName = $_SESSION['user']['first_name'] ?? null;
+            $lastName  = $_SESSION['user']['last_name'] ?? null;
+
+            $logModel = new LogModel();
+            $logModel->logSystem(
+                'logout',
+                'Déconnexion réussie',
+                $userId,
+                $firstName,
+                $lastName
+            );
+        }
+
         $_SESSION = [];
         session_destroy();
         session_start(); 
-        $_SESSION['success'] = 'Déconnexion réussie.';
-        header('Location: index.php?route=login');
-        exit();
+        $_SESSION['success'] = 'Déconnexion réussie';
+        $this->redirectToRoute('login');
     }
 }

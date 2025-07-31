@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use App\Models\LogModel;
+
 /**
  * AbstractController
  *
@@ -103,6 +105,27 @@ abstract class AbstractController
         ]);
 
         exit();
+    }
+
+    /**
+     * Log an access denial and redirect to the 403 Forbidden page.
+     *
+     * @param string $reason Contextual explanation of the access denial.
+     * @return void
+     */
+    protected function denyAccess(string $reason): void
+    {
+        $logModel = new LogModel();
+
+        $logModel->logSystem(
+            '403',
+            $reason,
+            $_SESSION['user']['id'] ?? null,
+            $_SESSION['user']['first_name'] ?? null,
+            $_SESSION['user']['last_name'] ?? null
+        );
+
+        $this->redirectToError403();
     }
 
 }

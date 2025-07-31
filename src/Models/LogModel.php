@@ -43,15 +43,19 @@ class LogModel extends AbstractModel
                     NOW(), :ip, :message
                 )";
 
-        $query = $this->getPdo()->prepare($sql);
-        $query->execute([
-            'context'   => $context,
-            'id_user'   => $userId,
-            'firstname' => $firstname,
-            'lastname'  => $lastname,
-            'ip'        => $_SERVER['REMOTE_ADDR'] ?? null,
-            'message'   => $message
-        ]);
+        try {
+            $query = $this->getPdo()->prepare($sql);
+            $query->execute([
+                'context'   => $context,
+                'id_user'   => $userId,
+                'firstname' => $firstname,
+                'lastname'  => $lastname,
+                'ip'        => $_SERVER['REMOTE_ADDR'] ?? null,
+                'message'   => $message
+            ]);
+        } catch (\PDOException $e) {
+            error_log('Erreur logSystem : ' . $e->getMessage());
+        }
     }
 
     /**

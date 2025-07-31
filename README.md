@@ -198,21 +198,33 @@ It includes:
 
 ---
 
-### Logs Management
+### Audit & Logging
 
-- Fully accessible only to `super-admin`
-- Views: `log-home.phtml`, `system.phtml`, `modification.phtml`
+StockEasy implements a centralized and extensible logging system, ensuring full traceability of both system events and data modifications.
 
 **System Logs**
-- Centralized view of all backend-level logs
-- Accessible via route `log-sys`
+- Recorded via `logSystem()` in the `LogModel` class
+- Covers login attempts, access denials (403), logout events, and transactional errors
+- Each log entry includes: type, description, user ID (if available), and timestamp
+- Viewable by `super_admin` only via `log/system.phtml`
 
 **Modification Logs**
-- Lists all create/update/delete/archive operations  
-- Includes user ID, action type, and timestamps
+- Recorded via `logModification()` in the `LogModel` class
+- Covers all create, update, delete, archive actions on key entities (e.g., `user`, `stock`)
+- Stores old vs. new data to ensure rollback and auditability
+- Logs include user ID, target entity, action type, and change payload
+- Displayed in `log/modification.phtml` with breadcrumb navigation
 
-**Architecture & Access**
-- Navigation handled in `PublicController`
+**Access Control Logs**
+- Denied access attempts are logged through the `denyAccess()` method (via `AbstractController`)
+- HTTP 403 status is set and the reason is recorded in the system log
+- User is redirected to a custom error403 view (`partials/error403.phtml`)
+
+**Technical Integration**
+- All logging methods rely on PDO and are wrapped in `try/catch` blocks
+- Logs are stored in a dedicated `log` database table
+- Views are isolated by type and follow the MVC architecture
+- Logging logic is separated from business logic to improve testability and readability
 
 ---
 
@@ -249,10 +261,6 @@ The following functional blocks are planned and will follow the same secure, doc
 - Secure login with role system
 - Session persistence and protection
 - Error feedback and PHPDoc coverage
-
-### Audit & Logging
-- Complete log triggers across all critical methods
-- Allow administrators to review recent changes and system events
 
 ---
 

@@ -48,7 +48,7 @@ class PublicController extends AbstractController
     public function showLogHome(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Tentative d’accès à la gestion des logs sans permission");
         }
 
         $this->setBreadcrumb([
@@ -71,7 +71,7 @@ class PublicController extends AbstractController
     public function showSystemLogs(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Tentative d'accès non autorisée à la consultation des logs système");
         }
 
         $logModel = new LogModel();
@@ -99,7 +99,7 @@ class PublicController extends AbstractController
     public function showModificationLogs(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Tentative d'accès non autorisée à la consultation des logs de modification");
         }        
 
         $logModel = new LogModel();
@@ -128,7 +128,7 @@ class PublicController extends AbstractController
     public function showUserHome(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Tentative d'accès non autorisée à la gestion des utilisateurs");
         }        
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
@@ -154,7 +154,7 @@ class PublicController extends AbstractController
     public function showUserCreate(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Tentative d'accès non autorisée au formulaire de création d'utilisateur");
         }
         $roleModel = new RoleModel();
         $roles = $roleModel->findAll();
@@ -188,7 +188,7 @@ class PublicController extends AbstractController
     public function showUserListByFilter(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Tentative d'accès non autorisée à la liste des utilisateurs filtrée par statut");
         }
 
         $status = strtolower($_GET['status'] ?? 'active');
@@ -238,7 +238,7 @@ class PublicController extends AbstractController
     public function showUserEdit(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Tentative d'accès non autorisée au formulaire de modification utilisateur");
         }
 
         $id = $_GET['id'] ?? null;
@@ -296,7 +296,7 @@ class PublicController extends AbstractController
     public function showUserRole(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Tentative d'accès non autorisée à la gestion des rôles");
         }
 
         $this->setBreadcrumb([
@@ -323,7 +323,7 @@ class PublicController extends AbstractController
     public function showUserPermission(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Tentative d'accès non autorisée à la gestion des permissions par utilisateur");
         }
 
         $this->setBreadcrumb([
@@ -348,7 +348,7 @@ class PublicController extends AbstractController
     public function showStockHome(): void
     {
         if (Access::hasRole('guest')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Un invité a tenté d'accéder à la page d'accueil de gestion du stock");
         }
 
         $this->setBreadcrumb([
@@ -372,7 +372,7 @@ class PublicController extends AbstractController
     public function showStockList(): void
     {
         if (Access::hasRole('guest')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Un invité a tenté d'accéder à la liste d'inventaire du stock");
         }
 
         $stockModel = new StockModel();
@@ -405,15 +405,15 @@ class PublicController extends AbstractController
     /**
      * Display the stock creation form and today's registered tires.
      *
-     * Accessible to all users except those with 'guest' or 'interne' roles.
+     * Accessible to all users except those with 'guest' or 'intern' roles.
      * Redirects to a 403 error page if access is denied.
      *
      * @return void
      */
     public function showStockCreate(): void
     {
-        if (Access::hasOneRole(['guest', 'interne'])) {
-            $this->redirectToRoute('error403');
+        if (Access::hasOneRole(['guest', 'intern'])) {
+            $this->denyAccess("Accès refusé à la création de stock pour un rôle non autorisé");
         }
 
         $stockModel = new StockModel();
@@ -444,7 +444,7 @@ class PublicController extends AbstractController
     public function showStockSearch(): void
     {
         if (Access::hasRole('guest')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Accès refusé à la recherche de stock pour le rôle guest");
         }
 
         try {
@@ -511,15 +511,15 @@ class PublicController extends AbstractController
     /**
      * Display the stock edit form for an existing tire.
      *
-     * Accessible to all users except those with 'guest' or 'interne' roles.
+     * Accessible to all users except those with 'guest' or 'intern' roles.
      * Redirects to a 403 error page if access is denied.
      *
      * @return void
      */
     public function showStockEdit(): void
     {
-        if (Access::hasOneRole(['guest', 'interne'])) {
-            $this->redirectToRoute('error403');
+        if (Access::hasOneRole(['guest', 'intern'])) {
+            $this->denyAccess("Accès interdit à la modification de stock pour les rôles guest ou stagiaire");
         }
 
         try {

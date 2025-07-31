@@ -129,6 +129,21 @@ abstract class AbstractModel
     }
 
     /**
+     * Get the ID of the last inserted row.
+     *
+     * @return int|null Last inserted ID, or null on failure.
+     */
+    public function getLastInsertId(): ?int
+    {
+        try {
+            return (int) $this->getPdo()->lastInsertId();
+        } catch (\PDOException $e) {
+            return null;
+        }
+    }
+
+
+    /**
      * Insert a new row into the table.
      *
      * @param array $data Key-value pairs for column names and values.

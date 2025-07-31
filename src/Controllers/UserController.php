@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\AbstractController;
 use App\Models\UserModel;
 use App\Models\RoleModel;
+use App\Models\LogModel;
 use App\Core\Access;
 
 /**
@@ -30,7 +31,7 @@ class UserController extends AbstractController
     public function userCreate(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Refus d’accès à userCreate() : rôle super_admin requis");
         }
 
         try
@@ -97,6 +98,27 @@ class UserController extends AbstractController
             ];
             
             if ($userModel->insert($data)) {
+                $newUserId = $userModel->getLastInsertId();
+
+                if ($newUserId === null) {
+                    throw new \Exception("Utilisateur créé mais ID introuvable pour le log");
+                }
+
+                $logData = $data;
+                unset($logData['password']);
+
+                $logModel = new LogModel();
+                $logModel->logModification(
+                    'user',
+                    $newUserId,
+                    'create',
+                    $_SESSION['user']['id'],
+                    $_SESSION['user']['first_name'],
+                    $_SESSION['user']['last_name'] ?? null,
+                    [],
+                    $logData
+                );
+
                 $_SESSION['success'] = 'Nouvel utilisateur créé avec succès';
                 $this->redirectToRoute('user-list', ['status' => 'active']);
             } else {
@@ -123,7 +145,7 @@ class UserController extends AbstractController
     public function userSearch(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Refus d’accès à userSearch() : rôle super_admin requis");
         }
         
         $status = $_GET['status'] ?? 'active'; // brut, pour redirection
@@ -174,7 +196,7 @@ class UserController extends AbstractController
     public function toggleStatus(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Refus d’accès à toggleStatus() : rôle super_admin requis");
         }
         
         $id = $_POST['id'] ?? null;
@@ -188,52 +210,38 @@ class UserController extends AbstractController
         }
 
         $userModel = new UserModel();
+        $logModel = new LogModel();
+
+        $beforeUser = $userModel->find((int)$id);
+
+        if (!$beforeUser) {
+            $_SESSION['error'] = "Utilisateur introuvable";
+            $this->redirectToRoute($route, ['status' => $status]);
+            exit;
+        }
+
         $success = $userModel->toggleActiveStatus((int)$id);
 
         if ($success) {
+            $afterUser = $userModel->find((int)$id);
+
+            $logModel->logModification(
+                'user',
+                (int) $id,
+                'update',
+                $_SESSION['user']['id'],
+                $_SESSION['user']['first_name'],
+                $_SESSION['user']['last_name'] ?? null,
+                ['active' => $beforeUser['active']],
+                ['active' => $afterUser['active']]
+            );
+
             $_SESSION['success'] = "Statut utilisateur modifié avec succès";
         } else {
             $_SESSION['error'] = "Impossible de changer le statut de l’utilisateur";
         }
 
         $this->redirectToRoute($route, ['status' => $status]);
-    }
-
-    /**
-     * Delete a user and their associated permissions.
-     *
-     * Accessible only to users with the 'super_admin' role.
-     * Redirects to a 403 error page if access is denied.
-     *
-     * Accepts a user ID via GET.
-     * Performs deletion and redirects with feedback.
-     *
-     * @return void
-     */
-    public function userDelete(): void
-    {
-        if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
-        }
-        
-        $id = $_GET['id'] ?? null;
-        $status = $_GET['status'] ?? 'active';
-
-        if (!$id || !ctype_digit($id)) {
-            $_SESSION['error'] = "ID utilisateur invalide";
-            $this->redirectToRoute('user-list', ['status' => $status]);
-            exit;
-        }
-
-        $userModel = new UserModel();
-        
-        if ($userModel->deleteUserWithPermissions((int)$id)) {
-            $_SESSION['success'] = "Utilisateur supprimé avec succès";
-        } else {
-            $_SESSION['error'] = "Suppression impossible : cet utilisateur ne peut pas être supprimé, ou une erreur est survenue";
-        }
-
-        $this->redirectToRoute('user-list', ['status' => $status]);
     }
 
     /**
@@ -250,7 +258,7 @@ class UserController extends AbstractController
     public function userUpdate(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Refus d’accès à userUpdate() : rôle super_admin requis");
         }
         
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -297,7 +305,7 @@ class UserController extends AbstractController
                 || !preg_match('/\d/', $data['password'])
                 || !preg_match('/[\W_]/', $data['password'])
             ) {
-                $_SESSION['error'] = 'Le mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.';
+                $_SESSION['error'] = 'Le mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial';
                 $_SESSION['form_data_user_update'] = $_POST;
                 $this->redirectToRoute('user-edit', ['id' => $id, 'status' => $status]);
                 exit;
@@ -305,17 +313,106 @@ class UserController extends AbstractController
         }
 
         $userModel = new UserModel();
+        $beforeUser = $userModel->find((int)$id);
         $success = $userModel->updateUserInformations($data);
 
         if ($success) {
-            $_SESSION['success'] = 'Utilisateur mis à jour avec succès.';
+            $afterUser = $userModel->find((int)$id);
+
+            $logModel = new LogModel();
+            $logModel->logModification(
+                'user',
+                (int) $id,
+                'update',
+                $_SESSION['user']['id'],
+                $_SESSION['user']['first_name'],
+                $_SESSION['user']['last_name'] ?? null,
+                [
+                    'first_name' => $beforeUser['first_name'],
+                    'last_name'  => $beforeUser['last_name'],
+                    'email'      => $beforeUser['email'],
+                    'id_role'    => $beforeUser['id_role'],
+                    'active'     => $beforeUser['active'],
+                ],
+                [
+                    'first_name' => $afterUser['first_name'],
+                    'last_name'  => $afterUser['last_name'],
+                    'email'      => $afterUser['email'],
+                    'id_role'    => $afterUser['id_role'],
+                    'active'     => $afterUser['active'],
+                ]
+            );
+            $_SESSION['success'] = 'Utilisateur mis à jour avec succès';
             $this->redirectToRoute('user-list', ['status' => $status]);
         } else {
-            $_SESSION['error'] = 'Erreur lors de la mise à jour.';
+            $_SESSION['error'] = 'Erreur lors de la mise à jour';
             $_SESSION['form_data_user_update'] = $_POST;
             $this->redirectToRoute('user-edit', ['id' => $id, 'status' => $status]);
         }
     }
+
+    /**
+     * Delete a user and their associated permissions.
+     *
+     * Accessible only to users with the 'super_admin' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * Accepts a user ID via GET.
+     * Performs deletion and redirects with feedback.
+     *
+     * @return void
+     */
+    public function userDelete(): void
+    {
+        if (!Access::hasRole('super_admin')) {
+            $this->denyAccess("Refus d’accès à userDelete() : rôle super_admin requis");
+        }
+        
+        $id = $_GET['id'] ?? null;
+        $status = $_GET['status'] ?? 'active';
+
+        if (!$id || !ctype_digit($id)) {
+            $_SESSION['error'] = "ID utilisateur invalide";
+            $this->redirectToRoute('user-list', ['status' => $status]);
+            exit;
+        }
+
+        $userModel = new UserModel();
+        $beforeUser = $userModel->find((int)$id);
+
+        if (!$beforeUser) {
+            $_SESSION['error'] = "Utilisateur introuvable";
+            $this->redirectToRoute('user-list', ['status' => $status]);
+            exit;
+        }
+        
+        if ($userModel->deleteUserWithPermissions((int)$id)) {
+            $logModel = new LogModel();
+            $logModel->logModification(
+                'user',
+                (int) $id,
+                'delete',
+                $_SESSION['user']['id'],
+                $_SESSION['user']['first_name'],
+                $_SESSION['user']['last_name'] ?? null,
+                [
+                    'first_name' => $beforeUser['first_name'],
+                    'last_name'  => $beforeUser['last_name'],
+                    'email'      => $beforeUser['email'],
+                    'id_role'    => $beforeUser['id_role'],
+                    'active'     => $beforeUser['active'],
+                ],
+                []
+            );
+
+            $_SESSION['success'] = "Utilisateur supprimé avec succès";
+        } else {
+            $_SESSION['error'] = "Suppression impossible : cet utilisateur ne peut pas être supprimé, ou une erreur est survenue";
+        }
+
+        $this->redirectToRoute('user-list', ['status' => $status]);
+    }
+
 
     /**
      * Handle the password reset form submission.
@@ -332,7 +429,7 @@ class UserController extends AbstractController
     public function passwordReset(): void
     {
         if (Access::hasRole('guest')) {
-            $this->redirectToRoute('error403');
+            $this->denyAccess("Refus d’accès à passwordReset() : rôle guest interdit");
         }
                 
         $csrfToken = $_POST['csrf_token'] ?? '';
@@ -366,7 +463,7 @@ class UserController extends AbstractController
             }
 
             if (password_verify($newPassword, $user['password'])) {
-                throw new \Exception('Le nouveau mot de passe ne peut pas être identique à l\'ancien.');
+                throw new \Exception('Le nouveau mot de passe ne peut pas être identique à l\'ancien');
             }
 
             if ($newPassword !== $confirmPassword) {
@@ -392,13 +489,25 @@ class UserController extends AbstractController
             $success = $userModel->updatePasswordWithLoginDate($user['id'], $hash);
 
             if (!$success) {
-                throw new \Exception('Erreur transactionnelle : le mot de passe n\'a pas été mis à jour.');
+                throw new \Exception('Erreur transactionnelle : le mot de passe n\'a pas été mis à jour');
             }
+
+            $logModel = new LogModel();
+            $logModel->logModification(
+                'user',
+                (int) $user['id'],
+                'update',
+                $_SESSION['user']['id'],
+                $_SESSION['user']['first_name'],
+                $_SESSION['user']['last_name'] ?? null,
+                ['password' => 'changed'],
+                ['password' => 'changed']
+            );
 
             unset($_SESSION['csrf_token']);
             session_destroy();
             session_start();
-            $_SESSION['success'] = 'Mot de passe modifié avec succès. Veuillez vous reconnecter.';
+            $_SESSION['success'] = 'Mot de passe modifié avec succès. Veuillez vous reconnecter';
             $this->redirectToRoute('login');
 
         } catch (\Exception $e) {
