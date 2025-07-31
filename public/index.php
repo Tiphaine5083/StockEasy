@@ -16,6 +16,8 @@ $router->addRoute('construction', \App\Controllers\PartialsController::class . '
 $router->addRoute('log-home', \App\Controllers\PublicController::class . '::showLogHome');
 $router->addRoute('log-sys', \App\Controllers\PublicController::class . '::showSystemLogs');
 $router->addRoute('log-modif', \App\Controllers\PublicController::class . '::showModificationLogs');
+$router->addRoute('log-system-post', \App\Controllers\LogController::class . '::filterSystemLogs');
+$router->addRoute('log-modification-post', \App\Controllers\LogController::class . '::filterModificationLogs');
 
 // === Generic Route
 $router->addRoute('home', \App\Controllers\PublicController::class . '::showHome');

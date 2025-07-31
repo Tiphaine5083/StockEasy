@@ -653,6 +653,20 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 0.5rem;
 }
 
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+
+.log-diff {
+  background-color: #FEE970;
+  font-weight: bold;
+  padding: 0 0.2rem;
+  border-radius: 0.3rem;
+}
+
 .form__grid {
   display: flex;
   flex-direction: column;

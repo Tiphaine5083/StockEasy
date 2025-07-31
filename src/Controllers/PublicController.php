@@ -62,7 +62,7 @@ class PublicController extends AbstractController
     }
 
     /**
-     * Display all system logs.
+     * Display all system logs with optional filters.
      * Only accessible to users with the 'super_admin' role.
      * Redirects to a 403 error page if access is denied.
      *
@@ -74,18 +74,28 @@ class PublicController extends AbstractController
             $this->denyAccess("Tentative d'accès non autorisée à la consultation des logs système");
         }
 
+        $filters = [
+            'context'    => $_GET['type'] ?? '',
+            'user'       => $_GET['user'] ?? '',
+            'date_start' => $_GET['date_start'] ?? '',
+            'date_end'   => $_GET['date_end'] ?? '',
+        ];
+
         $logModel = new LogModel();
-        $logs = $logModel->getAllSystemLogs();
+        $usersWithLogs = $logModel->getUsersByLogType('system');
+        $contexts = $logModel->getContextsByType('system');
 
         $this->setBreadcrumb([
-            ['label' => 'Accueil', 'url' => '?route=home'],            
+            ['label' => 'Accueil', 'url' => '?route=home'],
             ['label' => 'Gestion des logs', 'url' => '?route=log-home'],
             ['label' => 'System Logs', 'url' => null]
         ]);
 
-        $this->display('log/system.phtml', [
-            'title' => 'System Logs',
-            'logs'  => $logs
+        $this->display('log/log-system.phtml', [
+            'title'         => 'System Logs',
+            'logs'          => [],
+            'usersWithLogs' => $usersWithLogs,
+            'contexts'      => $contexts,
         ]);
     }
 
@@ -103,7 +113,8 @@ class PublicController extends AbstractController
         }        
 
         $logModel = new LogModel();
-        $logs = $logModel->getAllModificationLogs();
+        $usersWithLogs = $logModel->getUsersByLogType('modification');
+        $contexts = $logModel->getContextsByType('modification');
 
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
@@ -111,9 +122,11 @@ class PublicController extends AbstractController
             ['label' => 'Modification Logs', 'url' => null]
         ]);
 
-        $this->display('log/modification.phtml', [
-            'title' => 'Modification Logs',
-            'logs'  => $logs
+        $this->display('log/log-modification.phtml', [
+            'title'         => 'Modification Logs',
+            'logs'          => [],
+            'usersWithLogs' => $usersWithLogs,
+            'contexts'      =>$contexts,
         ]);
     }
 

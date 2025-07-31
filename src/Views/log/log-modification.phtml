@@ -1,0 +1,133 @@
+<?php
+$typeFilter = $_POST['type'] ?? '';
+$userFilter = $_POST['user'] ?? '';
+$dateStart  = $_POST['date_start'] ?? '';
+$dateEnd    = $_POST['date_end'] ?? '';
+?>
+
+<!-- Helper for visual JSON diff display (highlight modified values) -->
+<?php
+function highlightDifferences(string $beforeJson, string $afterJson): array
+{
+    $beforeArray = json_decode($beforeJson, true);
+    $afterArray = json_decode($afterJson, true);
+
+    $beforeFormatted = [];
+    $afterFormatted = [];
+
+    foreach ($afterArray as $key => $afterValue) {
+        $beforeValue = $beforeArray[$key] ?? null;
+
+        $beforeFormatted[$key] = $beforeValue;
+        $afterFormatted[$key] = $afterValue;
+
+        if ($afterValue !== $beforeValue) {
+            $beforeFormatted[$key] = "<span class='log-diff'>" . htmlspecialchars($beforeValue) . "</span>";
+            $afterFormatted[$key] = "<span class='log-diff'>" . htmlspecialchars($afterValue) . "</span>";
+        }
+    }
+
+    return [
+        'before' => $beforeFormatted,
+        'after' => $afterFormatted
+    ];
+}
+?>
+
+<div class="page log-modification">
+    <h1 class="log-modification__title">Logs de modification</h1>
+
+    <div class="log-modification__form">
+        <form method="POST" action="index.php" class="form">
+            <input type="hidden" name="route" value="log-modification-post">
+
+            <div class="form__group">
+                <label for="type" class="form__label">Type d'action</label>
+                <select id="type" name="type" class="form__select">
+                    <option value="">-- Tous --</option>
+                    <?php foreach ($contexts as $context) { ?>
+                        <option value="<?= $context ?>" <?= $context === $typeFilter ? 'selected' : '' ?>>
+                            <?= ucfirst($context) ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </div>
+
+            <div class="form__group">
+                <label for="user" class="form__label">Utilisateur</label>
+                <select id="user" name="user" class="form__select">
+                    <option value="">-- Tous --</option>
+                    <?php foreach ($usersWithLogs as $user) {
+                        $fullName = $user['user_firstname'] . ' ' . $user['user_lastname'];
+                    ?>
+                        <option value="<?= htmlspecialchars($fullName) ?>" <?= $userFilter === $fullName ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($fullName) ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </div>
+
+            <div class="form__group">
+                <label for="date_start" class="form__label">Date début</label>
+                <input type="date" id="date_start" name="date_start" class="form__input" value="<?= htmlspecialchars($dateStart) ?>">
+            </div>
+
+            <div class="form__group">
+                <label for="date_end" class="form__label">Date fin</label>
+                <input type="date" id="date_end" name="date_end" class="form__input" value="<?= htmlspecialchars($dateEnd) ?>">
+            </div>
+
+            <div class="form__group form__group--buttons">
+                <button type="submit" class="btn btn--dark">Filtrer</button>
+                <a href="index.php?route=log-modif" class="btn btn--dark">Effacer</a>
+            </div>
+        </form>
+    </div>
+
+    <section class="log-modification__table-wrapper">
+        <h2 class="sr-only">Résultats des logs</h2>
+        <table class="table">
+            <thead class="table__thead">
+                <tr class="table__tr">
+                    <th>Type</th>
+                    <th>Table</th>
+                    <th>ID</th>
+                    <th>Utilisateur</th>
+                    <th>Avant</th>
+                    <th>Après</th>
+                    <th>Date</th>
+                    <th>IP</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($logs)) { ?>
+                    <?php foreach ($logs as $log) { ?>
+                        <tr class="table__tr">
+                            <td class="table__td" data-label="Type"><?= htmlspecialchars($log['context']) ?></td>
+                            <td class="table__td" data-label="Table"><?= htmlspecialchars($log['table_target']) ?></td>
+                            <td class="table__td" data-label="ID"><?= htmlspecialchars($log['record_id']) ?></td>
+                            <td class="table__td" data-label="Utilisateur">
+                                <?= htmlspecialchars($log['user_firstname'] . ' ' . $log['user_lastname']) ?>
+                            </td>
+                            <?php
+                            $diff = highlightDifferences($log['content_before'], $log['content_after']);
+                            ?>
+                            <td class="table__td" data-label="Avant">
+                                <pre><?= json_encode($diff['before'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></pre>
+                            </td>
+                            <td class="table__td" data-label="Après">
+                                <pre><?= json_encode($diff['after'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></pre>
+                            </td>
+                            <td class="table__td" data-label="Date"><?= htmlspecialchars($log['log_date']) ?></td>
+                            <td class="table__td" data-label="IP"><?= htmlspecialchars($log['ip_address']) ?></td>
+                        </tr>
+                    <?php } ?>
+                <?php } else { ?>
+                    <tr class="table__tr">
+                        <td class="table__td" colspan="8">Aucun résultat pour ces filtres</td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </section>
+</div>

@@ -242,3 +242,18 @@
         margin-top: 0.5rem;
     }
 }
+
+// === LOGS and differences 
+pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    max-width: 100%;
+}
+
+.log-diff {
+    background-color: variables.$light-yellow;
+    font-weight: bold;
+    padding: 0 0.2rem;
+    border-radius: 0.3rem;
+}
