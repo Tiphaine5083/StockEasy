@@ -228,6 +228,49 @@ StockEasy implements a centralized and extensible logging system, ensuring full 
 
 ---
 
+### Authentication
+
+**Login Form**
+- The login interface is implemented in `login.phtml` and includes a fully accessible form (`email` and `password` fields).
+- Error alerts use semantic HTML (`role="alert"`, `aria-live`) and support keyboard interaction.
+
+**Login Logic**
+- The `AuthController::login()` method handles:
+  - Form validation and user lookup via `UserModel::findByEmail()`
+  - Password verification using `password_verify()`
+  - Active status check and conditional redirect to password reset
+  - Session initialization (`$_SESSION['user']`) and last login update
+  - Redirection using `redirectToRoute()`
+- On failure, `LogModel::logSystem()` records the error reason (unknown email, wrong password, inactive account).
+
+**Logout**
+- The `AuthController::logout()` method:
+  - Logs the logout event (`logSystem`)
+  - Clears and destroys the session
+  - Starts a new session to store the `success` flash message
+  - Redirects the user to the login screen
+
+**Session & Access Control**
+- User data is stored in `$_SESSION['user']` upon login
+- A centralized `Access` class handles access logic:
+  - `isLoggedIn()` checks for a valid session
+  - `hasRole()` and `hasOneRole()` validate the current user's role
+  - `hasPermission()` checks against a role-permission table in `permissions.php` (planned for fine-grained control in V2)
+- These checks are called in controllers before protected actions.
+- Routes that require authentication or role validation are not accessible without the appropriate session data.
+
+**Interface Visibility by Role**
+- Menus and UI elements in `.phtml` views are conditionally displayed based on `$_SESSION['user']['role']`
+- No advanced permissions engine is used yet; visibility is handled directly in the templates for V2
+- This ensures that users only see actions they are allowed to perform, even without triggering a controller method
+
+**Flash Messaging**
+- Feedback to the user is handled exclusively via the `$_SESSION['error']` and `$_SESSION['success']` keys
+- Messages are cleared immediately after being displayed to avoid repetition
+- Only authentication-related events are logged to the system log; standard form validation errors are not logged
+
+---
+
 ## Next Steps
 
 The following functional blocks are planned and will follow the same secure, documented, and modular approach:
@@ -256,11 +299,6 @@ The following functional blocks are planned and will follow the same secure, doc
 - Centralized storage for all generated documents: invoices, stock listings, credits, quotations
 - Files organized in `/storage/pdf/...`
 - Future export/email integration planned
-
-### Authentication
-- Secure login with role system
-- Session persistence and protection
-- Error feedback and PHPDoc coverage
 
 ---
 
