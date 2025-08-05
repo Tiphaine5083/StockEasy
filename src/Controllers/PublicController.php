@@ -277,6 +277,7 @@ class PublicController extends AbstractController
             'last_name' => $user['last_name'],
             'email' => $user['email'],
             'id_role' => $user['id_role'],
+            'active' => $user['active'],
         ];
         unset($_SESSION['form_data_user_update']);
 
@@ -572,5 +573,29 @@ class PublicController extends AbstractController
             $_SESSION['error'] = $e->getMessage();
             $this->redirectToRoute('stock-search');
         }
+    }
+
+        /**
+     * Display the stock management home page.
+     *
+     * Accessible to all users except those with the 'guest' role.
+     * Redirects to a 403 error page if access is denied.
+     *
+     * @return void
+     */
+    public function showCustomerHome(): void
+    {
+        if (Access::hasOneRole(['guest', 'intern'])) {
+            $this->denyAccess("Accès à la gestion des clients interdite pour votre rôle");
+        }
+
+        $this->setBreadcrumb([
+            ['label' => 'Accueil', 'url' => '?route=home'],
+            ['label' => 'Gestion des clients', 'url' => null]
+        ]);
+
+        $this->display('customer/customer-home.phtml', [
+            'title' => 'Gestion des clients'
+        ]);
     }
 }

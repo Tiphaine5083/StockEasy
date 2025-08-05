@@ -118,7 +118,7 @@ class AuthController extends AbstractController
                     $user['first_name'],
                     $user['last_name'] ?? null,
                 );
-                $_SESSION['error'] = 'Identifiants invalides';
+                $_SESSION['error'] = 'Accès interdit : veuillez contacter un administrateur';
                 $this->redirectToRoute('login');
                 return;
             }

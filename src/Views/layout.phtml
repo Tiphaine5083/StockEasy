@@ -19,7 +19,7 @@
     <!-- HEADER -->
 <header class="layout__header">
 
-    <!-- ✅ HEADER PRINCIPAL -->
+    <!-- HEADER PRINCIPAL -->
     <div class="header__main">
         <!-- LOGO -->
         <div class="header__branding">
@@ -44,24 +44,42 @@
         </a>
     </div>
 
-    <!-- ✅ BURGER OVERLAY (MOBILE) -->
+    <!-- BURGER OVERLAY (MOBILE) -->
     <nav class="burger__overlay" aria-label="Menu principal mobile">
-        <a href="/stockeasy/public/index.php?route=stock-home">
-            <i class="fa-solid fa-warehouse" aria-hidden="true"></i> Stock
-        </a>
-        <a href="/stockeasy/public/index.php?route=construction">
-            <i class="fa-solid fa-address-book" aria-hidden="true"></i> Clients
-        </a>
-        <a href="/stockeasy/public/index.php?route=user-admin">
-            <i class="fa-solid fa-users" aria-hidden="true"></i> Utilisateurs
-        </a>
-        <a href="/stockeasy/public/index.php?route=log-home">
-            <i class="fa-solid fa-database" aria-hidden="true"></i> Logs
-        </a>
+        <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user','intern'])) { ?>
+            <a href="/stockeasy/public/index.php?route=stock-home">
+                <i class="fa-solid fa-warehouse" aria-hidden="true"></i> Stock
+            </a>
+        <?php } ?>
+        <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user','intern'])) { ?>
+            <a href="/stockeasy/public/index.php?route=customer-home">
+                <i class="fa-solid fa-address-book" aria-hidden="true"></i> Clients
+            </a>
+        <?php } ?>
+        <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary'])) { ?>
+            <a href="/stockeasy/public/index.php?route=accounting-home">
+                <i class="fa-solid fa-calculator" aria-hidden="true"></i> Compta
+            </a>
+        <?php } ?>
+        <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user'])) { ?>
+            <a href="/stockeasy/public/index.php?route=editions-home">
+                <i class="fa-solid fa-print" aria-hidden="true"></i> Editions
+            </a>
+        <?php } ?>
+        <?php if (\App\Core\Access::hasRole('super_admin')) { ?>
+            <a href="/stockeasy/public/index.php?route=user-admin">
+                <i class="fa-solid fa-users" aria-hidden="true"></i> Utilisateurs
+            </a>
+        <?php } ?>
+        <?php if (\App\Core\Access::hasRole('super_admin')) { ?>
+            <a href="/stockeasy/public/index.php?route=log-home">
+                <i class="fa-solid fa-database" aria-hidden="true"></i> Logs
+            </a>
+        <?php } ?>
         <a href="/stockeasy/public/index.php?route=home">
             <i class="fa-solid fa-house" aria-hidden="true"></i> Accueil
         </a>
-        <a href="#">
+        <a href="/stockeasy/public/index.php?route=construction">
             <i class="fa-solid fa-globe" aria-hidden="true"></i> Site public
         </a>
         <a href="/stockeasy/public/index.php?route=logout">
@@ -69,7 +87,7 @@
         </a>
     </nav>
 
-    <!-- ✅ BLOC BREADCRUMB -->
+    <!-- BLOC BREADCRUMB -->
     <div class="header__breadcrumb-bar">
         <?php if (!empty($breadcrumb)) { ?>
             <nav aria-label="Fil d’Ariane" class="header__breadcrumb">
@@ -91,7 +109,6 @@
 
 </header>
 
-
     <!-- WRAPPER : SIDEBAR + MAIN -->
     <div class="layout__body">
 
@@ -103,93 +120,136 @@
                 <ul class="sidebar__list">
 
                     <!-- Bloc STOCK -->
-                    <li class="sidebar__item">
-                        <a href="/stockeasy/public/index.php?route=stock-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-stock">
-                            <i class="fa-solid fa-warehouse" aria-hidden="true"></i> Stock
-                        </a>
-                        <ul class="sidebar__submenu" id="submenu-stock" aria-hidden="true">
-                            <li class="sidebar__subitem sidebar__subitem--home">
-                                <a href="/stockeasy/public/index.php?route=stock-home" class="sidebar__sublink" >Accueil Stock</a>
-                            </li>
-                            <li class="sidebar__subitem">
-                                <a href="/stockeasy/public/index.php?route=stock-create" class="sidebar__sublink">Créer</a>
-                            </li>
-                            <li class="sidebar__subitem">
-                                <a href="/stockeasy/public/index.php?route=stock-search" class="sidebar__sublink">Rechercher & Modifier</a>
-                            </li>
-                            <li class="sidebar__subitem">
-                                <a href="/stockeasy/public/index.php?route=stock-list" class="sidebar__sublink">Inventaire</a>
-                            </li>
-                        </ul>
-                    </li>
+                    <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user','intern'])) { ?>
+                        <li class="sidebar__item">
+                            <a href="/stockeasy/public/index.php?route=stock-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-stock">
+                                <i class="fa-solid fa-warehouse" aria-hidden="true"></i> Stock
+                            </a>
+                            <ul class="sidebar__submenu" id="submenu-stock" aria-hidden="true">
+                                <li class="sidebar__subitem sidebar__subitem--home">
+                                    <a href="/stockeasy/public/index.php?route=stock-home" class="sidebar__sublink" >Accueil Stock</a>
+                                </li>
+                                <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user'])) { ?>
+                                    <li class="sidebar__subitem">
+                                        <a href="/stockeasy/public/index.php?route=stock-create" class="sidebar__sublink">Créer</a>
+                                    </li>
+                                <?php } ?>
+                                <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user','intern'])) { ?>
+                                    <li class="sidebar__subitem">
+                                        <a href="/stockeasy/public/index.php?route=stock-search" class="sidebar__sublink">Rechercher & Modifier</a>
+                                    </li>
+                                    <li class="sidebar__subitem">
+                                        <a href="/stockeasy/public/index.php?route=stock-list" class="sidebar__sublink">Inventaire</a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                    <?php } ?>
 
                     <!-- Bloc CUSTOMER -->
-                    <li class="sidebar__item">
-                        <a href="/stockeasy/public/index.php?route=construction" class="sidebar__link" aria-expanded="false" aria-controls="submenu-customers">
-                            <i class="fa-solid fa-address-book" aria-hidden="true"></i> Clients
-                        </a>
-                        <ul class="sidebar__submenu" id="submenu-customers" aria-hidden="true">
-                            <li class="sidebar__subitem sidebar__subitem--home">
-                                <a href="/stockeasy/public/index.php?route=construction" class="sidebar__sublink">Accueil Clients</a>
-                            </li>
-                            <li class="sidebar__subitem">
-                                <a href="/stockeasy/public/index.php?route=construction" class="sidebar__sublink">Créer</a>
-                            </li>
-                            <li class="sidebar__subitem">
-                                <a href="/stockeasy/public/index.php?route=construction" class="sidebar__sublink">Rechercher & Modifier</a>
-                            </li>
-                        </ul>
-                    </li>
+                    <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user','intern'])) { ?>
+                        <li class="sidebar__item">
+                            <a href="/stockeasy/public/index.php?route=customer-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-customers">
+                                <i class="fa-solid fa-address-book" aria-hidden="true"></i> Clients
+                            </a>
+                            <ul class="sidebar__submenu" id="submenu-customers" aria-hidden="true">
+                                <li class="sidebar__subitem sidebar__subitem--home">
+                                    <a href="/stockeasy/public/index.php?route=customer-home" class="sidebar__sublink">Accueil Clients</a>
+                                </li>
+                                <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user'])) { ?>
+                                    <li class="sidebar__subitem">
+                                        <a href="/stockeasy/public/index.php?route=customer-create" class="sidebar__sublink">Créer</a>
+                                    </li>
+                                <?php } ?>
+                                <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user','intern'])) { ?>
+                                    <li class="sidebar__subitem">
+                                        <a href="/stockeasy/public/index.php?route=customer-search" class="sidebar__sublink">Rechercher & Modifier</a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                    <?php } ?>
 
-                    
+                    <!-- Bloc ACCOUNTING -->
+                    <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary'])) { ?>
+                        <li class="sidebar__item">
+                            <a href="/stockeasy/public/index.php?route=accounting-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-customers">
+                                <i class="fa-solid fa-calculator" aria-hidden="true"></i> Compta
+                            </a>
+                            <ul class="sidebar__submenu" id="submenu-customers" aria-hidden="true">
+                                <li class="sidebar__subitem sidebar__subitem--home">
+                                    <a href="/stockeasy/public/index.php?route=accounting-home" class="sidebar__sublink">Accueil Compta</a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php } ?>
+
+                    <!-- Bloc EDITIONS -->
+                    <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user'])) { ?>
+                        <li class="sidebar__item">
+                            <a href="/stockeasy/public/index.php?route=editions-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-customers">
+                                <i class="fa-solid fa-print" aria-hidden="true"></i> Editions
+                            </a>
+                            <ul class="sidebar__submenu" id="submenu-customers" aria-hidden="true">
+                                <li class="sidebar__subitem sidebar__subitem--home">
+                                    <a href="/stockeasy/public/index.php?route=editions-home" class="sidebar__sublink">Accueil Editions</a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php } ?>
+
                     <!-- Bloc USERS (super_admin seulement) -->
                     <!-- TODO : Restreindre à super-admin uniquement (si isset session et si session === super_admin) -->
-                    <li class="sidebar__item">
-                        <a href="/stockeasy/public/index.php?route=user-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-users">
-                            <i class="fa-solid fa-users" aria-hidden="true"></i> Utilisateurs
-                        </a>
-                        <ul class="sidebar__submenu" id="submenu-users" aria-hidden="true">
-                            <li class="sidebar__subitem sidebar__subitem--home">
-                                <a href="/stockeasy/public/index.php?route=user-home" class="sidebar__sublink">Accueil Utilisateurs</a>
-                            </li>
-                            <li class="sidebar__subitem">
-                                <a href="/stockeasy/public/index.php?route=user-create" class="sidebar__sublink">Créer un utilisateur</a>
-                            </li>
-                            <li class="sidebar__subitem">
-                                <a href="/stockeasy/public/index.php?route=user-list&status=active" class="sidebar__sublink">Utilisateurs actifs</a>
-                            </li>
-                            <li class="sidebar__subitem">
-                                <a href="/stockeasy/public/index.php?route=user-list&status=inactive" class="sidebar__sublink">Utilisateurs inactifs</a>
-                            </li>
-                            <li class="sidebar__subitem">
-                                <a href="/stockeasy/public/index.php?route=construction" class="sidebar__sublink">Rôles</a>
-                                <!-- <a href="/stockeasy/public/index.php?route=user-role" class="sidebar__sublink">Rôles</a> -->
-                            </li>
-                            <li class="sidebar__subitem">
-                                <a href="/stockeasy/public/index.php?route=construction" class="sidebar__sublink">Permissions par utilisateur</a>
-                                <!-- <a href="/stockeasy/public/index.php?route=user-permission" class="sidebar__sublink">Permissions par utilisateur</a> -->
-                            </li>
-                        </ul>
-                    </li>
+                    <?php if (\App\Core\Access::hasRole('super_admin')) { ?>
+                        <li class="sidebar__item">
+                            <a href="/stockeasy/public/index.php?route=user-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-users">
+                                <i class="fa-solid fa-users" aria-hidden="true"></i> Utilisateurs
+                            </a>
+                            <ul class="sidebar__submenu" id="submenu-users" aria-hidden="true">
+                                <li class="sidebar__subitem sidebar__subitem--home">
+                                    <a href="/stockeasy/public/index.php?route=user-home" class="sidebar__sublink">Accueil Utilisateurs</a>
+                                </li>
+                                <li class="sidebar__subitem">
+                                    <a href="/stockeasy/public/index.php?route=user-create" class="sidebar__sublink">Créer un utilisateur</a>
+                                </li>
+                                <li class="sidebar__subitem">
+                                    <a href="/stockeasy/public/index.php?route=user-list&status=active" class="sidebar__sublink">Utilisateurs actifs</a>
+                                </li>
+                                <li class="sidebar__subitem">
+                                    <a href="/stockeasy/public/index.php?route=user-list&status=inactive" class="sidebar__sublink">Utilisateurs inactifs</a>
+                                </li>
+                                <li class="sidebar__subitem">
+                                    <a href="/stockeasy/public/index.php?route=construction" class="sidebar__sublink">Rôles</a>
+                                    <!-- <a href="/stockeasy/public/index.php?route=user-role" class="sidebar__sublink">Rôles</a> -->
+                                </li>
+                                <li class="sidebar__subitem">
+                                    <a href="/stockeasy/public/index.php?route=construction" class="sidebar__sublink">Permissions par utilisateur</a>
+                                    <!-- <a href="/stockeasy/public/index.php?route=user-permission" class="sidebar__sublink">Permissions par utilisateur</a> -->
+                                </li>
+                            </ul>
+                        </li>
+                    <?php } ?>
 
                     <!-- Bloc LOGS (super_admin seulement) -->
                     <!-- TODO: Restreindre à super-admin uniquement (si isset session et si session === super_admin)  -->
-                    <li class="sidebar__item">
-                        <a href="/stockeasy/public/index.php?route=log-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-logs">
-                            <i class="fa-solid fa-database" aria-hidden="true"></i> Logs
-                        </a>
-                        <ul class="sidebar__submenu" id="submenu-logs" aria-hidden="true">
-                            <li class="sidebar__subitem sidebar__subitem--home">
-                                <a href="/stockeasy/public/index.php?route=log-home" class="sidebar__sublink">Accueil Logs</a>
-                            </li>
-                            <li class="sidebar__subitem">
-                                <a href="/stockeasy/public/index.php?route=log-modif" class="sidebar__sublink">Modification Logs</a>
-                            </li>
-                            <li class="sidebar__subitem">
-                                <a href="/stockeasy/public/index.php?route=log-sys" class="sidebar__sublink">System Logs</a>
-                            </li>
-                        </ul>
-                    </li>
+                    <?php if (\App\Core\Access::hasRole('super_admin')) { ?>
+                        <li class="sidebar__item">
+                            <a href="/stockeasy/public/index.php?route=log-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-logs">
+                                <i class="fa-solid fa-database" aria-hidden="true"></i> Logs
+                            </a>
+                            <ul class="sidebar__submenu" id="submenu-logs" aria-hidden="true">
+                                <li class="sidebar__subitem sidebar__subitem--home">
+                                    <a href="/stockeasy/public/index.php?route=log-home" class="sidebar__sublink">Accueil Logs</a>
+                                </li>
+                                <li class="sidebar__subitem">
+                                    <a href="/stockeasy/public/index.php?route=log-modif" class="sidebar__sublink">Modification Logs</a>
+                                </li>
+                                <li class="sidebar__subitem">
+                                    <a href="/stockeasy/public/index.php?route=log-sys" class="sidebar__sublink">System Logs</a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php } ?>
 
                 </ul>
 
@@ -203,7 +263,7 @@
                         </li>
 
                         <li class="sidebar__item">
-                            <a href="#" class="sidebar__link">
+                            <a href="/stockeasy/public/index.php?route=construction" class="sidebar__link">
                                 <i class="fa-solid fa-globe" aria-hidden="true"></i> Site public
                             </a>
                         </li>

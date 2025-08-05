@@ -54,5 +54,14 @@ $router->addRoute('toggle-status', \App\Controllers\UserController::class . '::t
 $router->addRoute('user-delete', \App\Controllers\UserController::class . '::userDelete');
 $router->addRoute('user-update-submit', \App\Controllers\UserController::class . '::userUpdate');
 
+// === Customer Routes
+$router->addRoute('customer-home', \App\Controllers\PublicController::class . '::showCustomerHome');
+$router->addRoute('customer-create', \App\Controllers\PartialsController::class . '::underConstruction');
+$router->addRoute('customer-search', \App\Controllers\PartialsController::class . '::underConstruction');
+
+// === coming routes
+$router->addRoute('editions-home', \App\Controllers\PartialsController::class . '::underConstruction');
+$router->addRoute('accounting-home', \App\Controllers\PartialsController::class . '::underConstruction');
+
 // En route mauvaise troupe !
 $router->startRouting();

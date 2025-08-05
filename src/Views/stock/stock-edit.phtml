@@ -3,171 +3,173 @@
     <div class="layout__wrapper">
         <div class="stock-page__content">
             <aside class="stock-page__form">
-                <form method="POST" action="index.php" class="form">
-                    <input type="hidden" name="route" class="form__input" value="stock-update">
-                    <input type="hidden" name="product_id" class="form__input" value="<?= $tire['id'] ?>">
-                    <?php if (!empty($_GET['brand'])) { ?>
-                        <input type="hidden" name="search_brand" class="form__input" value="<?= htmlspecialchars($_GET['brand']) ?>">
-                    <?php } ?>
-                    <?php if (!empty($_GET['width'])) { ?>
-                        <input type="hidden" name="search_width" class="form__input" value="<?= htmlspecialchars($_GET['width']) ?>">
-                    <?php } ?>
-                    <?php if (!empty($_GET['height'])) { ?>
-                        <input type="hidden" name="search_height" class="form__input" value="<?= htmlspecialchars($_GET['height']) ?>">
-                    <?php } ?>
-                    <?php if (!empty($_GET['diameter'])) { ?>
-                        <input type="hidden" name="search_diameter" class="form__input" value="<?= htmlspecialchars($_GET['diameter']) ?>">
-                    <?php } ?>
-                    <?php if (!empty($_GET['load_index'])) { ?>
-                        <input type="hidden" name="search_load_index" class="form__input" value="<?= htmlspecialchars($_GET['load_index']) ?>">
-                    <?php } ?>
-                    <?php if (!empty($_GET['speed_index'])) { ?>
-                        <input type="hidden" name="search_speed_index" class="form__input" value="<?= htmlspecialchars($_GET['speed_index']) ?>">
-                    <?php } ?>
-                    <?php
-                    if (!empty($_GET['season'])) {
-                        foreach ($_GET['season'] as $season) {
-                    ?>
-                        <input type="hidden" name="search_season[]" class="form__input" value="<?= htmlspecialchars($season) ?>">
-                    <?php }} ?>
-                    <?php
-                    if (!empty($_GET['quality'])) {
-                        foreach ($_GET['quality'] as $quality) {
-                    ?>
-                        <input type="hidden" name="search_quality[]" class="form__input" value="<?= htmlspecialchars($quality) ?>">
-                    <?php }} ?>
-                    <?php $readonly = $isInvoiced ? 'readonly' : ''; ?>
-                    <?php $disabled = $isInvoiced ? 'disabled' : ''; ?>
-                    <fieldset class="form__fieldset">
-                        <legend class="sr-only">Renseignements du pneu</legend>
-                        <div class="form__grid">
-                            <div class="form__group">
-                                <label class="form__label" for="brand">Marque</label>
-                                <select class="form__select" name="brand" id="brand" <?= $disabled ?>>
-                                    <?php foreach($brands as $brand) { ?>
-                                        <option value="<?= $brand ?>" <?php if (trim(strtoupper($tire['brand'])) === trim(strtoupper($brand))) echo 'selected'; ?>>
-                                            <?= $brand ?>
-                                        </option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <div class="form__group">
-                                <label class="form__label" for="width">Largeur</label>
-                                <input type="text" id="width" name="width" class="form__input" value="<?= htmlspecialchars($tire['width']) ?>" placeholder="Largeur" <?= $disabled ?>>
-                            </div>
-                            <div class="form__group">
-                                <label class="form__label" for="height">Hauteur</label>
-                                <input type="text" id="height" name="height" class="form__input" value="<?= htmlspecialchars($tire['height']) ?>" placeholder="Hauteur" <?= $disabled ?>>
-                            </div>
-                            <div class="form__group">
-                                <label class="form__label" for="diameter">Diamètre</label>
-                                <input type="text" id="diameter" name="diameter" class="form__input" value="<?= htmlspecialchars($tire['diameter']) ?>" placeholder="Diamètre" <?= $disabled ?>>
-                            </div>
-                            <div class="form__group">
-                                <label class="form__label" for="load_index">Charge</label>
-                                <input type="text" id="load_index" name="load_index" class="form__input" value="<?= htmlspecialchars($tire['load_index']) ?>" placeholder="Charge" <?= $disabled ?>>
-                            </div>
-                            <div class="form__group">
-                                <label class="form__label" for="speed_index">Vitesse</label>
-                                <input type="text" id="speed_index" name="speed_index" class="form__input" value="<?= htmlspecialchars($tire['speed_index']) ?>" placeholder="Vitesse" <?= $disabled ?>>
-                            </div>
-                            <div class="form__group">
-                                <label class="form__label" for="dot">DOT</label>
-                                <input type="text" id="dot" name="dot" class="form__input" value="<?= htmlspecialchars($tire['dot'] ?? '') ?>" placeholder="DOT" <?= $disabled ?>>
-                            </div>
-                            <div class="form__group">
-                                <label class="form__label" for="quantity_available">Quantité</label>
-                                <input type="text" id="quantity_available" name="quantity_available" class="form__input" value="<?= htmlspecialchars($tire['quantity_available']) ?>" placeholder="Quantité">
-                                <input type="hidden" id="original_quantity" class="form__input" value="<?= htmlspecialchars($tire['quantity_available']) ?>">
-                            </div>
-                            <div id="movement_reason_wrapper" class="form__group is-hidden">
-                                <label class="form__label" for="movement_reason">Motif de la modification</label>
-                                <select class="form__select" name="movement_reason" id="movement_reason">
-                                    <option value="" disabled selected hidden>Choisir dans la liste</option>
-                                    <?php foreach ($reasons as $reason) { ?>
-                                        <option value="<?= $reason ?>"><?= ucfirst($reason) ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <div id="reason_detail_wrapper" class="form__group is-hidden">
-                                <label class="form__label" for="reason_detail">Détail du motif</label>
-                                <textarea class="form__textarea" name="reason_detail" id="reason_detail" placeholder="Précisez ici..."></textarea>
-                            </div>
-                            <div class="form__group">
-                                <label class="form__label" for="unit_price_excluding_tax">P.U. H.T.</label>
-                                <input type="text" id="unit_price_excluding_tax" name="unit_price_excluding_tax" class="form__input" value="<?= htmlspecialchars($tire['unit_price_excluding_tax']) ?>" placeholder="P.U. H.T.">
-                            </div>
-                        </div>
-                        <div class="form__inline">
-                            <fieldset class="form__fieldset">
-                                <legend class="form__legend">Saison</legend>
-                                <div class="form__radio-wrapper">
-                                    <div class="form__radio">
-                                        <input type="radio" id="season-ete" name="season" value="ETE" class="form__input visually-hidden" <?= $disabled ?>
-                                        <?= ($tire['season'] === 'ETE') ? 'checked' : '' ?> />
-                                        <label class="form__label" for="season-ete" aria-label="Été" title="Été"><i class="fa-solid fa-sun"></i></label>
-                                    </div>
-                                    <div class="form__radio">
-                                        <input type="radio" id="season-4s" name="season" value="4S" class="form__input visually-hidden" <?= $disabled ?>
-                                        <?= ($tire['season'] === '4S') ? 'checked' : '' ?> />
-                                        <label class="form__label" for="season-4s" aria-label="4 saisons" title="4 Saisons"><i class="fa-solid fa-cloud-sun-rain"></i></label>
-                                    </div>
-                                    <div class="form__radio">
-                                        <input type="radio" id="season-hiver" name="season" value="HIVER" class="form__input visually-hidden" <?= $disabled ?>
-                                        <?= ($tire['season'] === 'HIVER') ? 'checked' : '' ?> />
-                                        <label class="form__label" for="season-hiver" aria-label="Hiver" title="Hiver"><i class="fa-solid fa-cloud-showers-heavy"></i></label>
-                                    </div>
+                <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary', 'user'])) { ?>
+                    <form method="POST" action="index.php" class="form">
+                        <input type="hidden" name="route" class="form__input" value="stock-update">
+                        <input type="hidden" name="product_id" class="form__input" value="<?= $tire['id'] ?>">
+                        <?php if (!empty($_GET['brand'])) { ?>
+                            <input type="hidden" name="search_brand" class="form__input" value="<?= htmlspecialchars($_GET['brand']) ?>">
+                        <?php } ?>
+                        <?php if (!empty($_GET['width'])) { ?>
+                            <input type="hidden" name="search_width" class="form__input" value="<?= htmlspecialchars($_GET['width']) ?>">
+                        <?php } ?>
+                        <?php if (!empty($_GET['height'])) { ?>
+                            <input type="hidden" name="search_height" class="form__input" value="<?= htmlspecialchars($_GET['height']) ?>">
+                        <?php } ?>
+                        <?php if (!empty($_GET['diameter'])) { ?>
+                            <input type="hidden" name="search_diameter" class="form__input" value="<?= htmlspecialchars($_GET['diameter']) ?>">
+                        <?php } ?>
+                        <?php if (!empty($_GET['load_index'])) { ?>
+                            <input type="hidden" name="search_load_index" class="form__input" value="<?= htmlspecialchars($_GET['load_index']) ?>">
+                        <?php } ?>
+                        <?php if (!empty($_GET['speed_index'])) { ?>
+                            <input type="hidden" name="search_speed_index" class="form__input" value="<?= htmlspecialchars($_GET['speed_index']) ?>">
+                        <?php } ?>
+                        <?php
+                        if (!empty($_GET['season'])) {
+                            foreach ($_GET['season'] as $season) {
+                        ?>
+                            <input type="hidden" name="search_season[]" class="form__input" value="<?= htmlspecialchars($season) ?>">
+                        <?php }} ?>
+                        <?php
+                        if (!empty($_GET['quality'])) {
+                            foreach ($_GET['quality'] as $quality) {
+                        ?>
+                            <input type="hidden" name="search_quality[]" class="form__input" value="<?= htmlspecialchars($quality) ?>">
+                        <?php }} ?>
+                        <?php $readonly = $isInvoiced ? 'readonly' : ''; ?>
+                        <?php $disabled = $isInvoiced ? 'disabled' : ''; ?>
+                        <fieldset class="form__fieldset">
+                            <legend class="sr-only">Renseignements du pneu</legend>
+                            <div class="form__grid">
+                                <div class="form__group">
+                                    <label class="form__label" for="brand">Marque</label>
+                                    <select class="form__select" name="brand" id="brand" <?= $disabled ?>>
+                                        <?php foreach($brands as $brand) { ?>
+                                            <option value="<?= $brand ?>" <?php if (trim(strtoupper($tire['brand'])) === trim(strtoupper($brand))) echo 'selected'; ?>>
+                                                <?= $brand ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
                                 </div>
-                            </fieldset>
-                            <fieldset class="form__fieldset">
-                                <legend class="form__legend">État</legend>
-                                <div class="form__radio-wrapper">
-                                    <div class="form__radio">
-                                        <input type="radio" id="quality-neuf" name="quality" value="NEUF" class="form__input visually-hidden" <?= $disabled ?>
-                                        <?= ($tire['quality'] === 'NEUF') ? 'checked' : '' ?> />
-                                        <label class="form__label" for="quality-neuf"><i class="fa-solid fa-n"></i></label>
-                                    </div>
-                                    <div class="form__radio">
-                                        <input type="radio" id="quality-tb" name="quality" value="TB" class="form__input visually-hidden" <?= $disabled ?>
-                                        <?= ($tire['quality'] === 'TB') ? 'checked' : '' ?> />
-                                        <label class="form__label" for="quality-tb"><i class="fa-solid fa-t"></i><i class="fa-solid fa-b"></i></label>
-                                    </div>
-                                    <div class="form__radio">
-                                        <input type="radio" id="quality-moy" name="quality" value="MOY" class="form__input visually-hidden" <?= $disabled ?>
-                                        <?= ($tire['quality'] === 'MOY') ? 'checked' : '' ?> />
-                                        <label class="form__label" for="quality-moy"><i class="fa-solid fa-m"></i></label>
-                                    </div>
+                                <div class="form__group">
+                                    <label class="form__label" for="width">Largeur</label>
+                                    <input type="text" id="width" name="width" class="form__input" value="<?= htmlspecialchars($tire['width']) ?>" placeholder="Largeur" <?= $disabled ?>>
                                 </div>
-                            </fieldset>
-                        </div>
-                        <div class="form__actions">
-                            <button type="submit" class="btn btn--dark">Valider</button>
+                                <div class="form__group">
+                                    <label class="form__label" for="height">Hauteur</label>
+                                    <input type="text" id="height" name="height" class="form__input" value="<?= htmlspecialchars($tire['height']) ?>" placeholder="Hauteur" <?= $disabled ?>>
+                                </div>
+                                <div class="form__group">
+                                    <label class="form__label" for="diameter">Diamètre</label>
+                                    <input type="text" id="diameter" name="diameter" class="form__input" value="<?= htmlspecialchars($tire['diameter']) ?>" placeholder="Diamètre" <?= $disabled ?>>
+                                </div>
+                                <div class="form__group">
+                                    <label class="form__label" for="load_index">Charge</label>
+                                    <input type="text" id="load_index" name="load_index" class="form__input" value="<?= htmlspecialchars($tire['load_index']) ?>" placeholder="Charge" <?= $disabled ?>>
+                                </div>
+                                <div class="form__group">
+                                    <label class="form__label" for="speed_index">Vitesse</label>
+                                    <input type="text" id="speed_index" name="speed_index" class="form__input" value="<?= htmlspecialchars($tire['speed_index']) ?>" placeholder="Vitesse" <?= $disabled ?>>
+                                </div>
+                                <div class="form__group">
+                                    <label class="form__label" for="dot">DOT</label>
+                                    <input type="text" id="dot" name="dot" class="form__input" value="<?= htmlspecialchars($tire['dot'] ?? '') ?>" placeholder="DOT" <?= $disabled ?>>
+                                </div>
+                                <div class="form__group">
+                                    <label class="form__label" for="quantity_available">Quantité</label>
+                                    <input type="text" id="quantity_available" name="quantity_available" class="form__input" value="<?= htmlspecialchars($tire['quantity_available']) ?>" placeholder="Quantité">
+                                    <input type="hidden" id="original_quantity" class="form__input" value="<?= htmlspecialchars($tire['quantity_available']) ?>">
+                                </div>
+                                <div id="movement_reason_wrapper" class="form__group is-hidden">
+                                    <label class="form__label" for="movement_reason">Motif de la modification</label>
+                                    <select class="form__select" name="movement_reason" id="movement_reason">
+                                        <option value="" disabled selected hidden>Choisir dans la liste</option>
+                                        <?php foreach ($reasons as $reason) { ?>
+                                            <option value="<?= $reason ?>"><?= ucfirst($reason) ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div id="reason_detail_wrapper" class="form__group is-hidden">
+                                    <label class="form__label" for="reason_detail">Détail du motif</label>
+                                    <textarea class="form__textarea" name="reason_detail" id="reason_detail" placeholder="Précisez ici..."></textarea>
+                                </div>
+                                <div class="form__group">
+                                    <label class="form__label" for="unit_price_excluding_tax">P.U. H.T.</label>
+                                    <input type="text" id="unit_price_excluding_tax" name="unit_price_excluding_tax" class="form__input" value="<?= htmlspecialchars($tire['unit_price_excluding_tax']) ?>" placeholder="P.U. H.T.">
+                                </div>
+                            </div>
+                            <div class="form__inline">
+                                <fieldset class="form__fieldset">
+                                    <legend class="form__legend">Saison</legend>
+                                    <div class="form__radio-wrapper">
+                                        <div class="form__radio">
+                                            <input type="radio" id="season-ete" name="season" value="ETE" class="form__input visually-hidden" <?= $disabled ?>
+                                            <?= ($tire['season'] === 'ETE') ? 'checked' : '' ?> />
+                                            <label class="form__label" for="season-ete" aria-label="Été" title="Été"><i class="fa-solid fa-sun"></i></label>
+                                        </div>
+                                        <div class="form__radio">
+                                            <input type="radio" id="season-4s" name="season" value="4S" class="form__input visually-hidden" <?= $disabled ?>
+                                            <?= ($tire['season'] === '4S') ? 'checked' : '' ?> />
+                                            <label class="form__label" for="season-4s" aria-label="4 saisons" title="4 Saisons"><i class="fa-solid fa-cloud-sun-rain"></i></label>
+                                        </div>
+                                        <div class="form__radio">
+                                            <input type="radio" id="season-hiver" name="season" value="HIVER" class="form__input visually-hidden" <?= $disabled ?>
+                                            <?= ($tire['season'] === 'HIVER') ? 'checked' : '' ?> />
+                                            <label class="form__label" for="season-hiver" aria-label="Hiver" title="Hiver"><i class="fa-solid fa-cloud-showers-heavy"></i></label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="form__fieldset">
+                                    <legend class="form__legend">État</legend>
+                                    <div class="form__radio-wrapper">
+                                        <div class="form__radio">
+                                            <input type="radio" id="quality-neuf" name="quality" value="NEUF" class="form__input visually-hidden" <?= $disabled ?>
+                                            <?= ($tire['quality'] === 'NEUF') ? 'checked' : '' ?> />
+                                            <label class="form__label" for="quality-neuf"><i class="fa-solid fa-n"></i></label>
+                                        </div>
+                                        <div class="form__radio">
+                                            <input type="radio" id="quality-tb" name="quality" value="TB" class="form__input visually-hidden" <?= $disabled ?>
+                                            <?= ($tire['quality'] === 'TB') ? 'checked' : '' ?> />
+                                            <label class="form__label" for="quality-tb"><i class="fa-solid fa-t"></i><i class="fa-solid fa-b"></i></label>
+                                        </div>
+                                        <div class="form__radio">
+                                            <input type="radio" id="quality-moy" name="quality" value="MOY" class="form__input visually-hidden" <?= $disabled ?>
+                                            <?= ($tire['quality'] === 'MOY') ? 'checked' : '' ?> />
+                                            <label class="form__label" for="quality-moy"><i class="fa-solid fa-m"></i></label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="form__actions">
+                                <button type="submit" class="btn btn--dark">Valider</button>
 
-                            <?php
-                            $backUrl = 'index.php?route=stock-search';
-                            if (!empty($_GET['brand'])) { $backUrl .= '&brand=' . urlencode($_GET['brand']); }
-                            if (!empty($_GET['width'])) { $backUrl .= '&width=' . urlencode($_GET['width']); }
-                            if (!empty($_GET['height'])) { $backUrl .= '&height=' . urlencode($_GET['height']); }
-                            if (!empty($_GET['diameter'])) { $backUrl .= '&diameter=' . urlencode($_GET['diameter']); }
-                            if (!empty($_GET['load_index'])) { $backUrl .= '&load_index=' . urlencode($_GET['load_index']); }
-                            if (!empty($_GET['speed_index'])) { $backUrl .= '&speed_index=' . urlencode($_GET['speed_index']); }
-                            if (!empty($_GET['season'])) {
-                                foreach($_GET['season'] as $season) {
-                                    $backUrl .= '&season[]=' . urlencode($season);
+                                <?php
+                                $backUrl = 'index.php?route=stock-search';
+                                if (!empty($_GET['brand'])) { $backUrl .= '&brand=' . urlencode($_GET['brand']); }
+                                if (!empty($_GET['width'])) { $backUrl .= '&width=' . urlencode($_GET['width']); }
+                                if (!empty($_GET['height'])) { $backUrl .= '&height=' . urlencode($_GET['height']); }
+                                if (!empty($_GET['diameter'])) { $backUrl .= '&diameter=' . urlencode($_GET['diameter']); }
+                                if (!empty($_GET['load_index'])) { $backUrl .= '&load_index=' . urlencode($_GET['load_index']); }
+                                if (!empty($_GET['speed_index'])) { $backUrl .= '&speed_index=' . urlencode($_GET['speed_index']); }
+                                if (!empty($_GET['season'])) {
+                                    foreach($_GET['season'] as $season) {
+                                        $backUrl .= '&season[]=' . urlencode($season);
+                                    }
                                 }
-                            }
-                            if (!empty($_GET['quality'])) {
-                                foreach($_GET['quality'] as $quality) {
-                                    $backUrl .= '&quality[]=' . urlencode($quality);
+                                if (!empty($_GET['quality'])) {
+                                    foreach($_GET['quality'] as $quality) {
+                                        $backUrl .= '&quality[]=' . urlencode($quality);
+                                    }
                                 }
-                            }
-                            ?>
+                                ?>
 
-                            <a href="<?= $backUrl ?>" class="btn btn--dark">Annuler</a>
+                                <a href="<?= $backUrl ?>" class="btn btn--dark">Annuler</a>
 
-                        </div>
-                    </fieldset>
-                </form>
+                            </div>
+                        </fieldset>
+                    </form>
+                <?php } ?>
             </aside>
             <div class="stock-page__table">
                 <div class="stock-page__table-wrapper">

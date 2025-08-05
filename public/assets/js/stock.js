@@ -361,13 +361,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modalArchiveBtn.addEventListener('click', handleArchiveChoice);
 
-        modalDeleteBtn.addEventListener('click', () => {
-            modalDeleteActionInput.value = 'delete';
-            modalChoiceBlock.classList.add('is-hidden');
-            modalValidateBlock.classList.remove('is-hidden');
-            modalReasonWrapper.classList.remove('is-hidden');
-            modalReasonDetailWrapper.classList.add('is-hidden');
-        });
+        modalDeleteBtn = document.getElementById('modalDeleteBtn');
+        if (modalDeleteBtn) {
+            modalDeleteBtn.addEventListener('click', () => {
+                modalDeleteActionInput.value = 'delete';
+                modalChoiceBlock.classList.add('is-hidden');
+                modalValidateBlock.classList.remove('is-hidden');
+                modalReasonWrapper.classList.remove('is-hidden');
+                modalReasonDetailWrapper.classList.add('is-hidden');
+            });
+        }
 
         if (modalReasonSelect) {
             modalReasonSelect.addEventListener('change', toggleReasonDetailInModal);
@@ -378,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const pneuId = btn.dataset.id;
                 openDeleteModal(pneuId);
             });
-        });
+        });    
     }
 
     // === STOCK-CREATE ===

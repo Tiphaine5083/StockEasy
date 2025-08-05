@@ -165,23 +165,27 @@
                                                     }
                                                 }
                                             ?>
-                                            <?php if ($value['quantity_available'] > 0) { ?>
-                                                <a href="<?= $editUrl ?>">
-                                                    <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
-                                                </a>
-                                            <?php } else { ?>
-                                                <span class="disabled">
-                                                    <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
-                                                </span>
+                                            <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary', 'user'])) { ?>
+                                                <?php if ($value['quantity_available'] > 0) { ?>
+                                                    <a href="<?= $editUrl ?>">
+                                                        <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                                                    </a>
+                                                <?php } else { ?>
+                                                    <span class="disabled">
+                                                        <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                                                    </span>
+                                                <?php } ?>
                                             <?php } ?>
                                         </td>
                                         <td class="table__td" data-label="Supprimer">
-                                            <button class="<?php if ($value['quantity_available'] <= 0) { echo ' disabled'; } ?>"
-                                                <?php if ($value['quantity_available'] > 0) { ?>
-                                                    data-id="<?= $value['id'] ?>"
-                                                <?php } ?>>
-                                                <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                                            </button>
+                                            <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary'])) { ?>
+                                                <button class="<?php if ($value['quantity_available'] <= 0) { echo ' disabled'; } ?>"
+                                                    <?php if ($value['quantity_available'] > 0) { ?>
+                                                        data-id="<?= $value['id'] ?>"
+                                                    <?php } ?>>
+                                                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                                </button>
+                                            <?php } ?>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -249,8 +253,13 @@
 
                 <div class="modal__actions">
                     <div class="modal__choice">
-                        <button type="button" class="btn btn--dark" id="modalDeleteBtn">Supprimer définitivement</button>
-                        <button type="button" class="btn btn--dark" id="modalArchiveBtn">Archiver</button>
+                        <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin'])) { ?>
+                            <button type="button" class="btn btn--dark" id="modalDeleteBtn">Supprimer définitivement</button>
+                        <?php } ?>
+
+                        <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary'])) { ?>
+                            <button type="button" class="btn btn--dark" id="modalArchiveBtn">Archiver</button>
+                        <?php } ?>
                     </div>
                     <div class="modal__validate is-hidden">
                         <button type="submit" class="btn btn--dark" id="modalConfirmBtn">Valider</button>

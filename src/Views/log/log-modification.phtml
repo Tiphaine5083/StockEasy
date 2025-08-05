@@ -1,3 +1,5 @@
+<?php if (\App\Core\Access::hasRole('super_admin')) { ?>
+
 <?php
 $typeFilter = $_POST['type'] ?? '';
 $userFilter = $_POST['user'] ?? '';
@@ -131,3 +133,5 @@ function highlightDifferences(string $beforeJson, string $afterJson): array
         </table>
     </section>
 </div>
+
+<?php } ?>

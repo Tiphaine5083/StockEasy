@@ -1,3 +1,5 @@
+<?php if (\App\Core\Access::hasRole('super_admin')) { ?>
+
 <section class="page user-edit">
     <h1 class="user-edit__title">Modification de l'utilisateur</h1>
 
@@ -5,7 +7,7 @@
             <form method="POST" action="index.php" class="form">
                 <input type="hidden" name="route" class="form__input" value="user-update-submit">
                 <input type="hidden" name="id" value="<?= htmlspecialchars($formData['id'] ?? '') ?>">
-                <input type="hidden" name="active" value="1">
+                <input type="hidden" name="active" value="<?= htmlspecialchars($formData['active']) ?>">
 
                 <h2 class="sr-only">Informations utilisateur</h2>
 
@@ -54,3 +56,5 @@
             </form>
         </div>
 </section>
+
+<?php } ?>

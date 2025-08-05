@@ -1,3 +1,5 @@
+<?php if (\App\Core\Access::hasRole('super_admin')) { ?>
+
 <section class="page user-create">
     <h1 class="user-create__title">Création d’un nouvel utilisateur</h1>
 
@@ -51,3 +53,5 @@
             </form>
         </div>
 </section>
+
+<?php } ?>

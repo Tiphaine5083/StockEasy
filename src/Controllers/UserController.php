@@ -268,7 +268,7 @@ class UserController extends AbstractController
         }
 
         $id = $_POST['id'] ?? null;
-        $status = $_GET['status'] ?? 'active';
+        $status = $_GET['status'] ?? ($_POST['active'] === '0' ? 'inactive' : 'active');
 
         if (!$id || !ctype_digit($id)) {
             $_SESSION['error'] = 'ID utilisateur invalide';

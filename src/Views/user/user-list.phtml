@@ -1,3 +1,5 @@
+<?php if (\App\Core\Access::hasRole('super_admin')) { ?>
+
 <?php
 $status = $_GET['status'] ?? 'active'; // sécurité minimale
 $title = ($status === 'inactive') ? 'Utilisateurs inactifs' : 'Utilisateurs actifs';
@@ -104,3 +106,5 @@ $roleFilter = $_GET['role'] ?? '';
         </table>
     </div>
 </div>
+
+<?php } ?>

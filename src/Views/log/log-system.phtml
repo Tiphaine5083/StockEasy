@@ -1,3 +1,5 @@
+<?php if (\App\Core\Access::hasRole('super_admin')) { ?>
+
 <?php
 $typeFilter = $_POST['type'] ?? '';
 $userFilter = $_POST['user'] ?? '';
@@ -89,3 +91,5 @@ $dateEnd    = $_POST['date_end'] ?? '';
         </table>
     </section>
 </div>
+
+<?php } ?>

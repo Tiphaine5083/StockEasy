@@ -4,100 +4,102 @@
         <div class="stock-page__content">
             <!-- FORM COLUMN -->
             <aside class="stock-page__form">
-                <form method="POST" action="index.php" class="form">
-                    <input type="hidden" name="route" class="form__input" value="stock-store">
-                    <input type="hidden" name="vehicle_category" class="form__input" value="VL">
+                <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary', 'user'])) { ?>
+                    <form method="POST" action="index.php" class="form">
+                        <input type="hidden" name="route" class="form__input" value="stock-store">
+                        <input type="hidden" name="vehicle_category" class="form__input" value="VL">
 
-                    <fieldset class="form__fieldset">
-                        <legend class="sr-only">Informations du pneu</legend>
+                        <fieldset class="form__fieldset">
+                            <legend class="sr-only">Informations du pneu</legend>
 
-                        <div class="form__grid">
-                            <div class="form__group">
-                                <label class="form__label" for="brand">Marque</label>
-                                <select class="form__select" name="brand" id="brand">
-                                    <option value="">Choisir une marque</option>
-                                    <?php foreach ($brands as $brand) { ?>
-                                        <option value="<?= htmlspecialchars($brand) ?>"><?= htmlspecialchars($brand) ?></option>
-                                    <?php } ?>
-                                    <option value="other">Autre...</option>
-                                </select>
-                                <input type="text" id="brand_other" name="brand_other" class="form__input is-hidden" placeholder="Nouvelle marque">
-                            </div>
-                            <div class="form__group--inline">
+                            <div class="form__grid">
                                 <div class="form__group">
-                                    <label class="form__label" for="width">Largeur</label>
-                                    <input type="number" id="width" name="width" class="form__input" placeholder="Largeur (ex: 205)" required>
+                                    <label class="form__label" for="brand">Marque</label>
+                                    <select class="form__select" name="brand" id="brand">
+                                        <option value="">Choisir une marque</option>
+                                        <?php foreach ($brands as $brand) { ?>
+                                            <option value="<?= htmlspecialchars($brand) ?>"><?= htmlspecialchars($brand) ?></option>
+                                        <?php } ?>
+                                        <option value="other">Autre...</option>
+                                    </select>
+                                    <input type="text" id="brand_other" name="brand_other" class="form__input is-hidden" placeholder="Nouvelle marque">
+                                </div>
+                                <div class="form__group--inline">
+                                    <div class="form__group">
+                                        <label class="form__label" for="width">Largeur</label>
+                                        <input type="number" id="width" name="width" class="form__input" placeholder="Largeur (ex: 205)" required>
+                                    </div>
+
+                                    <div class="form__group">
+                                        <label class="form__label" for="height">Hauteur</label>
+                                        <input type="text" id="height" name="height" class="form__input" placeholder="Hauteur (ex: 55 ou R)" required>
+                                    </div>
+                                </div>
+                                <div class="form__group--inline">
+                                    <div class="form__group">
+                                        <label class="form__label" for="diameter">Diamètre</label>
+                                        <input type="number" id="diameter" name="diameter" class="form__input" placeholder="Diamètre (ex: 16)" required>
+                                    </div>
+                                    <div class="form__group">
+                                        <label class="form__label" for="load_index">Charge</label>
+                                        <input type="number" id="load_index" name="load_index" class="form__input" placeholder="Indice de charge (ex: 91 ou 120)" required>
+                                    </div>
+                                </div>
+                                <div class="form__group--inline">
+                                    <div class="form__group">
+                                        <label class="form__label" for="speed_index">Vitesse</label>
+                                        <input type="text" id="speed_index" name="speed_index" class="form__input" placeholder="Indice de vitesse (ex: T)" required>
+                                    </div>
+                                    <div class="form__group">
+                                        <label class="form__label" for="dot">DOT</label>
+                                        <input type="number" id="dot" name="dot" class="form__input" placeholder="AAAA" required>
+                                    </div>
+                                </div>
+                                <div class="form__group--inline">
+                                    <div class="form__group">
+                                        <label class="form__label" for="create_quantity_available">Quantité</label>
+                                        <input type="number" id="create_quantity_available" name="quantity_available" min="1" placeholder="Quantité" class="form__input" value="<?= htmlspecialchars($_GET['quantity_available'] ?? '') ?>" required>
+                                    </div>
+                                    <div class="form__group">
+                                        <label class="form__label" for="unit_price_excluding_tax">P.U. H.T.</label>
+                                        <input type="number" id="unit_price_excluding_tax" name="unit_price_excluding_tax" step="0.50" min="0" class="form__input" placeholder="Prix H.T." required>
+                                    </div>
+                                </div>
+                                <div class="form__group">
+                                    <label class="form__label" for="season">Saison</label>
+                                    <select class="form__select" name="season" id="season" required>
+                                        <option value="">Choisir une saison</option>
+                                        <option value="ETE">Été</option>
+                                        <option value="4S">4 Saisons</option>
+                                        <option value="HIVER">Hiver</option>
+                                    </select>
                                 </div>
 
                                 <div class="form__group">
-                                    <label class="form__label" for="height">Hauteur</label>
-                                    <input type="text" id="height" name="height" class="form__input" placeholder="Hauteur (ex: 55 ou R)" required>
+                                    <label class="form__label" for="quality">État</label>
+                                    <select class="form__select" name="quality" id="quality" required>
+                                        <option value="">Choisir un état</option>
+                                        <option value="NEUF">Neuf</option>
+                                        <option value="TB">Très bon</option>
+                                        <option value="MOY">Moyen</option>
+                                    </select>
                                 </div>
-                            </div>
-                            <div class="form__group--inline">
+
                                 <div class="form__group">
-                                    <label class="form__label" for="diameter">Diamètre</label>
-                                    <input type="number" id="diameter" name="diameter" class="form__input" placeholder="Diamètre (ex: 16)" required>
+                                    <label class="form__label" for="features">Particularités</label>
+                                    <textarea class="form__textarea" name="features" id="features" placeholder="Détails / particularités..."></textarea>
                                 </div>
-                                <div class="form__group">
-                                    <label class="form__label" for="load_index">Charge</label>
-                                    <input type="number" id="load_index" name="load_index" class="form__input" placeholder="Indice de charge (ex: 91 ou 120)" required>
-                                </div>
-                            </div>
-                            <div class="form__group--inline">
-                                <div class="form__group">
-                                    <label class="form__label" for="speed_index">Vitesse</label>
-                                    <input type="text" id="speed_index" name="speed_index" class="form__input" placeholder="Indice de vitesse (ex: T)" required>
-                                </div>
-                                <div class="form__group">
-                                    <label class="form__label" for="dot">DOT</label>
-                                    <input type="number" id="dot" name="dot" class="form__input" placeholder="AAAA" required>
-                                </div>
-                            </div>
-                            <div class="form__group--inline">
-                                <div class="form__group">
-                                    <label class="form__label" for="create_quantity_available">Quantité</label>
-                                    <input type="number" id="create_quantity_available" name="quantity_available" min="1" placeholder="Quantité" class="form__input" value="<?= htmlspecialchars($_GET['quantity_available'] ?? '') ?>" required>
-                                </div>
-                                <div class="form__group">
-                                    <label class="form__label" for="unit_price_excluding_tax">P.U. H.T.</label>
-                                    <input type="number" id="unit_price_excluding_tax" name="unit_price_excluding_tax" step="0.50" min="0" class="form__input" placeholder="Prix H.T." required>
-                                </div>
-                            </div>
-                            <div class="form__group">
-                                <label class="form__label" for="season">Saison</label>
-                                <select class="form__select" name="season" id="season" required>
-                                    <option value="">Choisir une saison</option>
-                                    <option value="ETE">Été</option>
-                                    <option value="4S">4 Saisons</option>
-                                    <option value="HIVER">Hiver</option>
-                                </select>
                             </div>
 
-                            <div class="form__group">
-                                <label class="form__label" for="quality">État</label>
-                                <select class="form__select" name="quality" id="quality" required>
-                                    <option value="">Choisir un état</option>
-                                    <option value="NEUF">Neuf</option>
-                                    <option value="TB">Très bon</option>
-                                    <option value="MOY">Moyen</option>
-                                </select>
+                            <div class="form__actions">
+                                <button type="submit" class="btn btn--dark">Enregistrer</button>
+                                <button type="reset" class="btn btn--dark">Réinitialiser</button>
+                                <button class="btn btn--dark" id="print-btn" aria-label="Imprimer la page">Imprimer</button>
+                                <button type="button" class="btn btn--dark" id="quitButton">Quitter</button>
                             </div>
-
-                            <div class="form__group">
-                                <label class="form__label" for="features">Particularités</label>
-                                <textarea class="form__textarea" name="features" id="features" placeholder="Détails / particularités..."></textarea>
-                            </div>
-                        </div>
-
-                        <div class="form__actions">
-                            <button type="submit" class="btn btn--dark">Enregistrer</button>
-                            <button type="reset" class="btn btn--dark">Réinitialiser</button>
-                            <button class="btn btn--dark" id="print-btn" aria-label="Imprimer la page">Imprimer</button>
-                            <button type="button" class="btn btn--dark" id="quitButton">Quitter</button>
-                        </div>
-                    </fieldset>
-                </form>
+                        </fieldset>
+                    </form>
+                <?php } ?>
             </aside>
 
             <!-- TABLE COLUMN -->
@@ -157,7 +159,9 @@
             <form id="duplicateForm" method="POST" action="index.php?route=stock-increment">
                 <input class="form__input" type="hidden" name="product_id" id="duplicateProductId" value="">
                 <input class="form__input" type="hidden" name="added_quantity" id="duplicateAddedQty" value="">
-                <button type="button" id="duplicateConfirmBtn" class="btn btn--dark">Augmenter le stock</button>
+                <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary', 'user'])) { ?>
+                    <button type="button" id="duplicateConfirmBtn" class="btn btn--dark">Augmenter le stock</button>
+                <?php } ?>
                 <button type="button" id="duplicateCancelBtn" class="btn btn--dark">Annuler</button>
             </form>
         </div>
