@@ -55,15 +55,18 @@ STOCKEASY/
 ├── src/
 │ ├── Controllers/
 │ │ ├── AuthController.php
-│ │ ├── Error404Controller.php
+│ │ ├── LogController.php
+│ │ ├── PartialsController.php
 │ │ ├── PublicController.php
 │ │ ├── StockController.php
 │ │ └── UserController.php
 │ ├── Core/
 │ │ ├── AbstractController.php
 │ │ ├── AbstractModel.php
+│ │ ├── Access.php
 │ │ ├── Autoloader.php
 │ │ ├── Database.php
+│ │ ├── permissions.php
 │ │ └── Router.php
 │ ├── Models/
 │ │ ├── LogModel.php
@@ -71,12 +74,19 @@ STOCKEASY/
 │ │ ├── StockModel.php
 │ │ └── UserModel.php
 │ ├── Views/
+│ │ ├── customer/
+│ │ │ ├── customer-create.phtml
+│ │ │ ├── customer-edit.phtml
+│ │ │ ├── customer-home.phtml
+│ │ │ ├── customer-list.phtml
+│ │ │ └── customer-search.phtml
 │ │ ├── logs/
 │ │ │ ├── log-home.phtml
 │ │ │ ├── modification.phtml
 │ │ │ └── system.phtml
 │ │ ├── partials/
 │ │ │ ├── construction.phtml
+│ │ │ ├── error403.phtml
 │ │ │ └── error404.phtml
 │ │ ├── stock/
 │ │ │ ├── stock-create.phtml
@@ -94,6 +104,7 @@ STOCKEASY/
 │ │ ├── home.phtml
 │ │ ├── layout.phtml
 │ │ ├── login.phtml
+│ │ ├── password-reset.phtml
 │
 ├── .env
 ├── .env.example
@@ -271,7 +282,7 @@ StockEasy implements a centralized and extensible logging system, ensuring full 
 
 ---
 
-## Next Steps
+## Next Steps - V2
 
 The following functional blocks are planned and will follow the same secure, documented, and modular approach:
 
@@ -302,7 +313,7 @@ The following functional blocks are planned and will follow the same secure, doc
 
 ---
 
-## Planned Features (V2+)
+## Planned Features (V3+)
 
 These features are planned for a future release after V2 delivery:
 
@@ -311,6 +322,22 @@ These features are planned for a future release after V2 delivery:
 - Scheduled stock alerts and appointment reminders (email/SMS)
 - Client portal with downloadable invoice history
 - Data anonymization and GDPR log tracking
+
+---
+
+## Accessibility Policy
+
+StockEasy follows accessibility best practices to ensure usability by all users, including those with visual, motor, or cognitive impairments.
+The interface is designed in compliance with WCAG 2.1 – Level AA, and the following key principles have been implemented:
+
+- Responsive layout: mobile-first structure, scalable to tablet and desktop
+- Readable typography: sufficient contrast, resizable text, clear fonts
+- Keyboard navigation: all interactive elements are accessible via keyboard
+- Semantic HTML: headings, landmarks and form elements are correctly structured
+- ARIA attributes: used when necessary to support screen readers (e.g., for accordion menus)
+- Alternative text: all non-decorative images have meaningful alt attributes
+- Avoidance of motion: animations are minimal, non-intrusive, and do not trigger motion sensitivity
+- Accessibility will be further reinforced in future versions, especially on the public-facing side (client portal and contact forms).
 
 ---
 
