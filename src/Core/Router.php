@@ -52,7 +52,7 @@ class Router
             }
             $this->redirectToError404();
         } elseif ($route === null) {
-            header('Location: index.php?route=home');
+            header('Location: index.php?route=login');
             exit();
         } else {
             $this->redirectToError404();

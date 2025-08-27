@@ -16,6 +16,8 @@
 
 <body class="layout">
 
+    <a href="#main" class="skip-link sr-only">Aller au contenu principal</a>
+
     <!-- HEADER -->
 <header class="layout__header">
 
@@ -122,7 +124,7 @@
                     <!-- Bloc STOCK -->
                     <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user','intern'])) { ?>
                         <li class="sidebar__item">
-                            <a href="/stockeasy/public/index.php?route=stock-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-stock">
+                            <a href="/stockeasy/public/index.php?route=stock-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-stock" role="button">
                                 <i class="fa-solid fa-warehouse" aria-hidden="true"></i> Stock
                             </a>
                             <ul class="sidebar__submenu" id="submenu-stock" aria-hidden="true">
@@ -149,7 +151,7 @@
                     <!-- Bloc CUSTOMER -->
                     <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user','intern'])) { ?>
                         <li class="sidebar__item">
-                            <a href="/stockeasy/public/index.php?route=customer-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-customers">
+                            <a href="/stockeasy/public/index.php?route=customer-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-customers" role="button">
                                 <i class="fa-solid fa-address-book" aria-hidden="true"></i> Clients
                             </a>
                             <ul class="sidebar__submenu" id="submenu-customers" aria-hidden="true">
@@ -173,10 +175,10 @@
                     <!-- Bloc ACCOUNTING -->
                     <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary'])) { ?>
                         <li class="sidebar__item">
-                            <a href="/stockeasy/public/index.php?route=accounting-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-customers">
+                            <a href="/stockeasy/public/index.php?route=accounting-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-accounting" role="button">
                                 <i class="fa-solid fa-calculator" aria-hidden="true"></i> Compta
                             </a>
-                            <ul class="sidebar__submenu" id="submenu-customers" aria-hidden="true">
+                            <ul class="sidebar__submenu" id="submenu-accounting" aria-hidden="true">
                                 <li class="sidebar__subitem sidebar__subitem--home">
                                     <a href="/stockeasy/public/index.php?route=accounting-home" class="sidebar__sublink">Accueil Compta</a>
                                 </li>
@@ -187,10 +189,10 @@
                     <!-- Bloc EDITIONS -->
                     <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user'])) { ?>
                         <li class="sidebar__item">
-                            <a href="/stockeasy/public/index.php?route=editions-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-customers">
+                            <a href="/stockeasy/public/index.php?route=editions-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-editions" role="button">
                                 <i class="fa-solid fa-print" aria-hidden="true"></i> Editions
                             </a>
-                            <ul class="sidebar__submenu" id="submenu-customers" aria-hidden="true">
+                            <ul class="sidebar__submenu" id="submenu-editions" aria-hidden="true">
                                 <li class="sidebar__subitem sidebar__subitem--home">
                                     <a href="/stockeasy/public/index.php?route=editions-home" class="sidebar__sublink">Accueil Editions</a>
                                 </li>
@@ -202,7 +204,7 @@
                     <!-- TODO : Restreindre à super-admin uniquement (si isset session et si session === super_admin) -->
                     <?php if (\App\Core\Access::hasRole('super_admin')) { ?>
                         <li class="sidebar__item">
-                            <a href="/stockeasy/public/index.php?route=user-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-users">
+                            <a href="/stockeasy/public/index.php?route=user-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-users" role="button">
                                 <i class="fa-solid fa-users" aria-hidden="true"></i> Utilisateurs
                             </a>
                             <ul class="sidebar__submenu" id="submenu-users" aria-hidden="true">
@@ -231,10 +233,9 @@
                     <?php } ?>
 
                     <!-- Bloc LOGS (super_admin seulement) -->
-                    <!-- TODO: Restreindre à super-admin uniquement (si isset session et si session === super_admin)  -->
                     <?php if (\App\Core\Access::hasRole('super_admin')) { ?>
                         <li class="sidebar__item">
-                            <a href="/stockeasy/public/index.php?route=log-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-logs">
+                            <a href="/stockeasy/public/index.php?route=log-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-logs" role="button">
                                 <i class="fa-solid fa-database" aria-hidden="true"></i> Logs
                             </a>
                             <ul class="sidebar__submenu" id="submenu-logs" aria-hidden="true">
@@ -268,7 +269,7 @@
                             </a>
                         </li>
                     </ul>
-                    <a href="/stockeasy/public/index.php?route=logout" class="sidebar__logout">
+                    <a href="/stockeasy/public/index.php?route=logout" class="sidebar__logout" aria-label="Déconnexion (menu latéral)">
                         <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Déconnexion
                     </a>
                 </div>
@@ -277,7 +278,7 @@
         </aside>
 
         <!-- MAIN CONTENT -->
-        <main class="layout__content">
+        <main class="layout__content" id="main">
             <?php
                 $success = $_SESSION['success'] ?? $_GET['success'] ?? null;
                 $error = $_SESSION['error'] ?? ($_GET['error'] ?? null);
@@ -286,7 +287,7 @@
 
                 if ($success || $error) { ?>
                     <div class="message">
-                        <div class="message__modal <?= $success ? 'message__modal--success' : 'message__modal--error' ?>" role="alert" aria-live="assertive">
+                        <div class="message__modal <?= $success ? 'message__modal--success' : 'message__modal--error' ?>" role="alert" aria-live="assertive" tabindex="-1">
                             <button class="message__close" aria-label="Fermer le message">&times;</button>
                             <p><?= htmlspecialchars($success ?? $error) ?></p>
                         </div>
