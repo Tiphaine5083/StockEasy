@@ -153,6 +153,9 @@ td.disabled {
 .form__hint {
     display: block;
     margin-top: 0.3rem;
+    overflow-wrap: break-word;
+    color: blue;
+    background-color: variables.$light-bg;
     @include mixins.responsive-font(0.9rem, 1.1rem, 1.2rem);
 
     &--valid {
@@ -162,4 +165,12 @@ td.disabled {
     &--error {
         color: red;
     }
+}
+
+kbd {
+    background: variables.$pearl-grey;
+    border-radius: 0.3rem;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.85em;
+    font-family: monospace;
 }

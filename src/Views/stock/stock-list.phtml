@@ -1,76 +1,77 @@
 <div class="page stock-list">
-    <h1 class="stock-list__title">Inventaire</h1>
+    <h1 class="page__title">Inventaire</h1>
     <p class="stock-list__count">
         <em>Résultat(s) :
         <span class="result-count"><?= $nbDisplayed ?></span>
         / <?= $nbTotal ?>
         </em>
     </p>
+    <div class="page__wrapper">
+        <div class="stock-list__filter">
+            <?php
+                $stockFilters = [
+                    'all' => 'Tout le stock',
+                    'in'  => 'En stock',
+                    'out' => 'Rupture de stock'
+                ];
+            ?>
+            <form method="GET" action="index.php" class="stock-list__form form">
+                <input type="hidden" name="route" class="form__input" value="stock-list" />
 
-    <div class="stock-list__filter">
-        <?php
-            $stockFilters = [
-                'all' => 'Tout le stock',
-                'in'  => 'En stock',
-                'out' => 'Rupture de stock'
-            ];
-        ?>
-        <form method="GET" action="index.php" class="stock-list__form form">
-            <input type="hidden" name="route" class="form__input" value="stock-list" />
+                <fieldset class="form__fieldset stock-list__fieldset">
+                    <legend class="form__legend">Choix du stock à afficher</legend>
+                    <div class="stock-list__radios">
+                        <?php foreach ($stockFilters as $value => $label) { ?>
+                            <div class="stock-list__radio">
+                                <input type="radio" id="<?= $value ?>Stock" name="stockFilter" class="form__input" value="<?= $value ?>" <?= ($filter === $value) ? 'checked' : '' ?> />
+                                <label class="form__label" for="<?= $value ?>Stock"><?= $label ?></label>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </fieldset>
 
-            <fieldset class="form__fieldset stock-list__fieldset">
-                <legend class="form__legend">Choix du stock à afficher</legend>
-                <div class="stock-list__radios">
-                    <?php foreach ($stockFilters as $value => $label) { ?>
-                        <div class="stock-list__radio">
-                            <input type="radio" id="<?= $value ?>Stock" name="stockFilter" class="form__input" value="<?= $value ?>" <?= ($filter === $value) ? 'checked' : '' ?> />
-                            <label class="form__label" for="<?= $value ?>Stock"><?= $label ?></label>
-                        </div>
-                    <?php } ?>
-                </div>
-            </fieldset>
+                <button class="stock-list__submit btn btn--icon" type="submit" aria-label="Voir les résultats">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
 
-            <button class="stock-list__submit btn btn--icon" type="submit" aria-label="Voir les résultats">
-                <i class="fa-solid fa-magnifying-glass"></i>
+            <button class="stock-list__print btn btn--icon" id="print-btn" aria-label="Imprimer la page">
+                <i class="fa-solid fa-print"></i>
             </button>
-        </form>
-
-        <button class="stock-list__print btn btn--icon" id="print-btn" aria-label="Imprimer la page">
-            <i class="fa-solid fa-print"></i>
-        </button>
-    </div>
-
-    <section class="stock-page__table-wrapper stock-listing">
-        <h2 class="sr-only">Liste des résultats du stock</h2>
-        <table class="table">
-            <thead class="table__thead">
-                <tr class="table__tr">
-                    <th class="table__th"data-label = "Marque">Marque</th>
-                    <th class="table__th"data-label = "Taille commerciale">Taille commerciale</th>
-                    <th class="table__th"data-label = "Charge/Vitesse">Charge / Vitesse</th>
-                    <th class="table__th"data-label = "Saison">Saison</th>
-                    <th class="table__th"data-label = "État">État</th>
-                    <th class="table__th"data-label = "Quantité">Quantité</th>
-                    <th class="table__th"data-label = "Prix unitaire H.T.">Prix unitaire H.T.</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php foreach($data as $key => $value) { ?>
-                <tr class="table__tr">
-                    <td class="table__td" data-label = "Marque"> <?= $value['brand'] ?> </td>
-                    <td class="table__td" data-label = "Taille commerciale"> <?= $value['width'] ?>/<?= $value['height'] ?>/<?= $value['diameter'] ?> </td>
-                    <td class="table__td" data-label = "Charge/Vitesse"> <?= $value['load_index'] ?><?= $value['speed_index'] ?></td>
-                    <td class="table__td" data-label = "Saison"><?= $value['season'] ?></td>
-                    <td class="table__td" data-label = "État"><?= $value['quality'] ?></td>
-                    <td class="table__td" data-label = "Quantité"><?= $value['quantity_available'] ?></td>
-                    <td class="table__td" data-label = "Prix unitaire H.T."><?= $value['unit_price_excluding_tax'] ?> €</td>
-                </tr>
-            <?php } ?>
-            </tbody>
-        </table>
-        <div class="stock-list__actions">
-            <button type="submit" class="btn btn--saffron stock-list__load-more" id="load-more">Charger plus...</button>
-            <button type="submit" class="btn btn--saffron stock-list__load-all" id="load-all">Charger tout</button>
         </div>
-    </section>
+
+        <section class="stock-page__table-wrapper stock-listing">
+            <h2 class="sr-only">Liste des résultats du stock</h2>
+            <table class="table">
+                <thead class="table__thead">
+                    <tr class="table__tr">
+                        <th class="table__th"data-label = "Marque">Marque</th>
+                        <th class="table__th"data-label = "Taille commerciale">Taille commerciale</th>
+                        <th class="table__th"data-label = "Charge/Vitesse">Charge / Vitesse</th>
+                        <th class="table__th"data-label = "Saison">Saison</th>
+                        <th class="table__th"data-label = "État">État</th>
+                        <th class="table__th"data-label = "Quantité">Quantité</th>
+                        <th class="table__th"data-label = "Prix unitaire H.T.">Prix unitaire H.T.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach($data as $key => $value) { ?>
+                    <tr class="table__tr">
+                        <td class="table__td" data-label = "Marque"> <?= $value['brand'] ?> </td>
+                        <td class="table__td" data-label = "Taille commerciale"> <?= $value['width'] ?>/<?= $value['height'] ?>/<?= $value['diameter'] ?> </td>
+                        <td class="table__td" data-label = "Charge/Vitesse"> <?= $value['load_index'] ?><?= $value['speed_index'] ?></td>
+                        <td class="table__td" data-label = "Saison"><?= $value['season'] ?></td>
+                        <td class="table__td" data-label = "État"><?= $value['quality'] ?></td>
+                        <td class="table__td" data-label = "Quantité"><?= $value['quantity_available'] ?></td>
+                        <td class="table__td" data-label = "Prix unitaire H.T."><?= $value['unit_price_excluding_tax'] ?> €</td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+            <div class="stock-list__actions">
+                <button type="submit" class="btn btn--saffron stock-list__load-more" id="load-more">Charger plus...</button>
+                <button type="submit" class="btn btn--saffron stock-list__load-all" id="load-all">Charger tout</button>
+            </div>
+        </section>
+    </div>
 </div>

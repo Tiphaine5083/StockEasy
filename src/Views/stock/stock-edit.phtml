@@ -1,6 +1,6 @@
 <div class="page stock-page">
-    <h1 class="stock-page__title">Modifier le pneu</h1>
-    <div class="layout__wrapper">
+    <h1 class="page__title">Modifier le pneu</h1>
+    <div class="page__wrapper">
         <div class="stock-page__content">
             <aside class="stock-page__form">
                 <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary', 'user'])) { ?>
@@ -99,48 +99,26 @@
                                     <input type="text" id="unit_price_excluding_tax" name="unit_price_excluding_tax" class="form__input" value="<?= htmlspecialchars($tire['unit_price_excluding_tax']) ?>" placeholder="P.U. H.T.">
                                 </div>
                             </div>
-                            <div class="form__inline">
-                                <fieldset class="form__fieldset">
-                                    <legend class="form__legend">Saison</legend>
-                                    <div class="form__radio-wrapper">
-                                        <div class="form__radio">
-                                            <input type="radio" id="season-ete" name="season" value="ETE" class="form__input visually-hidden" <?= $disabled ?>
-                                            <?= ($tire['season'] === 'ETE') ? 'checked' : '' ?> />
-                                            <label class="form__label" for="season-ete" aria-label="Été" title="Été"><i class="fa-solid fa-sun"></i></label>
-                                        </div>
-                                        <div class="form__radio">
-                                            <input type="radio" id="season-4s" name="season" value="4S" class="form__input visually-hidden" <?= $disabled ?>
-                                            <?= ($tire['season'] === '4S') ? 'checked' : '' ?> />
-                                            <label class="form__label" for="season-4s" aria-label="4 saisons" title="4 Saisons"><i class="fa-solid fa-cloud-sun-rain"></i></label>
-                                        </div>
-                                        <div class="form__radio">
-                                            <input type="radio" id="season-hiver" name="season" value="HIVER" class="form__input visually-hidden" <?= $disabled ?>
-                                            <?= ($tire['season'] === 'HIVER') ? 'checked' : '' ?> />
-                                            <label class="form__label" for="season-hiver" aria-label="Hiver" title="Hiver"><i class="fa-solid fa-cloud-showers-heavy"></i></label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                                <fieldset class="form__fieldset">
-                                    <legend class="form__legend">État</legend>
-                                    <div class="form__radio-wrapper">
-                                        <div class="form__radio">
-                                            <input type="radio" id="quality-neuf" name="quality" value="NEUF" class="form__input visually-hidden" <?= $disabled ?>
-                                            <?= ($tire['quality'] === 'NEUF') ? 'checked' : '' ?> />
-                                            <label class="form__label" for="quality-neuf"><i class="fa-solid fa-n"></i></label>
-                                        </div>
-                                        <div class="form__radio">
-                                            <input type="radio" id="quality-tb" name="quality" value="TB" class="form__input visually-hidden" <?= $disabled ?>
-                                            <?= ($tire['quality'] === 'TB') ? 'checked' : '' ?> />
-                                            <label class="form__label" for="quality-tb"><i class="fa-solid fa-t"></i><i class="fa-solid fa-b"></i></label>
-                                        </div>
-                                        <div class="form__radio">
-                                            <input type="radio" id="quality-moy" name="quality" value="MOY" class="form__input visually-hidden" <?= $disabled ?>
-                                            <?= ($tire['quality'] === 'MOY') ? 'checked' : '' ?> />
-                                            <label class="form__label" for="quality-moy"><i class="fa-solid fa-m"></i></label>
-                                        </div>
-                                    </div>
-                                </fieldset>
+                            <div class="form__group">
+                                <label class="form__label" for="season">Saison</label>
+                                <select class="form__select" name="season" id="season" <?= $disabled ?> required>
+                                    <option value="">Choisir une saison</option>
+                                    <option value="ETE" <?= ($tire['season'] === 'ETE') ? 'selected' : '' ?>>Été</option>
+                                    <option value="4S" <?= ($tire['season'] === '4S') ? 'selected' : '' ?>>4 Saisons</option>
+                                    <option value="HIVER" <?= ($tire['season'] === 'HIVER') ? 'selected' : '' ?>>Hiver</option>
+                                </select>
                             </div>
+
+                            <div class="form__group">
+                                <label class="form__label" for="quality">État</label>
+                                <select class="form__select" name="quality" id="quality" <?= $disabled ?> required>
+                                    <option value="">Choisir un état</option>
+                                    <option value="NEUF" <?= ($tire['quality'] === 'NEUF') ? 'selected' : '' ?>>Neuf</option>
+                                    <option value="TB" <?= ($tire['quality'] === 'TB') ? 'selected' : '' ?>>Très bon</option>
+                                    <option value="MOY" <?= ($tire['quality'] === 'MOY') ? 'selected' : '' ?>>Moyen</option>
+                                </select>
+                            </div>
+
                             <div class="form__actions">
                                 <button type="submit" class="btn btn--dark">Valider</button>
 

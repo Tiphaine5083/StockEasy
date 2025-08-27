@@ -93,11 +93,6 @@ h1, h2, h3, h4, h5, h6 {
     height: 100vh;
   }
 }
-@media (min-width: 1280px) {
-  .layout {
-    grid-template-rows: 138px auto 35px;
-  }
-}
 
 .header__breadcrumb-bar {
   background-color: #D9D6D1;
@@ -131,11 +126,11 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #2C3258;
   color: white;
   padding: 1rem 2rem;
-  height: 118px;
+  height: 100px;
 }
 @media (min-width: 1280px) {
   .header__main {
-    height: 138px;
+    height: 100px;
   }
 }
 @media (min-width: 768px) {
@@ -154,11 +149,6 @@ h1, h2, h3, h4, h5, h6 {
 .header__main .header__branding img {
   max-height: 6rem;
   height: auto;
-}
-@media (min-width: 1280px) {
-  .header__main .header__branding img {
-    max-height: 8rem;
-  }
 }
 .header__main .header__title {
   font-family: "League Spartan", sans-serif;
@@ -388,7 +378,6 @@ h1, h2, h3, h4, h5, h6 {
   flex: 1;
   overflow-y: auto;
   padding: 2rem;
-  border-radius: 0.8rem;
 }
 @media (min-width: 768px) {
   .layout__content {
@@ -834,6 +823,9 @@ td.disabled {
 .form__hint {
   display: block;
   margin-top: 0.3rem;
+  overflow-wrap: break-word;
+  color: blue;
+  background-color: #F1F0EF;
 }
 @media (min-width: 768px) {
   .form__hint {
@@ -850,6 +842,14 @@ td.disabled {
 }
 .form__hint--error {
   color: red;
+}
+
+kbd {
+  background: #DBD7D4;
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.85em;
+  font-family: monospace;
 }
 
 .stock-page__table-wrapper {
@@ -1052,31 +1052,27 @@ td.disabled {
   }
 }
 
-.page {
-  margin: 2rem;
-  background-color: white;
+.page__title {
+  margin-top: -2rem;
   padding: 1rem;
-}
-.page > [class$=__title] {
-  margin: -1rem;
-  padding-left: 3rem;
   background-color: #F1F0EF;
   padding-bottom: 1rem;
 }
 @media (min-width: 768px) {
-  .page > [class$=__title] {
+  .page__title {
     font-size: 2.4rem;
   }
 }
 @media (min-width: 1024px) {
-  .page > [class$=__title] {
+  .page__title {
     font-size: 2.8rem;
   }
 }
-@media (min-width: 1280px) {
-  .page > [class$=__title] {
-    font-size: 3.2rem;
-  }
+.page__wrapper {
+  background-color: white;
+  border-top-left-radius: 0.8rem;
+  border-top-right-radius: 0.8rem;
+  padding: 2rem;
 }
 
 .stock-page {

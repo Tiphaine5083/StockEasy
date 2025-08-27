@@ -27,7 +27,6 @@ $warning: #FFC107;
 $info: #0DCAF0;
 
 // Polices
-
 @font-face {
   font-family: 'Work Sans';
   src: url('/assets/fonts/WorkSans.ttf') format('ttf');
@@ -41,12 +40,9 @@ $text-font:  'Work Sans', 'Verdana', sans-serif;
 
 
 // Z-Index
-
 $z-header: 10;
 $z-modal:  100;
 
 // Height : header and footer
-
-$header-height-desktop: 118px;
-$header-height-desktop-lg: 138px;
+$header-height: 100px;
 $footer-height: 35px;

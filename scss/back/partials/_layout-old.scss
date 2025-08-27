@@ -342,11 +342,11 @@
         border-radius: 0.8rem; 
 
         @include mixins.desktop {
-            height: calc(100vh - variables.$header-height-desktop - variables.$footer-height - 2rem);
+            height: calc(100vh - variables.$header-height - variables.$footer-height - 2rem);
         }
 
         @include mixins.desktop-lg {
-            height: calc(100vh - variables.$header-height-desktop-lg - variables.$footer-height - 2rem);
+            height: calc(100vh - variables.$header-height - variables.$footer-height - 2rem);
         }
     }
 

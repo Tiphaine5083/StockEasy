@@ -9,101 +9,103 @@ $roleFilter = $_GET['role'] ?? '';
 ?>
 
 <div class="page user-list">
-    <h1 class="user-list__title"><?= $title ?></h1>
+    <h1 class="page__title"><?= $title ?></h1>
 
-    <div class="user-list__form">
-        <form method="GET" action="index.php" class="form">
-            <input type="hidden" name="route" value="user-search">
-            <input type="hidden" name="status" value="<?= htmlspecialchars($status) ?>">
+    <div class="page__wrapper">
+        <div class="user-list__form">
+            <form method="GET" action="index.php" class="form">
+                <input type="hidden" name="route" value="user-search">
+                <input type="hidden" name="status" value="<?= htmlspecialchars($status) ?>">
 
-            <div class="form__group">
-                <label for="name" class="form__label">Nom</label>
-                <input type="text" id="name" name="name" class="form__input" value="<?= htmlspecialchars($nameFilter) ?>">
-            </div>
+                <div class="form__group">
+                    <label for="name" class="form__label">Nom</label>
+                    <input type="text" id="name" name="name" class="form__input" value="<?= htmlspecialchars($nameFilter) ?>">
+                </div>
 
-            <div class="form__group">
-                <label for="email" class="form__label">Email</label>
-                <input type="text" id="email" name="email" class="form__input" value="<?= htmlspecialchars($emailFilter) ?>">
-            </div>
+                <div class="form__group">
+                    <label for="email" class="form__label">Email</label>
+                    <input type="text" id="email" name="email" class="form__input" value="<?= htmlspecialchars($emailFilter) ?>">
+                </div>
 
-            <div class="form__group">
-                <label for="role" class="form__label">Rôle</label>
-                <select id="role" name="role" class="form__select">
-                    <option value="">-- Tous les rôles --</option>
-                    <?php foreach ($roles as $role) { ?>
-                        <option value="<?= htmlspecialchars($role['role_name']) ?>" <?= $roleFilter === $role['role_name'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($role['role_name']) ?>
-                        </option>
-                    <?php } ?>
-                </select>
-            </div>
+                <div class="form__group">
+                    <label for="role" class="form__label">Rôle</label>
+                    <select id="role" name="role" class="form__select">
+                        <option value="">-- Tous les rôles --</option>
+                        <?php foreach ($roles as $role) { ?>
+                            <option value="<?= htmlspecialchars($role['role_name']) ?>" <?= $roleFilter === $role['role_name'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($role['role_name']) ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                </div>
 
-            <div class="form__group form__group--buttons">
-                <button type="submit" class="btn btn--dark">Rechercher</button>
-                <a href="index.php?route=user-list&status=<?= htmlspecialchars($status) ?>" class="btn btn--dark">Réinitialiser</a>
-            </div>
-        </form>
-    </div>
-    <section class="stock-page__table-wrapper">
-        <h2 class="sr-only">Résultats de la recherche</h2>
-        <table class="table">
-            <thead class="table__thead">
-                <tr class="table__tr">
-                    <th>Statut</th>
-                    <th>Nom</th>
-                    <th>Email</th>
-                    <th>Dernière connexion</th>
-                    <th>Rôle</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($users)){ ?>
-                    <?php foreach ($users as $user) { ?>
-                        <tr class="table__tr">
-                            <td class="table__td" data-label="Statut">
-                                <form method="POST" action="index.php?route=toggle-status&status=<?= htmlspecialchars($status) ?>" class="status-toggle-form">
-                                    <input type="hidden" name="id" value="<?= $user['id'] ?>">
-                                    <button type="submit"
-                                            class="btn btn-icon"
-                                            title="<?= $user['active'] ? 'Désactiver' : 'Activer' ?>"
-                                            aria-pressed="<?= $user['active'] ? 'true' : 'false' ?>"
-                                            aria-label="<?= $user['active'] ? 'Utilisateur actif, cliquer pour désactiver' : 'Utilisateur inactif, cliquer pour activer' ?>"
-                                    >
-                                        <i class="fa-solid <?= $user['active'] ? 'fa-toggle-on' : 'fa-toggle-off' ?>"></i>
-                                    </button>
-                                </form>
-                            </td>
-                            <td class="table__td" data-label="Nom"><?= htmlspecialchars($user['first_name']) ?> <?= htmlspecialchars($user['last_name']) ?></td>
-                            <td class="table__td" data-label="Email"><?= htmlspecialchars($user['email']) ?></td>
-                            <td class="table__td" data-label="Dernière connexion"><?= $user['last_login_date'] !== null ? htmlspecialchars($user['last_login_date']) : '—' ?></td>
-                            <td class="table__td" data-label="Rôle"><?= htmlspecialchars($user['role_name']) ?></td>
-                            <td class="table__td user-list__actions"  data-label="Actions">
-                                <a href="index.php?route=user-edit&id=<?= $user['id'] ?>&status=<?= htmlspecialchars($status) ?>" class="btn btn--small"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <?php if ($user['role_name'] === 'intern' || $user['role_name'] === 'guest') { ?>
-                                    <a href="index.php?route=user-delete&id=<?= $user['id'] ?>&status=<?= htmlspecialchars($status) ?>" 
-                                    class="btn btn--small" 
-                                    title="Supprimer cet utilisateur"
-                                    onclick="return confirm('Confirmez-vous la suppression ?');">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                <?php } else { ?>
-                                    <button class="btn btn--small disabled" disabled title="Suppression non autorisée">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                <?php } ?>
-                                <!-- <a href="index.php?route=user-permissions&id=<?= $user['id'] ?>&status=<?= htmlspecialchars($status) ?>" class="btn btn--small"><i class="fa-solid fa-gear"></i></a> -->
-                                <a href="index.php?route=construction" class="btn btn--small"><i class="fa-solid fa-gear"></i></a>
-                            </td>
+                <div class="form__group form__group--buttons">
+                    <button type="submit" class="btn btn--dark">Rechercher</button>
+                    <a href="index.php?route=user-list&status=<?= htmlspecialchars($status) ?>" class="btn btn--dark">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+        <section class="stock-page__table-wrapper">
+            <h2 class="sr-only">Résultats de la recherche</h2>
+            <table class="table">
+                <thead class="table__thead">
+                    <tr class="table__tr">
+                        <th>Statut</th>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Dernière connexion</th>
+                        <th>Rôle</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($users)){ ?>
+                        <?php foreach ($users as $user) { ?>
+                            <tr class="table__tr">
+                                <td class="table__td" data-label="Statut">
+                                    <form method="POST" action="index.php?route=toggle-status&status=<?= htmlspecialchars($status) ?>" class="status-toggle-form">
+                                        <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                                        <button type="submit"
+                                                class="btn btn-icon"
+                                                title="<?= $user['active'] ? 'Désactiver' : 'Activer' ?>"
+                                                aria-pressed="<?= $user['active'] ? 'true' : 'false' ?>"
+                                                aria-label="<?= $user['active'] ? 'Utilisateur actif, cliquer pour désactiver' : 'Utilisateur inactif, cliquer pour activer' ?>"
+                                        >
+                                            <i class="fa-solid <?= $user['active'] ? 'fa-toggle-on' : 'fa-toggle-off' ?>"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                                <td class="table__td" data-label="Nom"><?= htmlspecialchars($user['first_name']) ?> <?= htmlspecialchars($user['last_name']) ?></td>
+                                <td class="table__td" data-label="Email"><?= htmlspecialchars($user['email']) ?></td>
+                                <td class="table__td" data-label="Dernière connexion"><?= $user['last_login_date'] !== null ? htmlspecialchars($user['last_login_date']) : '—' ?></td>
+                                <td class="table__td" data-label="Rôle"><?= htmlspecialchars($user['role_name']) ?></td>
+                                <td class="table__td user-list__actions"  data-label="Actions">
+                                    <a href="index.php?route=user-edit&id=<?= $user['id'] ?>&status=<?= htmlspecialchars($status) ?>" class="btn btn--small"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <?php if ($user['role_name'] === 'intern' || $user['role_name'] === 'guest') { ?>
+                                        <a href="index.php?route=user-delete&id=<?= $user['id'] ?>&status=<?= htmlspecialchars($status) ?>" 
+                                        class="btn btn--small" 
+                                        title="Supprimer cet utilisateur"
+                                        onclick="return confirm('Confirmez-vous la suppression ?');">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    <?php } else { ?>
+                                        <button class="btn btn--small disabled" disabled title="Suppression non autorisée">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    <?php } ?>
+                                    <!-- <a href="index.php?route=user-permissions&id=<?= $user['id'] ?>&status=<?= htmlspecialchars($status) ?>" class="btn btn--small"><i class="fa-solid fa-gear"></i></a> -->
+                                    <a href="index.php?route=construction" class="btn btn--small"><i class="fa-solid fa-gear"></i></a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="5">Aucun utilisateur trouvé pour ce statut.</td>
                         </tr>
                     <?php } ?>
-                <?php } else { ?>
-                    <tr>
-                        <td colspan="5">Aucun utilisateur trouvé pour ce statut.</td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

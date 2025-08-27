@@ -6,11 +6,11 @@
 ?>
 
 <div class="page stock-page">
-    <h1 class="stock-page__title">Recherche et modification de stock</h1>
+    <h1 class="page__title">Recherche et modification de stock</h1>
     
-    <div class="layout__wrapper">
+    <div class="page__wrapper">
         <div class="stock-page__content">
-            <aside class="stock-page__form">
+            <aside class="page__form">
                 <form method="GET" action="index.php" class="form">
                 <input type="hidden" name="route" class="form__input" value="stock-search">
                     <fieldset class="form__fieldset">
@@ -60,47 +60,24 @@
                             </div>
 
                         </div>
-                        <div class="form__inline">
-                            <fieldset class="form__fieldset">
-                                <legend class="form__legend">Saison</legend>
-                                <div class="form__checkbox-wrapper">
-                                    <div class="form__checkbox">
-                                        <input type="checkbox" id="season-ete" name="season[]" value="ETE" class="form__input visually-hidden"
-                                        <?php if (isset($_GET['season']) && in_array('ETE', $_GET['season'])) { echo 'checked'; } ?> />
-                                        <label class="form__label" for="season-ete" aria-label="Été" title="Été"><i class="fa-solid fa-sun" aria-hidden="true"></i></label>
-                                    </div>
-                                    <div class="form__checkbox">
-                                        <input type="checkbox" id="season-4s" name="season[]" value="4S" class="form__input visually-hidden" 
-                                        <?php if (isset($_GET['season']) && in_array('4S', $_GET['season'])) { echo 'checked'; } ?> />
-                                        <label class="form__label" for="season-4s" aria-label="4 saisons" title="4 Saisons"><i class="fa-solid fa-cloud-sun-rain" aria-hidden="true"></i></label>
-                                    </div>
-                                    <div class="form__checkbox">
-                                        <input type="checkbox" id="season-hiver" name="season[]" value="HIVER" class="form__input visually-hidden" 
-                                        <?php if (isset($_GET['season']) && in_array('HIVER', $_GET['season'])) { echo 'checked'; } ?> />
-                                        <label class="form__label" for="season-hiver" aria-label="Hiver" title="Hiver"><i class="fa-solid fa-cloud-showers-heavy" aria-hidden="true"></i></label>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            <fieldset class="form__fieldset">
-                                <legend class="form__legend">État</legend>
-                                <div class="form__checkbox-wrapper">
-                                    <div class="form__checkbox">
-                                        <input type="checkbox" id="quality-neuf" name="quality[]" value="NEUF" class="form__input visually-hidden" 
-                                        <?php if (isset($_GET['quality']) && in_array('NEUF', $_GET['quality'])) { echo 'checked'; } ?> />
-                                        <label class="form__label" for="quality-neuf"><i class="fa-solid fa-n" aria-hidden="true"></i></label>
-                                    </div>
-                                    <div class="form__checkbox">
-                                        <input type="checkbox" id="quality-tb" name="quality[]" value="TB" class="form__input visually-hidden"
-                                        <?php if (isset($_GET['quality']) && in_array('TB', $_GET['quality'])) { echo 'checked'; } ?> />
-                                        <label class="form__label" for="quality-tb"><i class="fa-solid fa-t" aria-hidden="true"></i><i class="fa-solid fa-b" aria-hidden="true"></i></label>
-                                    </div>
-                                    <div class="form__checkbox">
-                                        <input type="checkbox" id="quality-moy" name="quality[]" value="MOY" class="form__input visually-hidden"
-                                        <?php if (isset($_GET['quality']) && in_array('MOY', $_GET['quality'])) { echo 'checked'; } ?> />
-                                        <label class="form__label" for="quality-moy"><i class="fa-solid fa-m" aria-hidden="true"></i></label>
-                                    </div>
-                                </div>
-                            </fieldset>
+                        <div class="form__group">
+                            <label class="form__label" for="season">Saison</label>
+                            <select class="form__select" name="season[]" id="season" multiple size="3">
+                                <option value="ETE" <?= (isset($_GET['season']) && in_array('ETE', $_GET['season'])) ? 'selected' : '' ?>>Été</option>
+                                <option value="4S" <?= (isset($_GET['season']) && in_array('4S', $_GET['season'])) ? 'selected' : '' ?>>4 Saisons</option>
+                                <option value="HIVER" <?= (isset($_GET['season']) && in_array('HIVER', $_GET['season'])) ? 'selected' : '' ?>>Hiver</option>
+                            </select>
+                            <span class="form__hint">Maintenez <kbd>Ctrl</kbd> (Windows) ou <kbd>Cmd</kbd> (Mac) pour sélectionner plusieurs options.</span>
+                        </div>
+
+                        <div class="form__group">
+                            <label class="form__label" for="quality">État</label>
+                            <select class="form__select" name="quality[]" id="quality" multiple size="3">
+                                <option value="NEUF" <?= (isset($_GET['quality']) && in_array('NEUF', $_GET['quality'])) ? 'selected' : '' ?>>Neuf</option>
+                                <option value="TB" <?= (isset($_GET['quality']) && in_array('TB', $_GET['quality'])) ? 'selected' : '' ?>>Très bon</option>
+                                <option value="MOY" <?= (isset($_GET['quality']) && in_array('MOY', $_GET['quality'])) ? 'selected' : '' ?>>Moyen</option>
+                            </select>
+                            <span class="form__hint">Maintenez <kbd>Ctrl</kbd> (Windows) ou <kbd>Cmd</kbd> (Mac) pour sélectionner plusieurs options.</span>
                         </div>
                         <div class="form__actions">
                             <button type="submit" class="btn btn--dark">Afficher les résultats</button>
