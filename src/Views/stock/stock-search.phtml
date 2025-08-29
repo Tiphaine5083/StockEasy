@@ -10,12 +10,13 @@
     
     <div class="page__wrapper">
         <div class="stock-page__content">
-            <aside class="page__form">
+            <section class="page__form">
+
                 <form method="GET" action="index.php" class="form">
                 <input type="hidden" name="route" class="form__input" value="stock-search">
-                    <fieldset class="form__fieldset">
-                        <legend class="sr-only">Renseignez les champs de recherche</legend>
+
                         <div class="form__grid">
+
                             <div class="form__group">
                                 <label class="form__label" for="brand">Marque</label>
                                 <select class="form__select" name="brand" id="brand">
@@ -59,38 +60,37 @@
                                 value="<?= htmlspecialchars($_GET['speed_index'] ?? '') ?>" />
                             </div>
 
-                        </div>
                         <div class="form__group">
-                            <label class="form__label" for="season">Saison</label>
-                            <select class="form__select" name="season[]" id="season" multiple size="3">
+                            <label class="form__label" for="season" title="Maintenez la touche Ctrl ou Cmd enfoncée pour sélection multiple">Saison</label>
+                            <select class="form__select" name="season[]" id="season" multiple size="3" title="Maintenez la touche Ctrl ou Cmd enfoncée pour sélection multiple">
                                 <option value="ETE" <?= (isset($_GET['season']) && in_array('ETE', $_GET['season'])) ? 'selected' : '' ?>>Été</option>
                                 <option value="4S" <?= (isset($_GET['season']) && in_array('4S', $_GET['season'])) ? 'selected' : '' ?>>4 Saisons</option>
                                 <option value="HIVER" <?= (isset($_GET['season']) && in_array('HIVER', $_GET['season'])) ? 'selected' : '' ?>>Hiver</option>
                             </select>
-                            <span class="form__hint">Maintenez <kbd>Ctrl</kbd> (Windows) ou <kbd>Cmd</kbd> (Mac) pour sélectionner plusieurs options.</span>
                         </div>
 
                         <div class="form__group">
-                            <label class="form__label" for="quality">État</label>
-                            <select class="form__select" name="quality[]" id="quality" multiple size="3">
+                            <label class="form__label" for="quality" title="Maintenez la touche Ctrl ou Cmd enfoncée pour sélection multiple">État</label>
+                            <select class="form__select" name="quality[]" id="quality" multiple size="3" title="Maintenez la touche Ctrl ou Cmd enfoncée pour sélection multiple">
                                 <option value="NEUF" <?= (isset($_GET['quality']) && in_array('NEUF', $_GET['quality'])) ? 'selected' : '' ?>>Neuf</option>
                                 <option value="TB" <?= (isset($_GET['quality']) && in_array('TB', $_GET['quality'])) ? 'selected' : '' ?>>Très bon</option>
                                 <option value="MOY" <?= (isset($_GET['quality']) && in_array('MOY', $_GET['quality'])) ? 'selected' : '' ?>>Moyen</option>
                             </select>
-                            <span class="form__hint">Maintenez <kbd>Ctrl</kbd> (Windows) ou <kbd>Cmd</kbd> (Mac) pour sélectionner plusieurs options.</span>
                         </div>
+
+                    </div>
+
                         <div class="form__actions">
                             <button type="submit" class="btn btn--dark">Afficher les résultats</button>
-                            <a href="index.php?route=stock-search" class="btn btn--dark">
-                                <i class="fa-solid fa-arrows-rotate"></i>
-                            </a>
+                            <a href="index.php?route=stock-search" class="btn btn--dark">Réinitialiser la recherche</a>
                         </div>
-                    </fieldset>
                 </form>
-            </aside>
-            <section class="stock-page__table">
+
+            </section>
+
+            <section class="page__table">
                 <h3 class="sr-only">Liste des résultats de la recherche de stock</h3>
-                <div class="stock-page__table-wrapper">
+                <div class="page__table-wrapper">
                     <table class="table">
                         <thead class="table__thead">
                             <tr class="table__tr">

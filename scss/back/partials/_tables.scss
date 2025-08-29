@@ -16,6 +16,7 @@
     font-family: 'Work Sans', sans-serif;
     color: variables.$dark-blue;
 
+
     // === Mobile stacked block ===
     &__thead {
         display: none;
@@ -55,25 +56,29 @@
     @include mixins.desktop {
         &__thead {
             display: table-header-group;
-            position: sticky;
-            top: 0;
-            z-index: 2;
             font-family: 'League Spartan', sans-serif;
             background-color: variables.$dark-blue;
             color: white;
             font-weight: bold;
 
             .table__th {
+                background-color: variables.$dark-blue;
                 padding: 1rem;
                 white-space: normal;
                 word-break: break-word;
                 @include mixins.responsive-font(0.8rem, 1rem, 1rem);
+
+                @include mixins.desktop {
+                    position: sticky;
+                    top: 0;
+                    z-index: 2;
+                }
             }
         }
 
         &__tr {
             display: table-row;
-            background-color: transparent;
+            background-color: white;
             padding: 0;
 
             &:nth-child(even) {
@@ -84,6 +89,7 @@
                 display: table-cell;
                 padding: 1rem;
                 font-size: 0.8rem;
+                text-align: center;
 
                 @include mixins.responsive-font (0.8rem, 1rem, 1rem);
 
@@ -98,19 +104,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        // === Exemple de largeur : 1ère colonne plus large ===
-        &__th:nth-child(1),
-        &__td:nth-child(1) {
-            width: 25%;
-            text-align: left;
-        }
-
-        &__th:not(:nth-child(1)),
-        &__td:not(:nth-child(1)) {
-            width: calc(75% / 6);
-            text-align: center;
         }
         
     }
