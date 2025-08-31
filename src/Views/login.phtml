@@ -45,9 +45,10 @@
             </div>
                 <h2>Bienvenue</h2>
             <form id="loginForm" method="POST" action="index.php?route=login-post">
+                <?= $this->getCsrfField(); ?>
                 <div class="form-group">
                     <label for="email">Identifiant</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" autocomplete="on" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Mot de passe</label>

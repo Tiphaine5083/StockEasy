@@ -6,6 +6,7 @@
     <div class="page__wrapper">
         <div class="page__form">
             <form method="POST" action="index.php" class="form">
+                <?= $this->getCsrfField(); ?>
                 <input type="hidden" name="route" class="form__input" value="user-create-submit">
                 <input type="hidden" name="active" value="1">
 

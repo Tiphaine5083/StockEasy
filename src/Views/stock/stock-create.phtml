@@ -8,6 +8,7 @@
                 <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary', 'user'])) { ?>
 
                     <form method="POST" action="index.php" class="form">
+                        <?= $this->getCsrfField(); ?>
                         <input type="hidden" name="route" class="form__input" value="stock-store">
                         <input type="hidden" name="vehicle_category" class="form__input" value="VL">
 
@@ -157,6 +158,7 @@
             <h2>Doublon détecté</h2>
             <p>Le pneu existe déjà, que voulez-vous faire ?</p>
             <form id="duplicateForm" method="POST" action="index.php?route=stock-increment">
+                <?= $this->getCsrfField(); ?>
                 <input class="form__input" type="hidden" name="product_id" id="duplicateProductId" value="">
                 <input class="form__input" type="hidden" name="added_quantity" id="duplicateAddedQty" value="">
                 <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary', 'user'])) { ?>

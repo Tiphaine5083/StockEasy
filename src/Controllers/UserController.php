@@ -34,6 +34,8 @@ class UserController extends AbstractController
             $this->denyAccess("Refus d’accès à userCreate() : rôle super_admin requis");
         }
 
+        $this->requireCsrfToken();
+
         try
         {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -198,6 +200,8 @@ class UserController extends AbstractController
         if (!Access::hasRole('super_admin')) {
             $this->denyAccess("Refus d’accès à toggleStatus() : rôle super_admin requis");
         }
+
+        $this->requireCsrfToken();
         
         $id = $_POST['id'] ?? null;
         $status = $_GET['status'] ?? 'active';
@@ -260,6 +264,8 @@ class UserController extends AbstractController
         if (!Access::hasRole('super_admin')) {
             $this->denyAccess("Refus d’accès à userUpdate() : rôle super_admin requis");
         }
+
+        $this->requireCsrfToken();
         
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $_SESSION['error'] = 'Méthode non autorisée';
@@ -367,9 +373,11 @@ class UserController extends AbstractController
         if (!Access::hasRole('super_admin')) {
             $this->denyAccess("Refus d’accès à userDelete() : rôle super_admin requis");
         }
+
+        $this->requireCsrfToken();
         
-        $id = $_GET['id'] ?? null;
-        $status = $_GET['status'] ?? 'active';
+        $id = $_POST['id'] ?? null;
+        $status = $_POST['status'] ?? 'active';
 
         if (!$id || !ctype_digit($id)) {
             $_SESSION['error'] = "ID utilisateur invalide";
@@ -432,10 +440,7 @@ class UserController extends AbstractController
             $this->denyAccess("Refus d’accès à passwordReset() : rôle guest interdit");
         }
                 
-        $csrfToken = $_POST['csrf_token'] ?? '';
-        if (empty($csrfToken) || $csrfToken !== ($_SESSION['csrf_token'] ?? '')) {
-            throw new \Exception('Jeton CSRF invalide.');
-        }
+        $this->requireCsrfToken();
 
         if (!isset($_SESSION['user'])) {
             $this->redirectToRoute('login');

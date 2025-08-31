@@ -42,6 +42,7 @@ function highlightDifferences(string $beforeJson, string $afterJson): array
     <div class="page__wrapper">
         <div class="log-modification__form">
             <form method="POST" action="index.php" class="form">
+                <?= $this->getCsrfField(); ?>
                 <input type="hidden" name="route" value="log-modification-post">
 
                 <div class="form__group">

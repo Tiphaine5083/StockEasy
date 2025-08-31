@@ -31,7 +31,6 @@ class StockModel extends AbstractModel
      */
     public function findByStockFilter(string $filter, int $limit, int $offset): array
     {
-
         $sql = 'SELECT * FROM detail_tire';
         $where = '';
 
@@ -42,11 +41,15 @@ class StockModel extends AbstractModel
         }
 
         $sql .= $where . ' ORDER BY brand, diameter, height, width ';
-        $sql .= 'LIMIT ' . $limit . ' OFFSET ' . $offset;
+        $sql .= 'LIMIT :limit OFFSET :offset';
 
         try
         {
             $query = $this->getPdo()->prepare($sql);
+
+            $query->bindValue(':limit', (int) $limit, \PDO::PARAM_INT);
+            $query->bindValue(':offset', (int) $offset, \PDO::PARAM_INT);
+
             $query->execute();
             return $query->fetchAll();
         } 

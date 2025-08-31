@@ -13,6 +13,7 @@ $dateEnd    = $_POST['date_end'] ?? '';
     <div class="page__wrapper">
         <div class="log-system__form">
             <form method="POST" action="index.php" class="form">
+                <?= $this->getCsrfField(); ?>
                 <input type="hidden" name="route" value="log-system-post">
 
                 <div class="form__group">

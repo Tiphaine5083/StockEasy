@@ -283,6 +283,15 @@ function prepareDuplicateForm() {
 
 // === DOM ===
 document.addEventListener('DOMContentLoaded', () => {
+    // === SECURITY ===
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+        fetch('index.php?route=ajax-stock-list', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-Token': csrfToken
+            }
+        });
+
     // === STOCK-LIST ===
     const loadMoreBtn = document.getElementById('load-more');
     if (loadMoreBtn) {

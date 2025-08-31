@@ -5,6 +5,7 @@
             <aside class="stock-page__form">
                 <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary', 'user'])) { ?>
                     <form method="POST" action="index.php" class="form">
+                        <?= $this->getCsrfField(); ?>
                         <input type="hidden" name="route" class="form__input" value="stock-update">
                         <input type="hidden" name="product_id" class="form__input" value="<?= $tire['id'] ?>">
                         <?php if (!empty($_GET['brand'])) { ?>

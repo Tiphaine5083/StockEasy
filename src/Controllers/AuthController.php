@@ -47,18 +47,13 @@ class AuthController extends AbstractController
      * If the user is not authenticated or already updated his password,
      * he is redirected to the login screen.
      *
-     * A CSRF token is generated if it doesn't exist.
-     *
      * @return void
+     *
      */
     public function showPasswordReset(): void
     {
         if (Access::hasRole('guest')) {
             $this->denyAccess("Tentative d'accès à la réinitialisation sans permission");
-        }
-
-        if (empty($_SESSION['csrf_token'])) {
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         }
 
         if (!isset($_SESSION['user'])) {
@@ -94,6 +89,9 @@ class AuthController extends AbstractController
      */
     public function login(): void
     {
+
+        $this->requireCsrfToken();
+
         if (isset($_POST['email'], $_POST['password'])) {
             $email = trim($_POST['email']);
             $password = trim($_POST['password']);
@@ -138,6 +136,7 @@ class AuthController extends AbstractController
 
                 if (empty($user['last_password_update'])) {
                     $userModel->updateLastLogin((int)$user['id']);
+                    session_regenerate_id(true);
                     $_SESSION['user'] = [
                         'id'          => $user['id'],
                         'first_name'  => $user['first_name'],
@@ -149,6 +148,8 @@ class AuthController extends AbstractController
                 }
 
                 $userModel->updateLastLogin((int)$user['id']);
+
+                session_regenerate_id(true);
 
                 $_SESSION['user'] = [
                     'id'          => $user['id'],

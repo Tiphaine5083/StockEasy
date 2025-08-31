@@ -24,6 +24,8 @@ class LogController extends AbstractController {
             $this->denyAccess("Tentative d'accès non autorisée à l'utilisation du filtre des logs système");
         }
 
+        $this->requireCsrfToken();
+
         $filters = [
             'context'    => $_POST['type'] ?? '',
             'user'       => $_POST['user'] ?? '',
@@ -61,6 +63,8 @@ class LogController extends AbstractController {
         if (!Access::hasRole('super_admin')) {
             $this->denyAccess("Tentative d'accès non autorisée à l'utilisation du filtre des logs de modification");
         }
+
+        $this->requireCsrfToken();
 
         $filters = [
             'context'    => $_POST['type'] ?? '',

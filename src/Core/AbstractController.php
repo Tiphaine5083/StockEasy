@@ -18,6 +18,76 @@ abstract class AbstractController
     protected array $breadcrumb = [];
 
     /**
+     * Generate a hidden CSRF token input field for HTML forms.
+     *
+     * This method ensures that a CSRF token exists in the session.
+     * If none is found, a new token is generated. The token is then
+     * returned as a ready-to-use hidden input field for inclusion
+     * inside secure forms.
+     *
+     * @return string The HTML hidden input field containing the CSRF token.
+     */
+    protected function getCsrfField(): string
+    {
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($_SESSION['csrf_token']) . '">';
+    }
+
+    /**
+     * Validate the CSRF token from the current request.
+     *
+     * This method checks if the submitted CSRF token comes either
+     * from a POST form field or from an AJAX header (X-CSRF-Token).
+     * The token is then compared to the session value using hash_equals()
+     * to prevent timing attacks.
+     *
+     * @return bool True if the CSRF token is valid, false otherwise.
+     */
+    protected function validateCsrfToken(): bool
+    {
+        $expected = $_SESSION['csrf_token'] ?? null;
+
+        if (empty($expected)) {
+            return false;
+        }
+
+        $given = $_POST['csrf_token']
+            ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+
+        return !empty($given) && hash_equals($expected, $given);
+    }
+
+
+    /**
+     * Require a valid CSRF token for the current request.
+     *
+     * This method validates the CSRF token using validateCsrfToken().
+     * If the validation fails, an error message is stored in the session,
+     * the incident is logged in the system log, and the user is redirected
+     * to the error403 route.
+     *
+     * @return void
+     */
+    protected function requireCsrfToken(): void
+    {
+        if (!$this->validateCsrfToken()) {
+            $logModel = new LogModel();
+            $logModel->logSystem(
+                'error',
+                'CSRF token invalid or missing',
+                $_SESSION['user']['id'] ?? null,
+                $_SESSION['user']['first_name'] ?? null,
+                $_SESSION['user']['last_name'] ?? null,
+            );
+
+            $_SESSION['error'] = 'Token de sécurité invalide. Veuillez réessayer.';
+            $this->redirectToRoute('error403');
+        }
+    }
+
+    /**
      * Display a view with the given data.
      * Escapes all string values for security.
      *

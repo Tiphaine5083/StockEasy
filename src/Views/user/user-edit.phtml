@@ -6,6 +6,7 @@
     <div class="page__wrapper">
         <div class="user-edit__form">
             <form method="POST" action="index.php" class="form">
+                <?= $this->getCsrfField(); ?>
                 <input type="hidden" name="route" class="form__input" value="user-update-submit">
                 <input type="hidden" name="id" value="<?= htmlspecialchars($formData['id'] ?? '') ?>">
                 <input type="hidden" name="active" value="<?= htmlspecialchars($formData['active']) ?>">

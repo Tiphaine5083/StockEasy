@@ -115,7 +115,7 @@ STOCKEASY/
 
 ## General Features
 
-StockEasy V2 is a fully ACID-compliant application built in pure PHP with a custom MVC architecture.  
+StockEasy is a fully ACID-compliant application built in pure PHP with a custom MVC architecture.  
 It includes:
 
 - A robust routing system (`index.php` → `Router.php`)
@@ -123,9 +123,14 @@ It includes:
 - SCSS modular structure with responsive-first design
 - Flash messages are stored in `$_SESSION` and displayed in the layout with automatic flush
 - Full PHPDoc coverage for every class and method
-- Role-based access control system (super-admin, admin, secretary, user, intern, guest) — fine-grained permissions planned for V2
+- Role-based access control system (super-admin, admin, secretary, user, intern, guest) — fine-grained permissions planned for V2+
+- Centralized CSRF protection on all sensitive forms (`login`, `password reset`, `user CRUD`, `stock CRUD`, `logs filters`)
+- SQL injection prevention with prepared statements and bound parameters (including `LIMIT`/`OFFSET`)
+- All dynamic outputs are escaped with htmlspecialchars to prevent XSS vulnerabilities
 - Strong focus on UX for low-tech users (clear labels, modals, keyboard access)
 - All sensitive operations are wrapped in transactions (`beginTransaction` / `commit` / `rollback`)
+- Database errors trigger a 503 with logging, no sensitive info exposed
+- Session ID is regenerated after each successful login to prevent session fixation
 
 ---
 
@@ -191,6 +196,7 @@ It includes:
 **Create / Edit / Delete**
 - Full form with role selection and active status
 - Password hashed with `password_hash()` (PASSWORD_DEFAULT)
+- Passwords must respect the project’s password policy (minimum length & complexity)
 - Email is unique and replaces former "login" field
 - Role management is handled via `user_role`. Fine-grained permissions are planned for V2.
 
@@ -279,6 +285,12 @@ StockEasy implements a centralized and extensible logging system, ensuring full 
 - Feedback to the user is handled exclusively via the `$_SESSION['error']` and `$_SESSION['success']` keys
 - Messages are cleared immediately after being displayed to avoid repetition
 - Only authentication-related events are logged to the system log; standard form validation errors are not logged
+
+**CSRF Protection**
+- All authentication and sensitive forms include a CSRF token generated once per session.
+- Tokens are automatically injected in forms via `AbstractController::getCsrfField()`.
+- Verification is centralized in `AbstractController::requireCsrfToken()`.
+- Any invalid or missing token triggers a 403 error and is logged as a security incident.
 
 ---
 

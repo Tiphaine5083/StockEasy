@@ -76,6 +76,8 @@ class StockController extends AbstractController {
             $this->denyAccess("Refus d’accès à stockUpdate() : rôle guest ou stagiaire interdit");
         }
 
+        $this->requireCsrfToken();
+
         try {
             $tireId = $_POST['product_id'] ?? null;
 
@@ -223,6 +225,8 @@ class StockController extends AbstractController {
             $this->denyAccess("Refus d’accès à stockDelete() : rôle non autorisé");
         }
 
+        $this->requireCsrfToken();
+
         try {
             $tireId = $_POST['product_id'] ?? null;
             $action = $_POST['delete_action'] ?? null;
@@ -324,6 +328,8 @@ class StockController extends AbstractController {
         if (Access::hasOneRole(['guest', 'intern'])) {
             $this->denyAccess("Refus d’accès à stockCreate() : rôle guest ou stagiaire interdit");
         }
+
+        $this->requireCsrfToken();
 
         try {
             $brand = trim($_POST['brand'] ?? '');
@@ -505,6 +511,8 @@ class StockController extends AbstractController {
         if (Access::hasOneRole(['guest', 'intern'])) {
             $this->denyAccess("Refus d’accès à stockIncrement() : rôle guest ou stagiaire interdit");
         }
+
+        $this->requireCsrfToken();
     
         try {
             $tireId = $_POST['product_id'] ?? null;

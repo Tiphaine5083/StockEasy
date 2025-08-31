@@ -180,6 +180,7 @@
             <p id="modalText">Que voulez-vous faire ?</p>
 
             <form method="POST" action="index.php">
+                <?= $this->getCsrfField(); ?>
                 <input class="form__input" type="hidden" name="route" value="stock-delete">
                 <input class="form__input" type="hidden" name="product_id" id="modal_product_id">
                 <input class="form__input" type="hidden" name="delete_action" id="modal_delete_action">

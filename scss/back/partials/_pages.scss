@@ -94,3 +94,40 @@
             text-align: center;
         }
 */
+
+.stock-list {
+    &__fieldset {
+        flex: 1;
+        border: none;
+        margin: 0;
+        padding: 0;
+
+        .form__legend {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    &__radios {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        white-space: nowrap;
+        gap: 1rem;
+    }
+
+    &__radio {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    &__actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin: 2rem 3rem;
+    }
+}

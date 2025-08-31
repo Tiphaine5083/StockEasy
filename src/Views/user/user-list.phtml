@@ -22,12 +22,12 @@ $roleFilter = $_GET['role'] ?? '';
 
                     <div class="form__group">
                         <label for="name" class="form__label">Nom</label>
-                        <input type="text" id="name" name="name" class="form__input" autocomplete="true" value="<?= htmlspecialchars($nameFilter) ?>">
+                        <input type="text" id="name" name="name" class="form__input" autocomplete="on" value="<?= htmlspecialchars($nameFilter) ?>">
                     </div>
 
                     <div class="form__group">
                         <label for="email" class="form__label">Email</label>
-                        <input type="text" id="email" name="email" class="form__input" autocomplete="true" value="<?= htmlspecialchars($emailFilter) ?>">
+                        <input type="text" id="email" name="email" class="form__input" autocomplete="on" value="<?= htmlspecialchars($emailFilter) ?>">
                     </div>
 
                     <div class="form__group">
@@ -71,6 +71,7 @@ $roleFilter = $_GET['role'] ?? '';
                                 <tr class="table__tr">
                                     <td class="table__td" data-label="Statut">
                                         <form method="POST" action="index.php?route=toggle-status&status=<?= htmlspecialchars($status) ?>" class="status-toggle-form">
+                                            <?= $this->getCsrfField(); ?>
                                             <input type="hidden" name="id" value="<?= $user['id'] ?>">
                                             <button type="submit"
                                                     class="btn btn-icon"
@@ -89,12 +90,17 @@ $roleFilter = $_GET['role'] ?? '';
                                     <td class="table__td user-list__actions"  data-label="Actions">
                                         <a href="index.php?route=user-edit&id=<?= $user['id'] ?>&status=<?= htmlspecialchars($status) ?>" class="fa-icon"><i class="fa-solid fa-pen-to-square"></i></a>
                                         <?php if ($user['role_name'] === 'intern' || $user['role_name'] === 'guest') { ?>
-                                            <a href="index.php?route=user-delete&id=<?= $user['id'] ?>&status=<?= htmlspecialchars($status) ?>" 
-                                            class="fa-icon" 
-                                            title="Supprimer cet utilisateur"
-                                            onclick="return confirm('Confirmez-vous la suppression ?');">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </a>
+                                            <form method="POST" action="index.php?route=user-delete" style="display:inline;">
+                                                <?= $this->getCsrfField(); ?>
+                                                <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                                                <input type="hidden" name="status" value="<?= htmlspecialchars($status) ?>">
+                                                <button type="submit"
+                                                        class="fa-icon"
+                                                        title="Supprimer cet utilisateur"
+                                                        onclick="return confirm('Confirmez-vous la suppression ?');">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </form>
                                         <?php } else { ?>
                                             <button class="fa-icon disabled" disabled title="Suppression non autorisée">
                                                 <i class="fa-solid fa-trash"></i>
