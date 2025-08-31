@@ -31,7 +31,7 @@ class UserController extends AbstractController
     public function userCreate(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->denyAccess("Refus d’accès à userCreate() : rôle super_admin requis");
+            $this->denyAccess("Refus d'accès à userCreate() : rôle super_admin requis");
         }
 
         $this->requireCsrfToken();
@@ -124,7 +124,7 @@ class UserController extends AbstractController
                 $_SESSION['success'] = 'Nouvel utilisateur créé avec succès';
                 $this->redirectToRoute('user-list', ['status' => 'active']);
             } else {
-                throw new \Exception('Erreur lors de la création de l’utilisateur');
+                throw new \Exception('Erreur lors de la création de l\'utilisateur');
             }
         } catch (\Exception $e) {
             $_SESSION['error'] = $e->getMessage();
@@ -147,7 +147,7 @@ class UserController extends AbstractController
     public function userSearch(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->denyAccess("Refus d’accès à userSearch() : rôle super_admin requis");
+            $this->denyAccess("Refus d'accès à userSearch() : rôle super_admin requis");
         }
         
         $status = $_GET['status'] ?? 'active'; // brut, pour redirection
@@ -198,7 +198,7 @@ class UserController extends AbstractController
     public function toggleStatus(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->denyAccess("Refus d’accès à toggleStatus() : rôle super_admin requis");
+            $this->denyAccess("Refus d'accès à toggleStatus() : rôle super_admin requis");
         }
 
         $this->requireCsrfToken();
@@ -242,7 +242,7 @@ class UserController extends AbstractController
 
             $_SESSION['success'] = "Statut utilisateur modifié avec succès";
         } else {
-            $_SESSION['error'] = "Impossible de changer le statut de l’utilisateur";
+            $_SESSION['error'] = "Impossible de changer le statut de l'utilisateur";
         }
 
         $this->redirectToRoute($route, ['status' => $status]);
@@ -262,7 +262,7 @@ class UserController extends AbstractController
     public function userUpdate(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->denyAccess("Refus d’accès à userUpdate() : rôle super_admin requis");
+            $this->denyAccess("Refus d'accès à userUpdate() : rôle super_admin requis");
         }
 
         $this->requireCsrfToken();
@@ -371,7 +371,7 @@ class UserController extends AbstractController
     public function userDelete(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->denyAccess("Refus d’accès à userDelete() : rôle super_admin requis");
+            $this->denyAccess("Refus d'accès à userDelete() : rôle super_admin requis");
         }
 
         $this->requireCsrfToken();
@@ -437,7 +437,7 @@ class UserController extends AbstractController
     public function passwordReset(): void
     {
         if (Access::hasRole('guest')) {
-            $this->denyAccess("Refus d’accès à passwordReset() : rôle guest interdit");
+            $this->denyAccess("Refus d'accès à passwordReset() : rôle guest interdit");
         }
                 
         $this->requireCsrfToken();

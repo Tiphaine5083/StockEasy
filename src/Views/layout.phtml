@@ -29,7 +29,7 @@
         <div class="header__branding">
             <a href="/stockeasy/public/index.php?route=home">
                 <img src="/stockeasy/public/assets/img/logos/logo-fond-bleu.webp"
-                    alt="Logo du logiciel StockEasy avec écriture blanche et safran sur fond bleu nuit, entouré d’un pneu">
+                    alt="Logo du logiciel StockEasy avec écriture blanche et safran sur fond bleu nuit, entouré d'un pneu">
             </a>
         </div>
 
@@ -94,7 +94,7 @@
     <!-- BLOC BREADCRUMB -->
     <div class="header__breadcrumb-bar">
         <?php if (!empty($breadcrumb)) { ?>
-            <nav aria-label="Fil d’Ariane" class="header__breadcrumb">
+            <nav aria-label="Fil d'Ariane" class="header__breadcrumb">
                 <?php foreach ($breadcrumb as $index => $item) { ?>
                     <?php if ($item['url']) { ?>
                         <a href="<?= htmlspecialchars($item['url']) ?>" class="breadcrumb__link">

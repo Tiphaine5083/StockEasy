@@ -25,7 +25,7 @@ class StockController extends AbstractController {
     public function stockListData(): void
     {
         if (Access::hasOneRole(['guest', 'intern'])) {
-            $this->denyAccess("Refus d’accès à stockListData() : rôle guest ou stagiaire interdit");
+            $this->denyAccess("Refus d'accès à stockListData() : rôle guest ou stagiaire interdit");
         }
 
         $filter = $_GET['stockFilter'] ?? 'all';
@@ -73,7 +73,7 @@ class StockController extends AbstractController {
     public function stockUpdate(): void
     {
         if (Access::hasOneRole(['guest', 'intern'])) {
-            $this->denyAccess("Refus d’accès à stockUpdate() : rôle guest ou stagiaire interdit");
+            $this->denyAccess("Refus d'accès à stockUpdate() : rôle guest ou stagiaire interdit");
         }
 
         $this->requireCsrfToken();
@@ -104,7 +104,7 @@ class StockController extends AbstractController {
             $unitPrice = $_POST['unit_price_excluding_tax'] ?? null;
 
             if ($quantity === null || !is_numeric($quantity) || $quantity <= 0) {
-                throw new \Exception('Quantité invalide : la quantité ne peut pas être mise à zéro directement. Veuillez utiliser l’archivage ou un mouvement de stock');
+                throw new \Exception('Quantité invalide : la quantité ne peut pas être mise à zéro directement. Veuillez utiliser l\'archivage ou un mouvement de stock');
             }
             if ($unitPrice === null || !is_numeric($unitPrice) || $unitPrice < 0) {
                 throw new \Exception('Prix unitaire invalide');
@@ -125,6 +125,35 @@ class StockController extends AbstractController {
                 $data['season'] = $_POST['season'] ?? $tire['season'];
                 $data['quality'] = $_POST['quality'] ?? $tire['quality'];
                 $data['dot'] = $_POST['dot'] ?? $tire['dot'];
+            }
+
+            if (!empty($data['width']) && (!ctype_digit($data['width']) || (int)$data['width'] < 125 || (int)$data['width'] > 355)) {
+                throw new \Exception('La largeur doit être comprise entre 125 et 355 mm');
+            }
+
+            if (!empty($data['height'])) {
+                if (!preg_match('/^[0-9]{2}$/', $data['height']) && !preg_match('/^[A-Za-z]$/', $data['height'])) {
+                    throw new \Exception('La hauteur doit être un nombre entre 25 et 85 ou une lettre');
+                }
+                if (ctype_digit($data['height']) && ((int)$data['height'] < 25 || (int)$data['height'] > 85)) {
+                    throw new \Exception('La hauteur doit être comprise entre 25 et 85');
+                }
+            }
+
+            if (!empty($data['diameter']) && (!ctype_digit($data['diameter']) || (int)$data['diameter'] < 10 || (int)$data['diameter'] > 24)) {
+                throw new \Exception('Le diamètre doit être compris entre 10 et 24 pouces');
+            }
+
+            if (!empty($data['dot'])) {
+                if (!ctype_digit($data['dot'])) {
+                    throw new \Exception('Le DOT doit être numérique');
+                }
+                if (strlen($data['dot']) === 2) {
+                    $data['dot'] = '20' . $data['dot'];
+                }
+                if ((int)$data['dot'] < 2000 || (int)$data['dot'] > intval(date('Y')) + 1) {
+                    throw new \Exception('Le DOT doit être compris entre 2000 et ' . (intval(date('Y')) + 1));
+                }
             }
 
             if ($quantity != $tire['quantity_available']) {
@@ -222,7 +251,7 @@ class StockController extends AbstractController {
     public function stockDelete(): void
     {
         if (!Access::hasOneRole(['super_admin', 'admin', 'secretary'])) {
-            $this->denyAccess("Refus d’accès à stockDelete() : rôle non autorisé");
+            $this->denyAccess("Refus d'accès à stockDelete() : rôle non autorisé");
         }
 
         $this->requireCsrfToken();
@@ -326,7 +355,7 @@ class StockController extends AbstractController {
     public function stockCreate(): void
     {
         if (Access::hasOneRole(['guest', 'intern'])) {
-            $this->denyAccess("Refus d’accès à stockCreate() : rôle guest ou stagiaire interdit");
+            $this->denyAccess("Refus d'accès à stockCreate() : rôle guest ou stagiaire interdit");
         }
 
         $this->requireCsrfToken();
@@ -352,14 +381,17 @@ class StockController extends AbstractController {
             if (empty($brand)) {
                 throw new \Exception('La marque est obligatoire');
             }
-            if (!ctype_digit($width) || strlen($width) !== 3) {
-                throw new \Exception('La largeur doit être composée de 3 chiffres');
+            if (!ctype_digit($width) || (int)$width < 125 || (int)$width > 355) {
+                throw new \Exception('La largeur doit être comprise entre 125 et 355 mm');
             }
-            if (!(ctype_digit($height) && strlen($height) === 2) && !preg_match('/^[A-Za-z]$/', $height)) {
-                throw new \Exception('La hauteur doit être composée de 2 chiffres ou d\'une lettre');
+            if (!preg_match('/^[0-9]{2}$/', $height) && !preg_match('/^[A-Za-z]$/', $height)) {
+                throw new \Exception('La hauteur doit être un nombre entre 25 et 85 ou une lettre');
             }
-            if (!ctype_digit($diameter) || strlen($diameter) !== 2) {
-                throw new \Exception('Le diamètre doit être composé de 2 chiffres');
+            if (ctype_digit($height) && ((int)$height < 25 || (int)$height > 85)) {
+                throw new \Exception('La hauteur doit être comprise entre 25 et 85');
+            }
+            if (!ctype_digit($diameter) || (int)$diameter < 10 || (int)$diameter > 24) {
+                throw new \Exception('Le diamètre doit être compris entre 10 et 24 pouces');
             }
             if (!ctype_digit($loadIndex) || strlen($loadIndex) < 2 || strlen($loadIndex) > 3) {
                 throw new \Exception('L\'indice de charge doit contenir 2 ou 3 chiffres');
@@ -475,7 +507,7 @@ class StockController extends AbstractController {
     public function stockCreateData(): void
     {
         if (Access::hasOneRole(['guest', 'intern'])) {
-            $this->denyAccess("Refus d’accès à stockCreateData() : rôle guest ou stagiaire interdit");
+            $this->denyAccess("Refus d'accès à stockCreateData() : rôle guest ou stagiaire interdit");
         }
         
         $stockModel = new StockModel();
@@ -509,7 +541,7 @@ class StockController extends AbstractController {
     public function stockIncrement(): void
     {
         if (Access::hasOneRole(['guest', 'intern'])) {
-            $this->denyAccess("Refus d’accès à stockIncrement() : rôle guest ou stagiaire interdit");
+            $this->denyAccess("Refus d'accès à stockIncrement() : rôle guest ou stagiaire interdit");
         }
 
         $this->requireCsrfToken();
@@ -545,7 +577,7 @@ class StockController extends AbstractController {
             );
 
             if (!$success) {
-                throw new \Exception('L’incrément du stock a échoué.');
+                throw new \Exception('L\'incrément du stock a échoué.');
             }
 
             $_SESSION['success'] = 'Stock augmenté avec succès.';

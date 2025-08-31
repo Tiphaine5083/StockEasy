@@ -29,7 +29,7 @@ class Router
             $publicRoutes = ['login', 'login-post', 'error404', 'construction'];
             if (!in_array($route, $publicRoutes, true) && !Access::isLoggedIn()) {
                 if (!isset($_SESSION['user'])) {
-                    $_SESSION['error'] = 'Veuillez vous connecter pour accéder à l’application.';
+                    $_SESSION['error'] = 'Veuillez vous connecter pour accéder à l\'application.';
                 }
                 
                 header('Location: index.php?route=login');

@@ -196,7 +196,7 @@ It includes:
 **Create / Edit / Delete**
 - Full form with role selection and active status
 - Password hashed with `password_hash()` (PASSWORD_DEFAULT)
-- Passwords must respect the project’s password policy (minimum length & complexity)
+- Passwords must respect the project's password policy (minimum length & complexity)
 - Email is unique and replaces former "login" field
 - Role management is handled via `user_role`. Fine-grained permissions are planned for V2.
 

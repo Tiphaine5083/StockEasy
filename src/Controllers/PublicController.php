@@ -48,7 +48,7 @@ class PublicController extends AbstractController
     public function showLogHome(): void
     {
         if (!Access::hasRole('super_admin')) {
-            $this->denyAccess("Tentative d’accès à la gestion des logs sans permission");
+            $this->denyAccess("Tentative d'accès à la gestion des logs sans permission");
         }
 
         $this->setBreadcrumb([
