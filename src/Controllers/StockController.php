@@ -63,10 +63,16 @@ class StockController extends AbstractController {
      *
      * Handles:
      * - Basic data validation (IDs, quantities, prices)
-     * - Restriction for invoiced tires (brand/dimensions lock)
-     * - Automatic stock movement if the quantity changes
+     * - Restriction for invoiced tires (brand/dimensions locked)
+     * - Business validation for non-invoiced tires:
+     *   - Width: 125–355 mm
+     *   - Height: 25–85 % or a single letter
+     *   - Diameter: 10–24 inches
+     *   - DOT: 2 or 4 digits, auto-converted to YYYY, between 2000 and current year+1
+     * - Automatic stock movement if the quantity changes (entry/exit with reason)
      * - Synchronizes stock and catalog if needed
-     * - Redirects back to stock search with appropriate success or error message
+     *
+     * Redirects back to stock search with appropriate success or error message.
      *
      * @return void
      */
@@ -342,13 +348,20 @@ class StockController extends AbstractController {
      * Accessible to all authenticated users except those with 'guest' or 'intern' roles.
      * Redirects to a 403 error page if access is denied.
      *
-     * Validates all fields:
-     * - Brand, dimensions, indices, DOT, season, quality, price
-     * - Ensures valid numerical values
-     * - Calls the full creation routine with catalog sync and initial stock movement
-     * - Redirects back with success or error message
+     * Validates all business fields before insertion:
+     * - Brand (required, can be provided as "other" → converted to uppercase)
+     * - Width: 125–355 mm
+     * - Height: 25–85 % or a single letter (special cases)
+     * - Diameter: 10–24 inches
+     * - Load index: 2–3 digits
+     * - Speed index: single letter
+     * - DOT: 2 or 4 digits, auto-converted to YYYY, must be >= 2000 and <= current year+1
+     * - Season and quality are required
+     * - Quantity > 0 (cannot be zero)
+     * - Unit price > 0 (normalized to 2 decimals)
      *
-     * Note: Duplicate check logic to be added in V1.
+     * Handles duplicate detection and redirects back with form data if a match is found.
+     * On success, calls the full creation routine with catalog sync and initial stock movement.
      *
      * @return void
      */

@@ -189,6 +189,17 @@ It includes:
 - Fully wrapped in transaction
 - Flash messages ensure transparent UX
 
+**Validation Rules**
+- All stock creation and update operations enforce strict business validation:
+  - Width: 125–355 mm
+  - Height: 25–85 % or a single letter (special cases)
+  - Diameter: 10–24 inches
+  - DOT: stored as YYYY (accepts 2-digit input → auto-converted to 20YY), valid range 2000 → current year+1
+  - Quantity: must be strictly > 0 (no direct zeroing; use stock movement or archive instead)
+  - Unit price: numeric, positive, formatted with 2 decimals
+- Invalid or inconsistent inputs trigger error messages and do not reach the database
+- This guarantees data consistency across `detail_tire`, `catalog`, and `stock_movement`
+
 ---
 
 ### User Management
