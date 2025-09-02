@@ -73,6 +73,8 @@ let stockCreateMessageBox = null;
 // === FUNCTIONS ===
 async function loadMoreStock(event) {
     event.preventDefault();
+    const btn = event.currentTarget;
+    btn.disabled = true;    
     try {
         const checkedRadio = document.querySelector('input[name="stockFilter"]:checked');
         filter = checkedRadio ? checkedRadio.value : 'all';
@@ -84,11 +86,15 @@ async function loadMoreStock(event) {
         page++;
     } catch (error) {
         console.error('Erreur lors du chargement des pneus :', error);
+    } finally {
+        btn.disabled = false; 
     }
 }
 
 async function loadAllStock(event) {
     event.preventDefault();
+        const btn = event.currentTarget;
+    btn.disabled = true;
     try {
         const checkedRadio = document.querySelector('input[name="stockFilter"]:checked');
         filter = checkedRadio ? checkedRadio.value : 'all';
@@ -101,6 +107,8 @@ async function loadAllStock(event) {
         page++;
     } catch (error) {
         console.error('Erreur lors du chargement des pneus :', error);
+    } finally {
+        btn.disabled = false; 
     }
 }
 

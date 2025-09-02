@@ -50,8 +50,8 @@ function highlightDifferences(string $beforeJson, string $afterJson): array
                     <select id="type" name="type" class="form__select">
                         <option value="">-- Tous --</option>
                         <?php foreach ($contexts as $context) { ?>
-                            <option value="<?= $context ?>" <?= $context === $typeFilter ? 'selected' : '' ?>>
-                                <?= ucfirst($context) ?>
+                            <option value="<?= htmlspecialchars($context, ENT_QUOTES) ?>" <?= $context === $typeFilter ? 'selected' : '' ?>>
+                                <?= htmlspecialchars(ucfirst($context), ENT_QUOTES) ?>
                             </option>
                         <?php } ?>
                     </select>

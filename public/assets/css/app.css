@@ -1,7 +1,7 @@
 @charset "UTF-8";
 @font-face {
   font-family: "Work Sans";
-  src: url("/assets/fonts/WorkSans.ttf") format("ttf");
+  src: url("subset-WorkSans-Regular.woff2") format("woff2"), url("subset-WorkSans-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -396,6 +396,7 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center;
   padding: 1rem;
   font-size: 0.8rem;
+  font-size: 0.8rem;
 }
 @media (min-width: 768px) {
   .layout__footer {
@@ -442,6 +443,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 .card__text {
   font-weight: bold;
+  font-size: 1.4rem;
 }
 @media (min-width: 768px) {
   .card__text {
@@ -497,6 +499,7 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: none;
   border: none;
   transition: all 0.2s ease;
+  font-size: 1.2rem;
 }
 @media (min-width: 768px) {
   .btn {
@@ -541,6 +544,9 @@ h1, h2, h3, h4, h5, h6 {
 .btn--icon:hover {
   color: white;
   background: #2C3258;
+}
+.btn--icon i {
+  font-size: 1rem;
 }
 @media (min-width: 768px) {
   .btn--icon i {
@@ -689,6 +695,7 @@ pre {
   padding: 0.5rem 0.8rem;
   font-family: inherit;
   width: 100%;
+  font-size: 0.9rem;
 }
 @media (min-width: 768px) {
   .form__input, .form__select, .form__textarea {
@@ -723,6 +730,7 @@ td.disabled {
   overflow-wrap: break-word;
   color: blue;
   background-color: #F1F0EF;
+  font-size: 0.6rem;
 }
 @media (min-width: 768px) {
   .form__hint {
@@ -780,6 +788,7 @@ td.disabled {
   font-weight: bold;
   font-family: "League Spartan", sans-serif;
   color: #2C3258;
+  font-size: 1.2rem;
 }
 @media (min-width: 768px) {
   .table__tr .table__td::before {
@@ -804,6 +813,7 @@ td.disabled {
     padding: 1rem;
     white-space: normal;
     word-break: break-word;
+    font-size: 0.8rem;
   }
 }
 @media (min-width: 1024px) and (min-width: 768px) {
@@ -837,6 +847,7 @@ td.disabled {
     padding: 1rem;
     font-size: 0.8rem;
     text-align: center;
+    font-size: 0.8rem;
   }
 }
 @media (min-width: 1024px) and (min-width: 768px) {
@@ -918,6 +929,7 @@ td.disabled {
 }
 .error__link {
   font-weight: bold;
+  font-size: 2rem;
 }
 .error__link:hover {
   color: #F7C503;
@@ -944,6 +956,7 @@ td.disabled {
   padding: 1rem;
   background-color: #F1F0EF;
   padding-bottom: 1rem;
+  font-size: 2rem;
 }
 @media (min-width: 768px) {
   .page__title {
@@ -1109,6 +1122,7 @@ td.disabled {
   color: #9B9183;
   text-align: center;
   padding: 1rem;
+  font-size: 0.6rem;
 }
 @media (min-width: 768px) {
   .login-footer {

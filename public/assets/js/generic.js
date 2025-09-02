@@ -11,6 +11,12 @@ function scrollToHighlight() {
 
 // === DOM ===
 document.addEventListener('DOMContentLoaded', () => {
+
+    const flashMessage = document.querySelector('.message__modal');
+    if (flashMessage) {
+        flashMessage.focus();
+    }
+
     const printBtn = document.querySelector('#print-btn');
     if (printBtn) {
         printBtn.addEventListener('click', () => {
@@ -29,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (overlay) {
             overlay.remove();
         }
-    }, 3000);
+    }, 5000);
 
     scrollToHighlight();
 });

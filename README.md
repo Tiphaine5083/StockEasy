@@ -200,6 +200,13 @@ It includes:
 - Invalid or inconsistent inputs trigger error messages and do not reach the database
 - This guarantees data consistency across `detail_tire`, `catalog`, and `stock_movement`
 
+**Performance Optimization**
+- Frequently searched columns are indexed to improve query performance:
+  - `detail_tire`: brand, (width, height, diameter), season, dot
+  - `catalog`: name, product_type, archived
+  - `customer`: email, last_name
+- This ensures faster searches and filters even on large datasets
+
 ---
 
 ### User Management

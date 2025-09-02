@@ -28,11 +28,12 @@ $info: #0DCAF0;
 
 // Polices
 @font-face {
-  font-family: 'Work Sans';
-  src: url('/assets/fonts/WorkSans.ttf') format('ttf');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+    font-family: 'Work Sans';
+    src: url('subset-WorkSans-Regular.woff2') format('woff2'),
+        url('subset-WorkSans-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
 $title-font: 'League Spartan', 'Verdana', sans-serif;

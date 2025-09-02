@@ -19,7 +19,7 @@
                                 <select class="form__select" name="brand" id="brand">
                                     <option value="">Choisir une marque</option>
                                     <?php foreach ($brands as $brand) { ?>
-                                        <option value="<?= htmlspecialchars($brand) ?>"><?= htmlspecialchars($brand) ?></option>
+                                        <option value="<?= htmlspecialchars($brand, ENT_QUOTES) ?>"><?= htmlspecialchars($brand, ENT_QUOTES) ?></option>
                                     <?php } ?>
                                     <option value="other">Autre...</option>
                                 </select>
@@ -58,7 +58,7 @@
 
                             <div class="form__group">
                                 <label class="form__label" for="create_quantity_available">Quantité</label>
-                                <input type="number" id="create_quantity_available" name="quantity_available" min="1" placeholder="Quantité" class="form__input" value="<?= htmlspecialchars($_GET['quantity_available'] ?? '') ?>" required>
+                                <input type="number" id="create_quantity_available" name="quantity_available" min="1" placeholder="Quantité" class="form__input" value="<?= htmlspecialchars($_GET['quantity_available'] ?? '', ENT_QUOTES) ?>" required>
                             </div>
 
                             <div class="form__group">
@@ -124,15 +124,15 @@
                         <tbody class="stock-create-table-body">
                             <?php foreach ($todayTires as $tire) { ?>
                                 <tr class="table__tr">
-                                    <td class="table__td" data-label="Marque"><?= htmlspecialchars($tire['brand']) ?></td>
-                                    <td class="table__td" data-label="Taille"><?= htmlspecialchars($tire['width']) ?>/<?= htmlspecialchars($tire['height']) ?>/<?= htmlspecialchars($tire['diameter']) ?></td>
-                                    <td class="table__td" data-label="Charge/Vitesse"><?= htmlspecialchars($tire['load_index']) ?>/<?= htmlspecialchars($tire['speed_index']) ?></td>
-                                    <td class="table__td" data-label="Saison"><?= htmlspecialchars($tire['season']) ?></td>
-                                    <td class="table__td" data-label="DOT"><?= htmlspecialchars($tire['dot']) ?></td>
-                                    <td class="table__td" data-label="État"><?= htmlspecialchars($tire['quality']) ?></td>
-                                    <td class="table__td" data-label="Particularités"><?= htmlspecialchars($tire['features']) ?></td>
-                                    <td class="table__td" data-label="Quantité"><?= htmlspecialchars($tire['quantity_available']) ?></td>
-                                    <td class="table__td" data-label="P.U. H.T."><?= htmlspecialchars($tire['unit_price_excluding_tax']) ?> €</td>
+                                    <td class="table__td" data-label="Marque"><?= htmlspecialchars($tire['brand'], ENT_QUOTES) ?></td>
+                                    <td class="table__td" data-label="Taille"><?= htmlspecialchars($tire['width'], ENT_QUOTES) ?>/<?= htmlspecialchars($tire['height'], ENT_QUOTES) ?>/<?= htmlspecialchars($tire['diameter'], ENT_QUOTES) ?></td>
+                                    <td class="table__td" data-label="Charge/Vitesse"><?= htmlspecialchars($tire['load_index'], ENT_QUOTES) ?>/<?= htmlspecialchars($tire['speed_index'], ENT_QUOTES) ?></td>
+                                    <td class="table__td" data-label="Saison"><?= htmlspecialchars($tire['season'], ENT_QUOTES) ?></td>
+                                    <td class="table__td" data-label="DOT"><?= htmlspecialchars($tire['dot'], ENT_QUOTES) ?></td>
+                                    <td class="table__td" data-label="État"><?= htmlspecialchars($tire['quality'], ENT_QUOTES) ?></td>
+                                    <td class="table__td" data-label="Particularités"><?= htmlspecialchars($tire['features'], ENT_QUOTES) ?></td>
+                                    <td class="table__td" data-label="Quantité"><?= htmlspecialchars($tire['quantity_available'], ENT_QUOTES) ?></td>
+                                    <td class="table__td" data-label="P.U. H.T."><?= htmlspecialchars($tire['unit_price_excluding_tax'], ENT_QUOTES) ?> €</td>
                                 </tr>
                             <?php } ?>
                         </tbody>

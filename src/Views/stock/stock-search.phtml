@@ -22,9 +22,9 @@
                                 <select class="form__select" name="brand" id="brand">
                                     <option value="" <?php if (!isset($_GET['brand']) || $_GET['brand'] === '') { echo 'selected'; } ?>>Choisir dans la liste</option>
                                     <?php foreach($brands as $brand) { ?>
-                                                <option value="<?= $brand ?>" 
+                                                <option value="<?= htmlspecialchars($brand, ENT_QUOTES) ?>" 
                                                     <?php if (isset($_GET['brand']) && $_GET['brand'] === $brand) { echo 'selected'; } ?>>
-                                                    <?= $brand ?>
+                                                    <?= htmlspecialchars($brand, ENT_QUOTES) ?>
                                                 </option>
                                     <?php } ?>
                                 </select>
@@ -113,15 +113,15 @@
                                 </tr>
                             <?php } else { ?>
                                 <?php foreach($criterias as $key => $value) { ?>
-                                    <tr class="table__tr" data-id="<?= $value['id'] ?>" <?php if ($value['id'] == $highlightId) echo 'class="highlight"'; ?>>
-                                        <td class="table__td" data-label = "Marque"><?= $value['brand'] ?></td>
-                                        <td class="table__td" data-label = "Taille commerciale"><?= $value['width'] ?>/<?= $value['height'] ?>/<?= $value['diameter'] ?></td> 
-                                        <td class="table__td" data-label = "Charge/Vitesse"><?= $value['load_index'] ?><?= $value['speed_index'] ?></td>
-                                        <td class="table__td" data-label = "Saison"><?= $value['season'] ?></td>
-                                        <td class="table__td" data-label="DOT"><?= $value['dot'] ?></td>
-                                        <td class="table__td" data-label = "État"><?= $value['quality'] ?></td>
-                                        <td class="table__td" data-label = "Quantité"><?= $value['quantity_available'] ?></td>
-                                        <td class="table__td" data-label = "Prix unitaire H.T."><?= $value['unit_price_excluding_tax'] ?> €</td>
+                                    <tr class="table__tr" data-id="<?= htmlspecialchars($value['id'], ENT_QUOTES) ?>" <?php if ($value['id'] == $highlightId) echo 'class="highlight"'; ?>>
+                                        <td class="table__td" data-label = "Marque"><?= htmlspecialchars($value['brand'], ENT_QUOTES) ?></td>
+                                        <td class="table__td" data-label = "Taille commerciale"><?= htmlspecialchars($value['width'], ENT_QUOTES) ?>/<?= htmlspecialchars($value['height'], ENT_QUOTES) ?>/<?= htmlspecialchars($value['diameter'], ENT_QUOTES) ?></td> 
+                                        <td class="table__td" data-label = "Charge/Vitesse"><?= htmlspecialchars($value['load_index'], ENT_QUOTES) ?><?= htmlspecialchars($value['speed_index'], ENT_QUOTES) ?></td>
+                                        <td class="table__td" data-label = "Saison"><?= htmlspecialchars($value['season'], ENT_QUOTES) ?></td>
+                                        <td class="table__td" data-label="DOT"><?= htmlspecialchars($value['dot'], ENT_QUOTES) ?></td>
+                                        <td class="table__td" data-label = "État"><?= htmlspecialchars($value['quality'], ENT_QUOTES) ?></td>
+                                        <td class="table__td" data-label = "Quantité"><?= htmlspecialchars($value['quantity_available'], ENT_QUOTES) ?></td>
+                                        <td class="table__td" data-label = "Prix unitaire H.T."><?= htmlspecialchars($value['unit_price_excluding_tax'], ENT_QUOTES) ?> €</td>
                                         <td class="table__td" data-label="Modifier" class="modify-btn">
                                             <?php
                                                 $editUrl = 'index.php?route=stock-edit&id=' . urlencode($value['id']);
@@ -158,7 +158,7 @@
                                             <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary'])) { ?>
                                                 <button class="<?php if ($value['quantity_available'] <= 0) { echo ' disabled'; } ?>"
                                                     <?php if ($value['quantity_available'] > 0) { ?>
-                                                        data-id="<?= $value['id'] ?>"
+                                                        data-id="<?= htmlspecialchars($value['id'], ENT_QUOTES) ?>"
                                                     <?php } ?>>
                                                     <i class="fa-solid fa-trash" aria-hidden="true"></i>
                                                 </button>
@@ -219,7 +219,7 @@
                     <select class="form__select" name="movement_reason" id="movement_reason">
                         <option value="" disabled selected hidden>Choisir un motif</option>
                         <?php foreach ($reasons as $reason) { ?>
-                            <option value="<?= $reason ?>"><?= ucfirst($reason) ?></option>
+                            <option value="<?= htmlspecialchars($reason, ENT_QUOTES) ?>"><?= htmlspecialchars(ucfirst($reason), ENT_QUOTES) ?></option>
                         <?php } ?>
                     </select>
 

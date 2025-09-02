@@ -13,14 +13,7 @@
     <script src="https://kit.fontawesome.com/8adc571076.js" crossorigin="anonymous"></script>
 </head>
 <body class="login-body">
-    <?php if (isset($_GET['success']) || isset($_GET['error'])) { ?>
-        <div class="message-overlay">
-            <div class="message-modal <?= isset($_GET['success']) ? 'success' : 'error' ?>">
-                <button class="message-close">&times;</button>
-                <p><?= htmlspecialchars($_GET['success'] ?? $_GET['error']) ?></p>
-            </div>
-        </div>
-    <?php } ?>
+
     <main class="login-wrapper">
 
         <?php

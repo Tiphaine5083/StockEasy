@@ -21,8 +21,8 @@ $dateEnd    = $_POST['date_end'] ?? '';
                     <select id="type" name="type" class="form__select">
                         <option value="">-- All --</option>
                         <?php foreach ($contexts as $context) { ?>
-                            <option value="<?= $context ?>" <?= $context === $typeFilter ? 'selected' : '' ?>>
-                                <?= ucfirst($context) ?>
+                            <option value="<?= htmlspecialchars($context, ENT_QUOTES) ?>" <?= $context === $typeFilter ? 'selected' : '' ?>>
+                                <?= htmlspecialchars(ucfirst($context), ENT_QUOTES) ?>
                             </option>
                         <?php } ?>
                     </select>
@@ -35,8 +35,8 @@ $dateEnd    = $_POST['date_end'] ?? '';
                         <?php foreach ($usersWithLogs as $user) {
                             $fullName = $user['user_firstname'] . ' ' . $user['user_lastname'];
                         ?>
-                            <option value="<?= htmlspecialchars($fullName) ?>" <?= $userFilter === $fullName ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($fullName) ?>
+                            <option value="<?= htmlspecialchars($fullName, ENT_QUOTES) ?>" <?= $userFilter === $fullName ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($fullName, ENT_QUOTES) ?>
                             </option>
                         <?php } ?>
                     </select>
@@ -44,12 +44,12 @@ $dateEnd    = $_POST['date_end'] ?? '';
 
                 <div class="form__group">
                     <label for="date_start" class="form__label">Date début</label>
-                    <input type="date" id="date_start" name="date_start" class="form__input" value="<?= htmlspecialchars($dateStart) ?>">
+                    <input type="date" id="date_start" name="date_start" class="form__input" value="<?= htmlspecialchars($dateStart, ENT_QUOTES) ?>">
                 </div>
 
                 <div class="form__group">
                     <label for="date_end" class="form__label">Date fin</label>
-                    <input type="date" id="date_end" name="date_end" class="form__input" value="<?= htmlspecialchars($dateEnd) ?>">
+                    <input type="date" id="date_end" name="date_end" class="form__input" value="<?= htmlspecialchars($dateEnd, ENT_QUOTES) ?>">
                 </div>
 
                 <div class="form__group form__group--buttons">
@@ -74,13 +74,13 @@ $dateEnd    = $_POST['date_end'] ?? '';
                     <?php if (!empty($logs)) { ?>
                         <?php foreach ($logs as $log) { ?>
                             <tr class="table__tr">
-                                <td class="table__td" data-label="Type"><?= htmlspecialchars($log['context']) ?></td>
+                                <td class="table__td" data-label="Type"><?= htmlspecialchars($log['context'], ENT_QUOTES) ?></td>
                                 <td class="table__td" data-label="User">
-                                    <?= htmlspecialchars($log['user_firstname'] . ' ' . $log['user_lastname']) ?>
+                                    <?= htmlspecialchars($log['user_firstname'] . ' ' . $log['user_lastname'], ENT_QUOTES) ?>
                                 </td>
-                                <td class="table__td" data-label="Message"><?= htmlspecialchars($log['message']) ?></td>
-                                <td class="table__td" data-label="Date"><?= htmlspecialchars($log['log_date']) ?></td>
-                                <td class="table__td" data-label="IP"><?= htmlspecialchars($log['ip_address']) ?></td>
+                                <td class="table__td" data-label="Message"><?= htmlspecialchars($log['message'], ENT_QUOTES) ?></td>
+                                <td class="table__td" data-label="Date"><?= htmlspecialchars($log['log_date'], ENT_QUOTES) ?></td>
+                                <td class="table__td" data-label="IP"><?= htmlspecialchars($log['ip_address'], ENT_QUOTES) ?></td>
                             </tr>
                         <?php } ?>
                     <?php } else { ?>

@@ -2,8 +2,8 @@
     <h1 class="page__title">Inventaire</h1>
     <p class="stock-list__count">
         <em>Résultat(s) :
-        <span class="result-count"><?= $nbDisplayed ?></span>
-        / <?= $nbTotal ?>
+        <span class="result-count"><?= htmlspecialchars($nbDisplayed, ENT_QUOTES) ?></span>
+        / <?= htmlspecialchars($nbTotal, ENT_QUOTES) ?>
         </em>
     </p>
     <div class="page__wrapper">
@@ -57,20 +57,20 @@
                 <tbody>
                 <?php foreach($data as $key => $value) { ?>
                     <tr class="table__tr">
-                        <td class="table__td" data-label = "Marque"> <?= $value['brand'] ?> </td>
-                        <td class="table__td" data-label = "Taille commerciale"> <?= $value['width'] ?>/<?= $value['height'] ?>/<?= $value['diameter'] ?> </td>
-                        <td class="table__td" data-label = "Charge/Vitesse"> <?= $value['load_index'] ?><?= $value['speed_index'] ?></td>
-                        <td class="table__td" data-label = "Saison"><?= $value['season'] ?></td>
-                        <td class="table__td" data-label = "État"><?= $value['quality'] ?></td>
-                        <td class="table__td" data-label = "Quantité"><?= $value['quantity_available'] ?></td>
-                        <td class="table__td" data-label = "Prix unitaire H.T."><?= $value['unit_price_excluding_tax'] ?> €</td>
+                        <td><?= htmlspecialchars($value['brand'], ENT_QUOTES) ?></td>
+                        <td><?= htmlspecialchars($value['width'], ENT_QUOTES) ?>/<?= htmlspecialchars($value['height'], ENT_QUOTES) ?>/<?= htmlspecialchars($value['diameter'], ENT_QUOTES) ?></td>
+                        <td><?= htmlspecialchars($value['load_index'], ENT_QUOTES) ?><?= htmlspecialchars($value['speed_index'], ENT_QUOTES) ?></td>
+                        <td><?= htmlspecialchars($value['season'], ENT_QUOTES) ?></td>
+                        <td><?= htmlspecialchars($value['quality'], ENT_QUOTES) ?></td>
+                        <td><?= htmlspecialchars($value['quantity_available'], ENT_QUOTES) ?></td>
+                        <td><?= htmlspecialchars($value['unit_price_excluding_tax'], ENT_QUOTES) ?> €</td>
                     </tr>
                 <?php } ?>
                 </tbody>
             </table>
             <div class="stock-list__actions">
-                <button type="submit" class="btn btn--saffron stock-list__load-more" id="load-more">Charger plus...</button>
-                <button type="submit" class="btn btn--saffron stock-list__load-all" id="load-all">Charger tout</button>
+                <button type="button" class="btn btn--saffron stock-list__load-more" id="load-more" aria-label="Charger plus de résultats">Charger plus...</button>
+                <button type="button" class="btn btn--saffron stock-list__load-all" id="load-all" aria-label="Charger tout le stock">Charger tout</button>
             </div>
         </section>
     </div>

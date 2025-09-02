@@ -16,17 +16,17 @@
 
                     <div class="form__group">
                         <label for="first_name" class="form__label">Prénom *</label>
-                        <input type="text" id="first_name" name="first_name" class="form__input" required value="<?= htmlspecialchars($formData['first_name'] ?? '') ?>">
+                        <input type="text" id="first_name" name="first_name" class="form__input" required value="<?= htmlspecialchars($formData['first_name'] ?? '', ENT_QUOTES) ?>">
                     </div>
 
                     <div class="form__group">
                         <label for="last_name" class="form__label">Nom *</label>
-                        <input type="text" id="last_name" name="last_name" class="form__input" required value="<?= htmlspecialchars($formData['last_name'] ?? '') ?>">
+                        <input type="text" id="last_name" name="last_name" class="form__input" required value="<?= htmlspecialchars($formData['last_name'] ?? '', ENT_QUOTES) ?>">
                     </div>
 
                     <div class="form__group">
                         <label for="email" class="form__label">Adresse e-mail *</label>
-                        <input type="email" id="email" name="email" class="form__input" required value="<?= htmlspecialchars($formData['email'] ?? '') ?>">
+                        <input type="email" id="email" name="email" class="form__input" required value="<?= htmlspecialchars($formData['email'] ?? '', ENT_QUOTES) ?>">
                     </div>
 
                     <div class="form__group">
@@ -41,9 +41,9 @@
                             <option value="">-- Choisir un rôle --</option>
                             <?php foreach ($roles as $role) { ?>
                                 <option value="<?= $role['id'] ?>"
-                                    data-description="<?= htmlspecialchars($role['description']) ?>"
+                                    data-description="<?= htmlspecialchars($role['description'], ENT_QUOTES) ?>"
                                     <?= (isset($formData['id_role']) && $formData['id_role'] == $role['id']) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($role['role_name']) ?>
+                                    <?= htmlspecialchars($role['role_name'], ENT_QUOTES) ?>
                                 </option>
                             <?php } ?>
                         </select>

@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="csrf-token" content="<?= $_SESSION['csrf_token'] ?? '' ?>">
+    <meta name="csrf-token" content="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES) ?>">
 
     <title>StockEasy - <?= htmlspecialchars($pageTitle) ?></title>
 
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan&display=swap&subset=latin" rel="stylesheet">
     <link rel="stylesheet" href="/stockeasy/public/assets/css/app.css">
 
     <link rel="dns-prefetch" href="https://kit.fontawesome.com" crossorigin>
@@ -203,7 +203,6 @@
                     <?php } ?>
 
                     <!-- Bloc USERS (super_admin seulement) -->
-                    <!-- TODO : Restreindre à super-admin uniquement (si isset session et si session === super_admin) -->
                     <?php if (\App\Core\Access::hasRole('super_admin')) { ?>
                         <li class="sidebar__item">
                             <a href="/stockeasy/public/index.php?route=user-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-users" role="button">
@@ -282,8 +281,8 @@
         <!-- MAIN CONTENT -->
         <main class="layout__content" id="main">
             <?php
-                $success = $_SESSION['success'] ?? $_GET['success'] ?? null;
-                $error = $_SESSION['error'] ?? ($_GET['error'] ?? null);
+                $success = $_SESSION['success'] ?? null;
+                $error = $_SESSION['error'] ?? null;
 
                 unset($_SESSION['success'], $_SESSION['error']);
 

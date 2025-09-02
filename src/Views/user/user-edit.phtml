@@ -8,24 +8,24 @@
             <form method="POST" action="index.php" class="form">
                 <?= $this->getCsrfField(); ?>
                 <input type="hidden" name="route" class="form__input" value="user-update-submit">
-                <input type="hidden" name="id" value="<?= htmlspecialchars($formData['id'] ?? '') ?>">
-                <input type="hidden" name="active" value="<?= htmlspecialchars($formData['active']) ?>">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($formData['id'] ?? '', ENT_QUOTES) ?>">
+                <input type="hidden" name="active" value="<?= htmlspecialchars($formData['active'], ENT_QUOTES) ?>">
 
                 <h2 class="sr-only">Informations utilisateur</h2>
 
                 <div class="form__group">
                     <label for="first_name" class="form__label">Prénom *</label>
-                    <input type="text" id="first_name" name="first_name" class="form__input" required value="<?= htmlspecialchars($formData['first_name'] ?? '') ?>">
+                    <input type="text" id="first_name" name="first_name" class="form__input" required value="<?= htmlspecialchars($formData['first_name'] ?? '', ENT_QUOTES) ?>">
                 </div>
 
                 <div class="form__group">
                     <label for="last_name" class="form__label">Nom *</label>
-                    <input type="text" id="last_name" name="last_name" class="form__input" required value="<?= htmlspecialchars($formData['last_name'] ?? '') ?>">
+                    <input type="text" id="last_name" name="last_name" class="form__input" required value="<?= htmlspecialchars($formData['last_name'] ?? '', ENT_QUOTES) ?>">
                 </div>
 
                 <div class="form__group">
                     <label for="email" class="form__label">Adresse e-mail *</label>
-                    <input type="email" id="email" name="email" class="form__input" required value="<?= htmlspecialchars($formData['email'] ?? '') ?>">
+                    <input type="email" id="email" name="email" class="form__input" required value="<?= htmlspecialchars($formData['email'] ?? '', ENT_QUOTES) ?>">
                 </div>
 
                 <div class="form__group">
@@ -40,9 +40,9 @@
                         <option value="">-- Choisir un rôle --</option>
                         <?php foreach ($roles as $role) { ?>
                             <option value="<?= $role['id'] ?>"
-                                data-description="<?= htmlspecialchars($role['description']) ?>"
+                                data-description="<?= htmlspecialchars($role['description'], ENT_QUOTES) ?>"
                                 <?= (isset($formData['id_role']) && $formData['id_role'] == $role['id']) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($role['role_name']) ?>
+                                <?= htmlspecialchars($role['role_name'], ENT_QUOTES) ?>
                             </option>
                         <?php } ?>
                     </select>
@@ -51,7 +51,7 @@
 
                 <div class="user-edit__buttons">
                     <button type="submit" class="btn btn--dark">Enregistrer</button>
-                    <a href="index.php?route=user-list&status=<?= htmlspecialchars($_GET['status'] ?? 'active') ?>" class="btn btn--dark">
+                    <a href="index.php?route=user-list&status=<?= htmlspecialchars($_GET['status'] ?? 'active', ENT_QUOTES) ?>" class="btn btn--dark">
                         Annuler
                     </a>
                 </div>

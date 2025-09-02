@@ -19,6 +19,7 @@
 }
 
 @mixin responsive-font($mobile, $tablet, $desktop, $desktop-lg: null) {
+    font-size: $mobile;
     
     @include tablet {
         font-size: $tablet;

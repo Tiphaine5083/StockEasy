@@ -44,13 +44,13 @@ class StockController extends AbstractController {
 
         foreach ($data as $key => $value) {
             echo '<tr>';
-                echo '<td>' . $value['brand'] . '</td>';
-                echo '<td>' . $value['width'] . '/' . $value['height'] . '/' . $value['diameter'] . '</td>';
-                echo '<td>' . $value['load_index'] . $value['speed_index'] . '</td>';
-                echo '<td>' . $value['season'] . '</td>';
-                echo '<td>' . $value['quality'] . '</td>';
-                echo '<td>' . $value['quantity_available'] . '</td>';
-                echo '<td>' . $value['unit_price_excluding_tax'] . ' €</td>';
+                echo '<td>' . htmlspecialchars($value['brand'], ENT_QUOTES) . '</td>';
+                echo '<td>' . htmlspecialchars($value['width'], ENT_QUOTES) . '/' . htmlspecialchars($value['height'], ENT_QUOTES) . '/' . htmlspecialchars($value['diameter'], ENT_QUOTES) . '</td>';
+                echo '<td>' . htmlspecialchars($value['load_index'], ENT_QUOTES) . htmlspecialchars($value['speed_index'], ENT_QUOTES) . '</td>';
+                echo '<td>' . htmlspecialchars($value['season'], ENT_QUOTES) . '</td>';
+                echo '<td>' . htmlspecialchars($value['quality'], ENT_QUOTES) . '</td>';
+                echo '<td>' . htmlspecialchars($value['quantity_available'], ENT_QUOTES) . '</td>';
+                echo '<td>' . htmlspecialchars($value['unit_price_excluding_tax'], ENT_QUOTES) . ' €</td>';
             echo '</tr>';
         }
     }
@@ -151,14 +151,13 @@ class StockController extends AbstractController {
             }
 
             if (!empty($data['dot'])) {
-                if (!ctype_digit($data['dot'])) {
-                    throw new \Exception('Le DOT doit être numérique');
-                }
-                if (strlen($data['dot']) === 2) {
+                if (strlen($data['dot']) === 2 && ctype_digit($data['dot'])) {
                     $data['dot'] = '20' . $data['dot'];
+                } elseif (strlen($data['dot']) !== 4 || !ctype_digit($data['dot'])) {
+                    throw new \Exception('Le DOT doit être au format YY ou YYYY');
                 }
                 if ((int)$data['dot'] < 2000 || (int)$data['dot'] > intval(date('Y')) + 1) {
-                    throw new \Exception('Le DOT doit être compris entre 2000 et ' . (intval(date('Y')) + 1));
+                    throw new \Exception('Le DOT doit être supérieur ou égal à 2000 et cohérent');
                 }
             }
 
@@ -397,7 +396,7 @@ class StockController extends AbstractController {
             if (!ctype_digit($width) || (int)$width < 125 || (int)$width > 355) {
                 throw new \Exception('La largeur doit être comprise entre 125 et 355 mm');
             }
-            if (!preg_match('/^[0-9]{2}$/', $height) && !preg_match('/^[A-Za-z]$/', $height)) {
+            if (!preg_match('/^([0-9]{2}|[A-Za-z])$/', $height)) {
                 throw new \Exception('La hauteur doit être un nombre entre 25 et 85 ou une lettre');
             }
             if (ctype_digit($height) && ((int)$height < 25 || (int)$height > 85)) {
@@ -412,11 +411,10 @@ class StockController extends AbstractController {
             if (!preg_match('/^[A-Za-z]$/', $speedIndex)) {
                 throw new \Exception('L\'indice de vitesse doit être une lettre');
             }
-            if (!ctype_digit($dot)) {
-                throw new \Exception('Le DOT doit être numérique');
-            }
-            if (strlen($dot) === 2) {
+            if (strlen($dot) === 2 && ctype_digit($dot)) {
                 $dot = '20' . $dot;
+            } elseif (strlen($dot) !== 4 || !ctype_digit($dot)) {
+                throw new \Exception('Le DOT doit être au format YY ou YYYY');
             }
             if ((int)$dot < 2000 || (int)$dot > intval(date('Y')) + 1) {
                 throw new \Exception('Le DOT doit être supérieur ou égal à 2000 et cohérent');

@@ -72,7 +72,7 @@ $roleFilter = $_GET['role'] ?? '';
                                     <td class="table__td" data-label="Statut">
                                         <form method="POST" action="index.php?route=toggle-status&status=<?= htmlspecialchars($status) ?>" class="status-toggle-form">
                                             <?= $this->getCsrfField(); ?>
-                                            <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                                            <input type="hidden" name="id" value="<?= htmlspecialchars($user['id']) ?>">
                                             <button type="submit"
                                                     class="btn btn-icon"
                                                     title="<?= $user['active'] ? 'Désactiver' : 'Activer' ?>"
