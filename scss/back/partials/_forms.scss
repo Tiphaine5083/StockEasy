@@ -70,7 +70,7 @@ td.disabled {
     display: block;
     margin-top: 0.3rem;
     overflow-wrap: break-word;
-    color: blue;
+    color: variables.$info;
     background-color: variables.$light-bg;
     @include mixins.responsive-font(0.6rem, 0.8rem, 1rem);
 

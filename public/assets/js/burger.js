@@ -45,24 +45,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const isOpen = parentItem.classList.contains('is-open');
 
+                // Fermer tous les sous-menus ouverts
                 document.querySelectorAll('.sidebar__item.is-open').forEach(item => {
                     item.classList.remove('is-open');
                     const sub = item.querySelector('.sidebar__submenu');
                     const trigger = item.querySelector('.sidebar__link');
                     if (sub) {
                         sub.style.maxHeight = null;
-                        sub.setAttribute('aria-hidden', 'true');
+                        sub.setAttribute('inert', ''); // rend le sous-menu inerte
                     }
                     if (trigger) {
                         trigger.setAttribute('aria-expanded', 'false');
                     }
                 });
 
-                // Ouvre si pas déjà ouvert
+                // Ouvrir si pas déjà ouvert
                 if (!isOpen) {
                     parentItem.classList.add('is-open');
                     submenu.style.maxHeight = submenu.scrollHeight + "px";
-                    submenu.setAttribute('aria-hidden', 'false');
+                    submenu.removeAttribute('inert'); // réactive le sous-menu
                     link.setAttribute('aria-expanded', 'true');
                 }
             }

@@ -33,8 +33,7 @@
             color: variables.$dark-blue;
             text-decoration: none;
 
-            &:hover,
-            &:focus {
+            &:hover {
                 text-decoration: underline;
             }
         }
@@ -139,8 +138,7 @@
             font-weight: bold;
             text-decoration: none;
 
-            &:hover,
-            &:focus {
+            &:hover {
                 text-decoration: underline;
             }
         }
@@ -169,8 +167,7 @@
             margin-right: 0.5rem;
         }
 
-        &:hover,
-        &:focus {
+        &:hover {
             text-decoration: underline;
         }
 
@@ -242,8 +239,7 @@
             color: inherit;
             font-weight: bold;
 
-            &:hover,
-            &:focus {
+            &:hover {
                 text-decoration: underline;
             }
 
@@ -272,8 +268,7 @@
                     font-size: 1.4rem;
                     padding-left: 1rem;
 
-                    &:hover,
-                    &:focus {
+                    &:hover {
                         text-decoration: underline;
                     }
 
@@ -305,8 +300,7 @@
             .sidebar__link {
                 font-weight: normal;
 
-                &:hover,
-                &:focus {
+                &:hover {
                     text-decoration: underline;
                 }
 
@@ -326,8 +320,7 @@
             text-decoration: none;
             color: inherit;
 
-            &:hover,
-            &:focus {
+            &:hover {
                 text-decoration: underline;
             }
 

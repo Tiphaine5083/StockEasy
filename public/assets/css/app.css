@@ -1,7 +1,7 @@
 @charset "UTF-8";
 @font-face {
   font-family: "Work Sans";
-  src: url("subset-WorkSans-Regular.woff2") format("woff2"), url("subset-WorkSans-Regular.woff") format("woff");
+  src: url("../fonts/subset-WorkSans-Regular.woff2") format("woff2"), url("../fonts/subset-WorkSans-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -114,7 +114,7 @@ h1, h2, h3, h4, h5, h6 {
   color: #2C3258;
   text-decoration: none;
 }
-.header__breadcrumb-bar .header__breadcrumb a:hover, .header__breadcrumb-bar .header__breadcrumb a:focus {
+.header__breadcrumb-bar .header__breadcrumb a:hover {
   text-decoration: underline;
 }
 .header__breadcrumb-bar .header__breadcrumb .breadcrumb__separator {
@@ -211,7 +211,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
     text-decoration: none;
   }
-  .header__main .header__logout:hover, .header__main .header__logout:focus {
+  .header__main .header__logout:hover {
     text-decoration: underline;
   }
 }
@@ -236,7 +236,7 @@ h1, h2, h3, h4, h5, h6 {
 .burger__overlay a i {
   margin-right: 0.5rem;
 }
-.burger__overlay a:hover, .burger__overlay a:focus {
+.burger__overlay a:hover {
   text-decoration: underline;
 }
 .burger__overlay a.is-active {
@@ -303,7 +303,7 @@ h1, h2, h3, h4, h5, h6 {
   color: inherit;
   font-weight: bold;
 }
-.layout__sidebar .sidebar__item .sidebar__link:hover, .layout__sidebar .sidebar__item .sidebar__link:focus {
+.layout__sidebar .sidebar__item .sidebar__link:hover {
   text-decoration: underline;
 }
 .layout__sidebar .sidebar__item .sidebar__link.is-active {
@@ -329,7 +329,7 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1.4rem;
   padding-left: 1rem;
 }
-.layout__sidebar .sidebar__item .sidebar__submenu .sidebar__subitem .sidebar__sublink:hover, .layout__sidebar .sidebar__item .sidebar__submenu .sidebar__subitem .sidebar__sublink:focus {
+.layout__sidebar .sidebar__item .sidebar__submenu .sidebar__subitem .sidebar__sublink:hover {
   text-decoration: underline;
 }
 .layout__sidebar .sidebar__item .sidebar__submenu .sidebar__subitem .sidebar__sublink.is-active {
@@ -354,7 +354,7 @@ h1, h2, h3, h4, h5, h6 {
 .layout__sidebar .sidebar__extras .sidebar__item .sidebar__link {
   font-weight: normal;
 }
-.layout__sidebar .sidebar__extras .sidebar__item .sidebar__link:hover, .layout__sidebar .sidebar__extras .sidebar__item .sidebar__link:focus {
+.layout__sidebar .sidebar__extras .sidebar__item .sidebar__link:hover {
   text-decoration: underline;
 }
 .layout__sidebar .sidebar__extras .sidebar__item .sidebar__link.is-active {
@@ -370,7 +370,7 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: none;
   color: inherit;
 }
-.layout__sidebar .sidebar__extras .sidebar__logout:hover, .layout__sidebar .sidebar__extras .sidebar__logout:focus {
+.layout__sidebar .sidebar__extras .sidebar__logout:hover {
   text-decoration: underline;
 }
 @media (min-width: 1280px) {
@@ -516,16 +516,15 @@ h1, h2, h3, h4, h5, h6 {
   color: white;
   border: 0.1rem solid white;
 }
-.btn--dark:hover {
-  background-color: white;
-  border: 0.1rem solid #2C3258;
+.btn--dark:hover, .btn--dark:focus-visible {
+  background-color: #F7C503;
   color: #2C3258;
 }
 .btn--saffron {
   background-color: #F7C503;
   color: #2C3258;
 }
-.btn--saffron:hover {
+.btn--saffron:hover, .btn--saffron:focus-visible {
   transform: scale(1.1);
   box-shadow: 0 0.5rem 1rem #FFFAD9;
   filter: brightness(1.15);
@@ -541,7 +540,7 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.btn--icon:hover {
+.btn--icon:hover, .btn--icon:focus-visible {
   color: white;
   background: #2C3258;
 }
@@ -728,7 +727,7 @@ td.disabled {
   display: block;
   margin-top: 0.3rem;
   overflow-wrap: break-word;
-  color: blue;
+  color: #0DCAF0;
   background-color: #F1F0EF;
   font-size: 0.6rem;
 }
@@ -1112,7 +1111,7 @@ td.disabled {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-.login-container .btn-login:hover {
+.login-container .btn-login:hover, .login-container .btn-login:focus-visible {
   background-color: #F7C503;
   color: #2C3258;
 }

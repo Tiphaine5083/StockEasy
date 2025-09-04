@@ -16,9 +16,6 @@ $light-beige:   #D9D6D1;
 // Couleurs logiques
 $light-bg: $pearl-white;
 $text:     $dark-blue;
-$accent:   $saffron;
-$focus:    $light-yellow;
-$border:   $pearl-grey;
 
 // Couleurs fonctionnelles
 $success: #198754;
@@ -29,8 +26,8 @@ $info: #0DCAF0;
 // Polices
 @font-face {
     font-family: 'Work Sans';
-    src: url('subset-WorkSans-Regular.woff2') format('woff2'),
-        url('subset-WorkSans-Regular.woff') format('woff');
+    src: url('../fonts/subset-WorkSans-Regular.woff2') format('woff2'),
+        url('../fonts/subset-WorkSans-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;

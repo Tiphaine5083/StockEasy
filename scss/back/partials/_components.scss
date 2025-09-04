@@ -96,18 +96,19 @@
         color: white;
         border: 0.1rem solid white;
 
-        &:hover {
-            background-color: white;
-            border: 0.1rem solid variables.$dark-blue;
+        &:hover,
+        &:focus-visible {
+            background-color: variables.$saffron;
             color: variables.$dark-blue;
-        }
+    }   
     }
 
     &--saffron {
         background-color: variables.$saffron;
         color: variables.$dark-blue;
 
-        &:hover {
+        &:hover,
+        &:focus-visible {
             transform: scale(1.1);
             box-shadow: 0 0.5rem 1rem variables.$pastel-yellow;
             filter: brightness(1.15);
@@ -125,7 +126,8 @@
         justify-content: center;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
 
-        &:hover {
+        &:hover,
+        &:focus-visible {
             color: white;
             background: variables.$dark-blue;
         }
