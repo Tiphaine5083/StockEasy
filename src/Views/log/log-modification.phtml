@@ -90,16 +90,17 @@ function highlightDifferences(string $beforeJson, string $afterJson): array
         <section class="log-modification__table-wrapper">
             <h2 class="sr-only">Résultats des logs</h2>
             <table class="table">
+                <caption class="sr-only">Tableau des logs de modification avec détails avant et après chaque action</caption>
                 <thead class="table__thead">
                     <tr class="table__tr">
-                        <th>Type</th>
-                        <th>Table</th>
-                        <th>ID</th>
-                        <th>Utilisateur</th>
-                        <th>Avant</th>
-                        <th>Après</th>
-                        <th>Date</th>
-                        <th>IP</th>
+                        <th class="table__th" scope="col">Type</th>
+                        <th class="table__th" scope="col">Table</th>
+                        <th class="table__th" scope="col">ID</th>
+                        <th class="table__th" scope="col">Utilisateur</th>
+                        <th class="table__th" scope="col">Avant</th>
+                        <th class="table__th" scope="col">Après</th>
+                        <th class="table__th" scope="col">Date</th>
+                        <th class="table__th" scope="col">IP</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -116,10 +117,10 @@ function highlightDifferences(string $beforeJson, string $afterJson): array
                                 $diff = highlightDifferences($log['content_before'], $log['content_after']);
                                 ?>
                                 <td class="table__td" data-label="Avant">
-                                    <pre><?= json_encode($diff['before'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></pre>
+                                    <pre aria-label="Contenu avant modification"><?= json_encode($diff['before'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></pre>
                                 </td>
                                 <td class="table__td" data-label="Après">
-                                    <pre><?= json_encode($diff['after'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></pre>
+                                    <pre aria-label="Contenu après modification"><?= json_encode($diff['after'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></pre>
                                 </td>
                                 <td class="table__td" data-label="Date"><?= htmlspecialchars($log['log_date']) ?></td>
                                 <td class="table__td" data-label="IP"><?= htmlspecialchars($log['ip_address']) ?></td>

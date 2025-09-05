@@ -5,15 +5,12 @@
 
 .construction {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    &__img {
+    &__video {
         max-height: 65vh;
-
-        @include mixins.desktop-lg {
-            max-height: 70vh;
-        }
     }
 }
 

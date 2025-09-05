@@ -2,25 +2,25 @@
     <h2 class="sr-only">Navigation stock</h2>
 
     <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary', 'user'])) { ?>
-        <a href="/stockeasy/public/index.php?route=stock-create" class="card">
+        <a href="/stockeasy/public/index.php?route=stock-create" class="card" aria-label="Accéder à la création d’un pneu en stock">
             <div class="card__icon">
-                <i class="fa-solid fa-file-pen"></i>
+                <i class="fa-solid fa-file-pen" aria-hidden="true"></i>
             </div>
             <p class="card__text">Création</p>
         </a>
     <?php } ?>
 
     <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary', 'user', 'intern'])) { ?>
-        <a href="/stockeasy/public/index.php?route=stock-search" class="card">
+        <a href="/stockeasy/public/index.php?route=stock-search" class="card" aria-label="Accéder à la recherche de stock">
             <div class="card__icon">
-                <i class="fa-solid fa-magnifying-glass"></i>
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
             </div>
             <p class="card__text">Recherche</p>
         </a>
 
-        <a href="/stockeasy/public/index.php?route=stock-list" class="card">
+        <a href="/stockeasy/public/index.php?route=stock-list" class="card" aria-label="Accéder à l’inventaire du stock">
             <div class="card__icon">
-                <i class="fa-solid fa-table-list"></i>
+                <i class="fa-solid fa-table-list" aria-hidden="true"></i>
             </div>
             <p class="card__text">Inventaire</p>
         </a>

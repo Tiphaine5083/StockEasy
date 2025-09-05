@@ -14,9 +14,13 @@
 </head>
 <body>
     <main class="container">
+        <h1 class="sr-only">Erreur 403 - Accès interdit</h1>
         <div class="error">
-            <img src="/stockeasy/public/assets/img/img403.webp" alt="Illustration d'un gendarme sifflant et levant la main devant un panneau de sens interdit avec le message 403 Accès refusé" role='img' aria-label='Accès refusé' class="error__img">
-            <a href="/stockeasy/public/index.php?route=login" class="error__link"><i class="fa-solid fa-hand-point-left"></i> Retour à la connexion</a>
+            <img src="/stockeasy/public/assets/img/img403.webp" alt="Illustration d'un gendarme sifflant et levant la main devant un panneau de sens interdit avec le message 403 Accès refusé" class="error__img">
+            <a href="/stockeasy/public/index.php?route=login" class="error__link">
+                <i class="fa-solid fa-hand-point-left" aria-hidden="true"></i> 
+                Retour à la connexion
+            </a>
         </div>
     </main>
 </body>

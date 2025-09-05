@@ -15,8 +15,8 @@
                         <div class="form__grid">
 
                             <div class="form__group">
-                                <label class="form__label" for="brand">Marque</label>
-                                <select class="form__select" name="brand" id="brand">
+                                <label class="form__label" for="brand">Marque <span class="form__hint">(obligatoire)</span></label>
+                                <select class="form__select" name="brand" id="brand" required>
                                     <option value="">Choisir une marque</option>
                                     <?php foreach ($brands as $brand) { ?>
                                         <option value="<?= htmlspecialchars($brand, ENT_QUOTES) ?>"><?= htmlspecialchars($brand, ENT_QUOTES) ?></option>
@@ -27,47 +27,47 @@
                             </div>
 
                             <div class="form__group">
-                                <label class="form__label" for="width">Largeur</label>
+                                <label class="form__label" for="width">Largeur <span class="form__hint">(obligatoire)</span></label>
                                 <input type="number" id="width" name="width" class="form__input" placeholder="Largeur (ex: 205)" required>
                             </div>
 
                             <div class="form__group">
-                                <label class="form__label" for="height">Hauteur</label>
+                                <label class="form__label" for="height">Hauteur <span class="form__hint">(obligatoire)</span></label>
                                 <input type="text" id="height" name="height" class="form__input" placeholder="Hauteur (ex: 55 ou R)" required>
                             </div>
 
                             <div class="form__group">
-                                <label class="form__label" for="diameter">Diamètre</label>
+                                <label class="form__label" for="diameter">Diamètre <span class="form__hint">(obligatoire)</span></label>
                                 <input type="number" id="diameter" name="diameter" class="form__input" placeholder="Diamètre (ex: 16)" required>
                             </div>
 
                             <div class="form__group">
-                                <label class="form__label" for="load_index">Charge</label>
+                                <label class="form__label" for="load_index">Charge <span class="form__hint">(obligatoire)</span></label>
                                 <input type="number" id="load_index" name="load_index" class="form__input" placeholder="Indice de charge (ex: 91 ou 120)" required>
                             </div>
 
                             <div class="form__group">
-                                <label class="form__label" for="speed_index">Vitesse</label>
+                                <label class="form__label" for="speed_index">Vitesse <span class="form__hint">(obligatoire)</span></label>
                                 <input type="text" id="speed_index" name="speed_index" class="form__input" placeholder="Indice de vitesse (ex: T)" required>
                             </div>
 
                             <div class="form__group">
-                                <label class="form__label" for="dot">DOT</label>
+                                <label class="form__label" for="dot">DOT <span class="form__hint">(obligatoire)</span></label>
                                 <input type="number" id="dot" name="dot" class="form__input" placeholder="AAAA" required>
                             </div>
 
                             <div class="form__group">
-                                <label class="form__label" for="create_quantity_available">Quantité</label>
+                                <label class="form__label" for="create_quantity_available">Quantité <span class="form__hint">(obligatoire)</span></label>
                                 <input type="number" id="create_quantity_available" name="quantity_available" min="1" placeholder="Quantité" class="form__input" value="<?= htmlspecialchars($_GET['quantity_available'] ?? '', ENT_QUOTES) ?>" required>
                             </div>
 
                             <div class="form__group">
-                                <label class="form__label" for="unit_price_excluding_tax">P.U. H.T.</label>
+                                <label class="form__label" for="unit_price_excluding_tax">P.U. H.T. <span class="form__hint">(obligatoire)</span></label>
                                 <input type="number" id="unit_price_excluding_tax" name="unit_price_excluding_tax" step="0.50" min="0" class="form__input" placeholder="Prix H.T." required>
                             </div>
 
                             <div class="form__group">
-                                <label class="form__label" for="season">Saison</label>
+                                <label class="form__label" for="season">Saison <span class="form__hint">(obligatoire)</span></label>
                                 <select class="form__select" name="season" id="season" required>
                                     <option value="">Choisir une saison</option>
                                     <option value="ETE">Été</option>
@@ -77,7 +77,7 @@
                             </div>
 
                             <div class="form__group">
-                                <label class="form__label" for="quality">État</label>
+                                <label class="form__label" for="quality">État <span class="form__hint">(obligatoire)</span></label>
                                 <select class="form__select" name="quality" id="quality" required>
                                     <option value="">Choisir un état</option>
                                     <option value="NEUF">Neuf</option>
@@ -108,24 +108,25 @@
                 <h2 class="sr-only">Inventaire ajouté</h2>
                 <div class="page__table-wrapper">
                     <table class="table">
+                        <caption class="sr-only">Inventaire des pneus ajoutés aujourd’hui</caption>
                         <thead class="table__thead">
                             <tr class="table__tr">
-                                <th class="table__th" data-label="Marque">Marque</th>
-                                <th class="table__th" data-label="Taille">Taille</th>
-                                <th class="table__th" data-label="Charge/Vitesse">Charge Vitesse</th>
-                                <th class="table__th" data-label="Saison">Saison</th>
-                                <th class="table__th" data-label="DOT">DOT</th>
-                                <th class="table__th" data-label="État">État</th>
-                                <th class="table__th" data-label="Particularités">Particularités</th>
-                                <th class="table__th" data-label="Quantité">Qté</th>
-                                <th class="table__th" data-label="Prix unitaire H.T.">P.U. H.T.</th>
+                                <th class="table__th" scope="col">Marque</th>
+                                <th class="table__th" scope="col">Dimensions</th>
+                                <th class="table__th" scope="col">Charge Vitesse</th>
+                                <th class="table__th" scope="col">Saison</th>
+                                <th class="table__th" scope="col">DOT</th>
+                                <th class="table__th" scope="col">État</th>
+                                <th class="table__th" scope="col">Particularités</th>
+                                <th class="table__th" scope="col">Qté</th>
+                                <th class="table__th" scope="col">P.U. H.T.</th>
                             </tr>
                         </thead>
                         <tbody class="stock-create-table-body">
                             <?php foreach ($todayTires as $tire) { ?>
                                 <tr class="table__tr">
                                     <td class="table__td" data-label="Marque"><?= htmlspecialchars($tire['brand'], ENT_QUOTES) ?></td>
-                                    <td class="table__td" data-label="Taille"><?= htmlspecialchars($tire['width'], ENT_QUOTES) ?>/<?= htmlspecialchars($tire['height'], ENT_QUOTES) ?>/<?= htmlspecialchars($tire['diameter'], ENT_QUOTES) ?></td>
+                                    <td class="table__td" data-label="Dimensions"><?= htmlspecialchars($tire['width'], ENT_QUOTES) ?>/<?= htmlspecialchars($tire['height'], ENT_QUOTES) ?>/<?= htmlspecialchars($tire['diameter'], ENT_QUOTES) ?></td>
                                     <td class="table__td" data-label="Charge/Vitesse"><?= htmlspecialchars($tire['load_index'], ENT_QUOTES) ?>/<?= htmlspecialchars($tire['speed_index'], ENT_QUOTES) ?></td>
                                     <td class="table__td" data-label="Saison"><?= htmlspecialchars($tire['season'], ENT_QUOTES) ?></td>
                                     <td class="table__td" data-label="DOT"><?= htmlspecialchars($tire['dot'], ENT_QUOTES) ?></td>
@@ -143,8 +144,8 @@
     </div>
     <!-- MODALS -->
     <div id="quitModal" class="modal is-hidden">
-        <div class="modal__content">
-            <h2>Quitter la page ?</h2>
+        <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="quitModalTitle">
+            <h2 id="quitModalTitle">Quitter la page ?</h2>
             <p>Vous souhaitez quitter cette page, avez-vous imprimé votre inventaire ?</p>
             <div class="modal__actions">
                 <button type="button" class="btn btn--dark" id="quitConfirmBtn">Oui, quitter</button>
@@ -154,8 +155,8 @@
     </div>
 
     <div id="duplicateModal" class="modal is-hidden" data-id="">
-        <div class="modal__content">
-            <h2>Doublon détecté</h2>
+        <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="duplicateModalTitle">
+            <h2 id="duplicateModalTitle">Doublon détecté</h2>
             <p>Le pneu existe déjà, que voulez-vous faire ?</p>
             <form id="duplicateForm" method="POST" action="index.php?route=stock-increment">
                 <?= $this->getCsrfField(); ?>

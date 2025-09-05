@@ -1,16 +1,18 @@
 <?php if (\App\Core\Access::hasRole('super_admin')) { ?>
 
 <section class="cards-grid">
-    <a href="/stockeasy/public/index.php?route=log-modif" class="card">
+    <h2 class="sr-only">Navigation logs</h2>
+
+    <a href="/stockeasy/public/index.php?route=log-modif" class="card" aria-label="Accéder aux logs de modification">
         <div class="card__icon">
-            <i class="fa-solid fa-file-pen"></i>
+            <i class="fa-solid fa-file-pen" aria-hidden="true"></i>
         </div>
         <p class="card__text">Modification Logs</p>
     </a>
 
-    <a href="/stockeasy/public/index.php?route=log-sys" class="card">
+    <a href="/stockeasy/public/index.php?route=log-sys" class="card" aria-label="Accéder aux logs système">
         <div class="card__icon">
-            <i class="fa-solid fa-file-shield"></i>
+            <i class="fa-solid fa-file-shield" aria-hidden="true"></i>
         </div>
         <p class="card__text">System Logs</p>
     </a>

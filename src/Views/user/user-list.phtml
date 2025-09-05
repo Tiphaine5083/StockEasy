@@ -55,14 +55,15 @@ $roleFilter = $_GET['role'] ?? '';
             <h2 class="sr-only">Résultats de la recherche</h2>
             <div class="page__table-wrapper">
                 <table class="table">
+                    <caption class="sr-only">Liste des utilisateurs <?= $status === 'inactive' ? 'inactifs' : 'actifs' ?></caption>
                     <thead class="table__thead">
                         <tr class="table__tr">
-                            <th class="table__th">Statut</th>
-                            <th class="table__th">Nom</th>
-                            <th class="table__th">Email</th>
-                            <th class="table__th">Dernière connexion</th>
-                            <th class="table__th">Rôle</th>
-                            <th class="table__th">Actions</th>
+                            <th class="table__th" scope="col">Statut</th>
+                            <th class="table__th" scope="col">Nom</th>
+                            <th class="table__th" scope="col">Email</th>
+                            <th class="table__th" scope="col">Dernière connexion</th>
+                            <th class="table__th" scope="col">Rôle</th>
+                            <th class="table__th" scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -88,7 +89,7 @@ $roleFilter = $_GET['role'] ?? '';
                                     <td class="table__td" data-label="Dernière connexion"><?= $user['last_login_date'] !== null ? htmlspecialchars($user['last_login_date']) : '—' ?></td>
                                     <td class="table__td" data-label="Rôle"><?= htmlspecialchars($user['role_name']) ?></td>
                                     <td class="table__td user-list__actions"  data-label="Actions">
-                                        <a href="index.php?route=user-edit&id=<?= $user['id'] ?>&status=<?= htmlspecialchars($status) ?>" class="fa-icon"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <a href="index.php?route=user-edit&id=<?= $user['id'] ?>&status=<?= htmlspecialchars($status) ?>" class="fa-icon"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
                                         <?php if ($user['role_name'] === 'intern' || $user['role_name'] === 'guest') { ?>
                                             <form method="POST" action="index.php?route=user-delete" style="display:inline;">
                                                 <?= $this->getCsrfField(); ?>
@@ -98,22 +99,22 @@ $roleFilter = $_GET['role'] ?? '';
                                                         class="fa-icon"
                                                         title="Supprimer cet utilisateur"
                                                         onclick="return confirm('Confirmez-vous la suppression ?');">
-                                                    <i class="fa-solid fa-trash"></i>
+                                                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
                                                 </button>
                                             </form>
                                         <?php } else { ?>
                                             <button class="fa-icon disabled" disabled title="Suppression non autorisée">
-                                                <i class="fa-solid fa-trash"></i>
+                                                <i class="fa-solid fa-trash" aria-hidden="true"></i>
                                             </button>
                                         <?php } ?>
                                         <!-- <a href="index.php?route=user-permissions&id=<?= $user['id'] ?>&status=<?= htmlspecialchars($status) ?>" class="btn btn--small"><i class="fa-solid fa-gear"></i></a> -->
-                                        <a href="index.php?route=construction" class="fa-icon disabled"><i class="fa-solid fa-gear"></i></a>
+                                        <a href="index.php?route=construction" class="fa-icon disabled"><i class="fa-solid fa-gear" aria-hidden="true"></i></a>
                                     </td>
                                 </tr>
                             <?php } ?>
                         <?php } else { ?>
                             <tr>
-                                <td colspan="5">Aucun utilisateur trouvé pour ce statut.</td>
+                                <td colspan="6">Aucun utilisateur trouvé pour ce statut.</td>
                             </tr>
                         <?php } ?>
                     </tbody>

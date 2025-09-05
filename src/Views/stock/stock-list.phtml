@@ -31,27 +31,28 @@
                 </fieldset>
 
                 <button class="stock-list__actions btn btn--icon" type="submit" aria-label="Voir les résultats">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                 </button>
             </form>
 
             <button class="stock-list__actions btn btn--icon" id="print-btn" aria-label="Imprimer la page">
-                <i class="fa-solid fa-print"></i>
+                <i class="fa-solid fa-print" aria-hidden="true"></i>
             </button>
         </div>
 
         <section class="stock-page__table-wrapper stock-listing">
             <h2 class="sr-only">Liste des résultats du stock</h2>
             <table class="table">
+                <caption class="sr-only">Inventaire des pneus selon le filtre choisi précédemment</caption>
                 <thead class="table__thead">
                     <tr class="table__tr">
-                        <th class="table__th" data-label = "Marque">Marque</th>
-                        <th class="table__th" data-label = "Dimensions">Taille commerciale</th>
-                        <th class="table__th" data-label = "Charge/Vitesse">Charge / Vitesse</th>
-                        <th class="table__th" data-label = "Saison">Saison</th>
-                        <th class="table__th" data-label = "État">État</th>
-                        <th class="table__th" data-label = "Quantité">Quantité</th>
-                        <th class="table__th" data-label = "Prix unitaire H.T.">Prix unitaire H.T.</th>
+                        <th class="table__th" scope="col">Marque</th>
+                        <th class="table__th" scope="col">Dimensions</th>
+                        <th class="table__th" scope="col">Charge / Vitesse</th>
+                        <th class="table__th" scope="col">Saison</th>
+                        <th class="table__th" scope="col">État</th>
+                        <th class="table__th" scope="col">Quantité</th>
+                        <th class="table__th" scope="col">Prix unitaire H.T.</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -40,18 +40,19 @@
             <form id="loginForm" method="POST" action="index.php?route=login-post">
                 <?= $this->getCsrfField(); ?>
                 <div class="form-group">
-                    <label for="email">Identifiant</label>
-                    <input type="email" id="email" name="email" autocomplete="on" required>
+                    <label for="email">Identifiant <span class="form__hint">(obligatoire)</span></label>
+                    <input type="email" id="email" name="email" autocomplete="on" required aria-describedby="error-login">
                 </div>
                 <div class="form-group">
-                    <label for="password">Mot de passe</label>
-                    <input type="password" id="password" name="password" required>
+                    <label for="password">Mot de passe <span class="form__hint">(obligatoire)</span></label>
+                    <input type="password" id="password" name="password" required aria-describedby="error-login">
+                    <small id="error-login" class="form__hint">Identifiants invalides</small>
                 </div>
                 <button type="submit" class="btn-login">Se connecter</button>
             </form>
         </div>
     </main>
-    <footer class=login-footer>
+    <footer class="login-footer">
         <p><em>© 2025 StockEasy — Designed and powered by Tiphaine LE CAM</em></p>
     </footer>
     <script src="/stockeasy/public/assets/js/generic.js" defer></script>

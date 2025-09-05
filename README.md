@@ -152,6 +152,28 @@ It includes:
 - Keyboard navigation and semantic landmarks
 - ARIA roles and states implemented across layout
 - Breadcrumb supports screen readers via `aria-current` and `aria-label`
+- In addition to the general WCAG 2.1 AA principles already applied, the following measures have been implemented across StockEasy:
+  - *Forms*  
+    - All forms include explicit `<label>` elements bound to inputs.  
+    - Required fields are marked with the `required` attribute and visually indicated with a text hint (visible or sr-only).  
+    - Hints (e.g., multi-select instructions) are associated with fields using `aria-describedby`.  
+
+  - *Tables*  
+    - Each data table includes a descriptive `<caption>` (sr-only).  
+    - All headers use `<th scope="col">` for column associations.  
+    - Each `<td>` includes a `data-label` attribute to ensure readability on small screens.  
+
+  - *Icons and Decorative Elements*  
+    - All Font Awesome icons used for decoration are hidden from assistive technologies via `aria-hidden="true"`.  
+
+  - *Error & Partial Pages*  
+    - Error pages (403 / 404) include a semantic `<h1>` (sr-only) and descriptive alternative texts for images.  
+    - Return links have clear labels (e.g., *Retour à l'accueil*, *Retour à la connexion*).  
+
+  - *Video Integration*  
+    - The “Construction” page features a looping, muted video of golden tires.  
+    - The video is described with `aria-label` to provide context to screen readers.  
+    - A textual fallback is provided for browsers without video support.  
 
 ---
 

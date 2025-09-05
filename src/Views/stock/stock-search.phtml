@@ -62,7 +62,8 @@
 
                         <div class="form__group">
                             <label class="form__label" for="season" title="Maintenez la touche Ctrl ou Cmd enfoncée pour sélection multiple">Saison</label>
-                            <select class="form__select" name="season[]" id="season" multiple size="3" title="Maintenez la touche Ctrl ou Cmd enfoncée pour sélection multiple">
+                            <span id="seasonHint" class="form__hint sr-only">Maintenez Ctrl (Windows) ou Cmd (Mac) pour une sélection multiple</span>
+                            <select class="form__select" name="season[]" id="season" multiple size="3" title="Maintenez la touche Ctrl ou Cmd enfoncée pour sélection multiple" aria-describedby="seasonHint">
                                 <option value="ETE" <?= (isset($_GET['season']) && in_array('ETE', $_GET['season'])) ? 'selected' : '' ?>>Été</option>
                                 <option value="4S" <?= (isset($_GET['season']) && in_array('4S', $_GET['season'])) ? 'selected' : '' ?>>4 Saisons</option>
                                 <option value="HIVER" <?= (isset($_GET['season']) && in_array('HIVER', $_GET['season'])) ? 'selected' : '' ?>>Hiver</option>
@@ -71,7 +72,8 @@
 
                         <div class="form__group">
                             <label class="form__label" for="quality" title="Maintenez la touche Ctrl ou Cmd enfoncée pour sélection multiple">État</label>
-                            <select class="form__select" name="quality[]" id="quality" multiple size="3" title="Maintenez la touche Ctrl ou Cmd enfoncée pour sélection multiple">
+                            <span id="qualityHint" class="form__hint sr-only">Maintenez Ctrl (Windows) ou Cmd (Mac) pour une sélection multiple</span>
+                            <select class="form__select" name="quality[]" id="quality" multiple size="3" title="Maintenez la touche Ctrl ou Cmd enfoncée pour sélection multiple" aria-describedby="qualityHint">
                                 <option value="NEUF" <?= (isset($_GET['quality']) && in_array('NEUF', $_GET['quality'])) ? 'selected' : '' ?>>Neuf</option>
                                 <option value="TB" <?= (isset($_GET['quality']) && in_array('TB', $_GET['quality'])) ? 'selected' : '' ?>>Très bon</option>
                                 <option value="MOY" <?= (isset($_GET['quality']) && in_array('MOY', $_GET['quality'])) ? 'selected' : '' ?>>Moyen</option>
@@ -92,30 +94,45 @@
                 <h3 class="sr-only">Liste des résultats de la recherche de stock</h3>
                 <div class="page__table-wrapper">
                     <table class="table">
+                        <caption class="sr-only">Résultats de la recherche de pneus selon les critères saisis</caption>
                         <thead class="table__thead">
                             <tr class="table__tr">
-                                <th class="table__th"data-label = "Marque">Marque</th>
-                                <th class="table__th"data-label = "Taille commerciale">Taille commerciale</th>
-                                <th class="table__th"data-label = "Charge/Vitesse">Charge / Vitesse</th>
-                                <th class="table__th"data-label = "Saison">Saison</th>
-                                <th class="table__th"data-label="DOT">DOT</th>
-                                <th class="table__th"data-label = "État">État</th>
-                                <th class="table__th"data-label = "Quantité">Quantité</th>
-                                <th class="table__th"data-label = "Prix unitaire H.T.">Prix unitaire H.T.</th>
-                                <th class="table__th"data-label = "Modifier">Modifier</th>
-                                <th class="table__th"data-label = "Supprimer">Supprimer</th>
+                                <th class="table__th" scope="col">Marque</th>
+                                <th class="table__th" scope="col">Dimensions</th>
+                                <th class="table__th" scope="col">Charge / Vitesse</th>
+                                <th class="table__th" scope="col">Saison</th>
+                                <th class="table__th" scope="col">DOT</th>
+                                <th class="table__th" scope="col">État</th>
+                                <th class="table__th" scope="col">Quantité</th>
+                                <th class="table__th" scope="col">Prix unitaire H.T.</th>
+                                <th class="table__th" scope="col">Modifier</th>
+                                <th class="table__th" scope="col">Supprimer</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (empty($criterias)) { ?>
-                                <tr class="table__tr">
-                                    <td class="table__td" colspan="9">Aucun résultat trouvé pour cette recherche.</td>
-                                </tr>
-                            <?php } else { ?>
+                            <?php
+                                $hasSearch = !empty($_GET['brand']) 
+                                    || !empty($_GET['width']) 
+                                    || !empty($_GET['height']) 
+                                    || !empty($_GET['diameter']) 
+                                    || !empty($_GET['load_index']) 
+                                    || !empty($_GET['speed_index']) 
+                                    || !empty($_GET['season']) 
+                                    || !empty($_GET['quality']);
+
+                                if (!$hasSearch) { ?>
+                                    <tr class="table__tr">
+                                        <td class="table__td" colspan="10">Veuillez lancer une recherche pour afficher des résultats.</td>
+                                    </tr>
+                                <?php } elseif (empty($criterias)) { ?>
+                                    <tr class="table__tr">
+                                        <td class="table__td" colspan="10">Aucun résultat trouvé pour cette recherche.</td>
+                                    </tr>
+                                <?php } else { ?>
                                 <?php foreach($criterias as $key => $value) { ?>
                                     <tr class="table__tr" data-id="<?= htmlspecialchars($value['id'], ENT_QUOTES) ?>" <?php if ($value['id'] == $highlightId) echo 'class="highlight"'; ?>>
                                         <td class="table__td" data-label = "Marque"><?= htmlspecialchars($value['brand'], ENT_QUOTES) ?></td>
-                                        <td class="table__td" data-label = "Taille commerciale"><?= htmlspecialchars($value['width'], ENT_QUOTES) ?>/<?= htmlspecialchars($value['height'], ENT_QUOTES) ?>/<?= htmlspecialchars($value['diameter'], ENT_QUOTES) ?></td> 
+                                        <td class="table__td" data-label = "Dimensions"><?= htmlspecialchars($value['width'], ENT_QUOTES) ?>/<?= htmlspecialchars($value['height'], ENT_QUOTES) ?>/<?= htmlspecialchars($value['diameter'], ENT_QUOTES) ?></td> 
                                         <td class="table__td" data-label = "Charge/Vitesse"><?= htmlspecialchars($value['load_index'], ENT_QUOTES) ?><?= htmlspecialchars($value['speed_index'], ENT_QUOTES) ?></td>
                                         <td class="table__td" data-label = "Saison"><?= htmlspecialchars($value['season'], ENT_QUOTES) ?></td>
                                         <td class="table__td" data-label="DOT"><?= htmlspecialchars($value['dot'], ENT_QUOTES) ?></td>
@@ -144,11 +161,11 @@
                                             ?>
                                             <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary', 'user'])) { ?>
                                                 <?php if ($value['quantity_available'] > 0) { ?>
-                                                    <a href="<?= $editUrl ?>">
+                                                    <a href="<?= $editUrl ?>" aria-label="Modifier le pneu">
                                                         <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
                                                     </a>
                                                 <?php } else { ?>
-                                                    <span class="disabled">
+                                                    <span class="disabled" aria-label="Modification du pneu interdite">
                                                         <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
                                                     </span>
                                                 <?php } ?>
@@ -159,7 +176,7 @@
                                                 <button class="<?php if ($value['quantity_available'] <= 0) { echo ' disabled'; } ?>"
                                                     <?php if ($value['quantity_available'] > 0) { ?>
                                                         data-id="<?= htmlspecialchars($value['id'], ENT_QUOTES) ?>"
-                                                    <?php } ?>>
+                                                    <?php } ?> aria-label="Supprimer le pneu">
                                                     <i class="fa-solid fa-trash" aria-hidden="true"></i>
                                                 </button>
                                             <?php } ?>
@@ -174,7 +191,7 @@
         </div>
 
     </div>
-    <div id="deleteModal" class="modal is-hidden">
+    <div id="deleteModal" class="modal is-hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal__content">
             <h2 id="modalTitle">Supprimer ou archiver ce pneu ?</h2>
             <p id="modalText">Que voulez-vous faire ?</p>
