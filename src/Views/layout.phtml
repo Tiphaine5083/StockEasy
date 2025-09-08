@@ -4,52 +4,40 @@
     <?php $pageTitle = $title ?? 'Page'; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <meta name="description" content="StockEasy assure une gestion de stock de pneus fiable avec traçabilité complète, gestion des utilisateurs et contrôle des accès.">
-
     <meta name="csrf-token" content="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES) ?>">
-
     <title>StockEasy - <?= htmlspecialchars($pageTitle) ?></title>
-
+    <link rel="icon" type="image/x-icon" href="/stockeasy/public/assets/img/logos/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=League+Spartan&display=swap&subset=latin" rel="stylesheet">
     <link rel="stylesheet" href="/stockeasy/public/assets/css/app.css">
-
     <link rel="dns-prefetch" href="https://kit.fontawesome.com" crossorigin>
     <script src="https://kit.fontawesome.com/8adc571076.js" crossorigin="anonymous"></script>
 </head>
-
 <body class="layout">
-
     <a href="#main" class="skip-link sr-only">Aller au contenu principal</a>
-
     <!-- HEADER -->
 <header class="layout__header">
-
-    <!-- HEADER PRINCIPAL -->
+    <!-- MAIN HEADER -->
     <div class="header__main">
-        <!-- LOGO -->
+        <!-- BRANDING -->
         <div class="header__branding">
             <a href="/stockeasy/public/index.php?route=home">
                 <img src="/stockeasy/public/assets/img/logos/logo-fond-bleu.webp"
                     alt="Logo du logiciel StockEasy avec écriture blanche et safran sur fond bleu nuit, entouré d'un pneu">
             </a>
         </div>
-
-        <!-- TITRE (masqué pour SEO) -->
+        <!-- TITLE (hidden) -->
         <h1 class="sr-only"><?= htmlspecialchars($title ?? 'Page') ?></h1>
-
         <!-- BURGER (MOBILE) -->
         <button class="header__toggle" aria-label="Ouvrir le menu">
             <i class="fa-solid fa-bars" aria-hidden="true"></i>
             <i class="fa-solid fa-xmark" aria-hidden="true"></i>
         </button>
-
-        <!-- DECONNEXION (DESKTOP) -->
+        <!-- LOGOUT (DESKTOP) -->
         <a href="/stockeasy/public/index.php?route=logout" class="header__logout">
             <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Déconnexion
         </a>
     </div>
-
     <!-- BURGER OVERLAY (MOBILE) -->
     <nav class="burger__overlay" aria-label="Menu principal mobile">
         <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user','intern'])) { ?>
@@ -92,8 +80,7 @@
             <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Déconnexion
         </a>
     </nav>
-
-    <!-- BLOC BREADCRUMB -->
+    <!-- BREADCRUMB -->
     <div class="header__breadcrumb-bar">
         <?php if (!empty($breadcrumb)) { ?>
             <nav aria-label="Fil d'Ariane" class="header__breadcrumb">
@@ -112,20 +99,15 @@
             </nav>
         <?php } ?>
     </div>
-
 </header>
-
     <!-- WRAPPER : SIDEBAR + MAIN -->
     <div class="layout__body">
-
         <!-- SIDEBAR -->
         <aside class="layout__sidebar" aria-label="Navigation principale">
             <nav class="sidebar__nav">
-
-                <!-- Liste principale -->
+                <!-- Main list -->
                 <ul class="sidebar__list">
-
-                    <!-- Bloc STOCK -->
+                    <!-- STOCK -->
                     <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user','intern'])) { ?>
                         <li class="sidebar__item">
                             <a href="/stockeasy/public/index.php?route=stock-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-stock" role="button">
@@ -151,8 +133,7 @@
                             </ul>
                         </li>
                     <?php } ?>
-
-                    <!-- Bloc CUSTOMER -->
+                    <!-- CUSTOMER -->
                     <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user','intern'])) { ?>
                         <li class="sidebar__item">
                             <a href="/stockeasy/public/index.php?route=customer-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-customers" role="button">
@@ -175,8 +156,7 @@
                             </ul>
                         </li>
                     <?php } ?>
-
-                    <!-- Bloc ACCOUNTING -->
+                    <!-- ACCOUNTING -->
                     <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary'])) { ?>
                         <li class="sidebar__item">
                             <a href="/stockeasy/public/index.php?route=accounting-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-accounting" role="button">
@@ -189,8 +169,7 @@
                             </ul>
                         </li>
                     <?php } ?>
-
-                    <!-- Bloc EDITIONS -->
+                    <!-- EDITIONS -->
                     <?php if (\App\Core\Access::hasOneRole(['super_admin','admin','secretary','user'])) { ?>
                         <li class="sidebar__item">
                             <a href="/stockeasy/public/index.php?route=editions-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-editions" role="button">
@@ -203,8 +182,7 @@
                             </ul>
                         </li>
                     <?php } ?>
-
-                    <!-- Bloc USERS (super_admin seulement) -->
+                    <!-- USERS (super_admin only) -->
                     <?php if (\App\Core\Access::hasRole('super_admin')) { ?>
                         <li class="sidebar__item">
                             <a href="/stockeasy/public/index.php?route=user-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-users" role="button">
@@ -234,8 +212,7 @@
                             </ul>
                         </li>
                     <?php } ?>
-
-                    <!-- Bloc LOGS (super_admin seulement) -->
+                    <!-- LOGS (super_admin only) -->
                     <?php if (\App\Core\Access::hasRole('super_admin')) { ?>
                         <li class="sidebar__item">
                             <a href="/stockeasy/public/index.php?route=log-home" class="sidebar__link" aria-expanded="false" aria-controls="submenu-logs" role="button">
@@ -254,10 +231,8 @@
                             </ul>
                         </li>
                     <?php } ?>
-
                 </ul>
-
-                <!-- Extras sticky bas -->
+                <!-- Extras sticky bottom -->
                 <div class="sidebar__extras">
                     <ul class="sidebar__list">
                         <li class="sidebar__item">
@@ -265,30 +240,21 @@
                                 <i class="fa-solid fa-house" aria-hidden="true"></i> Accueil
                             </a>
                         </li>
-
                         <li class="sidebar__item">
                             <a href="/stockeasy/public/index.php?route=construction" class="sidebar__link">
                                 <i class="fa-solid fa-globe" aria-hidden="true"></i> Site public
                             </a>
                         </li>
                     </ul>
-                    <a href="/stockeasy/public/index.php?route=logout" class="sidebar__logout" aria-label="Déconnexion (menu latéral)">
-                        <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Déconnexion
-                    </a>
                 </div>
-
             </nav>
         </aside>
-
-
         <!-- MAIN CONTENT -->
         <main class="layout__content" id="main">
             <?php
                 $success = $_SESSION['success'] ?? null;
                 $error = $_SESSION['error'] ?? null;
-
                 unset($_SESSION['success'], $_SESSION['error']);
-
                 if ($success || $error) { ?>
                     <div class="message">
                         <div class="message__modal <?= $success ? 'message__modal--success' : 'message__modal--error' ?>" role="alert" aria-live="assertive" tabindex="-1">
@@ -297,23 +263,17 @@
                         </div>
                     </div>
             <?php } ?>
-
-            <?php require($this->template); ?>
-            
+            <?php require($this->template); ?>            
         </main>
-
     </div>
-
     <!-- FOOTER -->
     <footer class="layout__footer">
         <p><em>© 2025 StockEasy — Designed and powered by Tiphaine LE CAM</em></p>
     </footer>
-
     <!-- SCRIPTS SPLITÉS -->
     <script src="/stockeasy/public/assets/js/burger.js" defer></script>
     <script src="/stockeasy/public/assets/js/stock.js" defer></script>
     <script src="/stockeasy/public/assets/js/user.js" defer></script>
     <script src="/stockeasy/public/assets/js/generic.js" defer></script>
-
 </body>
 </html>

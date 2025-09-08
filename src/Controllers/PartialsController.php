@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\AbstractController;
+use App\Core\Access;
 
 class PartialsController extends AbstractController
 {
@@ -13,22 +14,20 @@ class PartialsController extends AbstractController
      */
     public function notFound(): void
     {
+        if (!Access::isLoggedIn() || Access::hasRole('guest')) {
+            $this->redirectToRoute('login');
+            return;
+        }
+
+        $this->setBreadcrumb([
+            ['label' => 'Accueil', 'url' => '?route=home'],            
+            ['label' => 'Page non trouvée', 'url' => null]
+        ]);
+
         $this->display('partials/error404.phtml', [
             'title' => 'Page non trouvée'
         ]);
     }
-
-    /**
-     * Display the "error403" page.
-     *
-     * @return void
-     */
-    public function forbidden(): void
-    {
-        $title = 'Erreur 403 - Accès interdit';
-        require_once __DIR__ . '/../Views/partials/error403.phtml';
-    }
-
 
     /**
      * Display the "under contruction" page.
@@ -37,6 +36,11 @@ class PartialsController extends AbstractController
      */
     public function underConstruction(): void
     {
+        if (!Access::isLoggedIn() || Access::hasRole('guest')) {
+            $this->redirectToRoute('login');
+            return;
+        }
+
         $this->setBreadcrumb([
             ['label' => 'Accueil', 'url' => '?route=home'],
             ['label' => 'Page en construction', 'url' => null]

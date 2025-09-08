@@ -130,7 +130,7 @@
     .header__logout {
         display: none;
 
-        @include mixins.desktop {
+        @include mixins.tablet {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -310,22 +310,6 @@
                     padding: 0.5rem 1rem;
                     border-radius: 0.4rem;
                 }
-            }
-        }
-
-        .sidebar__logout {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            color: inherit;
-
-            &:hover {
-                text-decoration: underline;
-            }
-
-            @include mixins.desktop-lg {
-                display: none;
             }
         }
     }

@@ -1,27 +1,10 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <?php $pageTitle = $title ?? 'Page'; ?>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>StockEasy - <?= htmlspecialchars($pageTitle) ?></title>
-
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/stockeasy/public/assets/css/app.css">
-
-    <script src="https://kit.fontawesome.com/8adc571076.js" crossorigin="anonymous"></script>
-</head>
-<body>
-    <main class="container">
-        <h1 class="sr-only">Erreur 404 - Page introuvable</h1>
-        <div class="error">
-            <img src="/stockeasy/public/assets/img/img404.webp" alt="Illustration d'une barrière de chantier avec un panneau 404 et un pneu crevé devant, indiquant une page introuvable sur StockEasy" class="error__img">
-            <a href="/stockeasy/public/index.php?route=home" class="error__link">
-                <i class="fa-solid fa-hand-point-left" aria-hidden="true"></i> 
-                Retour à l'accueil
-            </a>
-        </div>
-    </main>
-</body>
-</html>
+<section class="page">
+    <h1 class="sr-only">Erreur 404 - Page introuvable</h1>
+    <div class="error">
+        <img src="/stockeasy/public/assets/img/img404.webp" alt="Illustration d'une barrière de chantier avec un panneau 404 et un pneu crevé devant, indiquant une page introuvable sur StockEasy" class="error__img">
+        <a href="/stockeasy/public/index.php?route=home" class="error__link">
+            <i class="fa-solid fa-hand-point-left" aria-hidden="true"></i> 
+            Retour à l'accueil
+        </a>
+    </div>
+</section>

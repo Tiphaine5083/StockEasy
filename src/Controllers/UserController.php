@@ -520,5 +520,4 @@ class UserController extends AbstractController
             $this->redirectToRoute('password-reset');
         }
     }
-
 }

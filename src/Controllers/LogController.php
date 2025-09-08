@@ -91,5 +91,4 @@ class LogController extends AbstractController {
             'contexts' => $contexts,
         ]);
     }
-
 }

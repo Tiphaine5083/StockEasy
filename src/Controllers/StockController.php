@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\AbstractController;
 use App\Models\StockModel;
+use App\Models\LogModel;
 use App\Core\Access;
 
 /**
@@ -600,4 +601,23 @@ class StockController extends AbstractController {
         }
     }
 
+    /**
+     * Display the full tire inventory in a print-friendly view.
+     *
+     * @return void
+     */
+    public function stockPrint(): void {
+        if (!Access::hasOneRole(['super_admin','admin','secretary','user','intern'])) {
+            $this->denyAccess("Refus d'accès à l'impression de l'inventaire : rôle guest interdit");
+        }
+        try {
+            $stockModel = new StockModel();
+            $tires = $stockModel->getAllForPrint();
+            require __DIR__ . '/../Views/stock/stock-print.phtml';
+        } catch (\Exception $e) {
+            $_SESSION['error'] = "Impossible de générer l'inventaire pour impression";
+            $this->redirectToRoute('stock-list');
+            exit;
+        }
+    }
 }

@@ -17,12 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
         flashMessage.focus();
     }
 
-    const printBtn = document.querySelector('#print-btn');
-    if (printBtn) {
-        printBtn.addEventListener('click', () => {
+    const stockPrintPage = document.querySelector('main.stock-print');
+        if (stockPrintPage) {
             window.print();
-        });
-    }
+        }
 
     document.addEventListener('click', function (e) {
         if (e.target.classList.contains('message__close')) {

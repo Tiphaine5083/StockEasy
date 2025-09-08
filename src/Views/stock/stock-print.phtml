@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="StockEasy assure une gestion de stock de pneus fiable avec traçabilité complète, gestion des utilisateurs et contrôle des accès.">
+    <meta name="csrf-token" content="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES) ?>">
+    <title>StockEasy - Impression de l'Inventaire</title>
+    <link rel="icon" type="image/x-icon" href="/stockeasy/public/assets/img/logos/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan&display=swap&subset=latin" rel="stylesheet">
+    <link rel="stylesheet" href="/stockeasy/public/assets/css/app.css">
+    <link rel="dns-prefetch" href="https://kit.fontawesome.com" crossorigin>
+    <script src="https://kit.fontawesome.com/8adc571076.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <main class="stock-print">
+        <h1 class="page__title">Inventaire complet</h1>
+        <section>
+            <h2 class="sr-only">Liste complète du stock</h2>
+            <table class="table">
+                <caption class="sr-only">Inventaire complet des pneus disponibles avec leurs caractéristiques</caption>
+                <thead class="table__thead">
+                    <tr class="table__tr">
+                        <th class="table__th" scope="col">Marque</th>
+                        <th class="table__th" scope="col">Dimensions</th>
+                        <th class="table__th" scope="col">Charge / Vitesse</th>
+                        <th class="table__th" scope="col">Saison</th>
+                        <th class="table__th" scope="col">État</th>
+                        <th class="table__th" scope="col">Quantité</th>
+                        <th class="table__th" scope="col">Prix unitaire H.T.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($tires as $tire) { ?>
+                        <tr class="table__tr">
+                            <td class="table__td" data-label="Marque"><?= htmlspecialchars($tire['brand'], ENT_QUOTES) ?></td>
+                            <td class="table__td" data-label="Dimensions">
+                                <?= htmlspecialchars($tire['width'], ENT_QUOTES) ?>/<?= htmlspecialchars($tire['height'], ENT_QUOTES) ?>/<?= htmlspecialchars($tire['diameter'], ENT_QUOTES) ?>
+                            </td>
+                            <td class="table__td" data-label="Charge/Vitesse">
+                                <?= htmlspecialchars($tire['load_index'], ENT_QUOTES) ?><?= htmlspecialchars($tire['speed_index'], ENT_QUOTES) ?>
+                            </td>
+                            <td class="table__td" data-label="Saison"><?= htmlspecialchars($tire['season'], ENT_QUOTES) ?></td>
+                            <td class="table__td" data-label="État"><?= htmlspecialchars($tire['quality'], ENT_QUOTES) ?></td>
+                            <td class="table__td" data-label="Quantité"><?= htmlspecialchars($tire['quantity_available'], ENT_QUOTES) ?></td>
+                            <td class="table__td" data-label="Prix HT"><?= htmlspecialchars($tire['unit_price_excluding_tax'], ENT_QUOTES) ?> €</td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script src="/stockeasy/public/assets/js/generic.js" defer></script>
+</body>
+</html>

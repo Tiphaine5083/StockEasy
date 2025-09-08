@@ -1,14 +1,16 @@
 @use './variables';
 @use './mixins';
+@use "sass:color";
 
 .login-body {
     margin: 0;
-    font-family: variables.$title-font, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background-color: variables.$pearl-white;
     color: variables.$dark-blue;
-    display: flex;
-    flex-direction: column; // Pour sticky footer
-    min-height: 100vh;
+    font-family: variables.$text-font, sans-serif;
 }
 
 .login-wrapper {
@@ -16,78 +18,140 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    padding: 1rem;
 }
 
 .login-container {
-    background: white;
-    padding: 2rem;
+    background: #fff;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
 
-    .logo-band {
+    width: calc(100% - 2rem);
+    aspect-ratio: 1 / 1;
+
+    display: flex;
+    flex-direction: column;
+
+    @include mixins.tablet {
+        width: 500px;
+        aspect-ratio: auto;
+        height: auto;
+    }
+
+    &__header {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        align-items: center;
         background-color: variables.$dark-blue;
-        padding: 1rem 2.5rem;
-        color: white;
-        font-size: 1.5rem;
-        font-weight: 600;
+        padding: 1rem;
         border-top-left-radius: 12px;
         border-top-right-radius: 12px;
-        margin: -2rem -2rem 1rem;
-        display: flex;
-        align-items: center;
-        gap: 2rem;
+    }
 
-        .logo-login {
-            height: 5rem;
-            max-width: 100%;
-            vertical-align: middle;
+    &__title {
+        margin: 0;
+        color: #fff;
+        font-family: variables.$title-font, sans-serif;
+        @include mixins.responsive-font(2.4rem, 2.8rem, 3.2rem);
+    }
+
+    &__logo {
+        max-height: 40px;
+        width: auto;
+
+        @include mixins.tablet {
+            max-height: 60px;
         }
+
     }
 
-    h2 {
+    &__subtitle {
         text-align: center;
-        margin-bottom: 2rem;
-        font-size: 2rem;
+        margin: 1rem 0;
+        font-family: variables.$title-font, sans-serif;
+        @include mixins.responsive-font(2rem, 2.4rem, 2.8rem);
     }
+}
+
+#loginForm {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
 
     .form-group {
         margin-bottom: 1rem;
+        position: relative;
 
         label {
             display: block;
-            margin-bottom: 0.8rem;
-            font-weight: 600;
+            margin-bottom: 0.3rem;
         }
 
-        input[type="email"],
-        input[type="password"] {
+        input {
             width: 100%;
-            padding: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            background-color: #fff;
+            color: variables.$dark-blue;
+            padding: 0.6rem 2.5rem 0.6rem 0.6rem;
+            border: 1px solid variables.$dark-blue;
+            border-radius: 8px;
+            font-family: variables.$text-font, sans-serif;
+            font-size: 1.6rem;
+            min-height: 44px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 0.6rem;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: variables.$dark-blue;
             font-size: 1rem;
         }
     }
 
-    .btn-login {
-        width: 100%;
-        padding: 1.1rem;
-        background-color: variables.$dark-blue;
-        border: none;
-        color: white;
-        font-size: 1.6rem;
+    .btn--dark {
+        width: calc(100% - 2rem);
+        margin: 1rem auto;
+        padding: 0.8rem;
+        border-radius: 8px;
+        font-family: variables.$title-font, sans-serif;
         font-weight: bold;
-        border-radius: 6px;
+        text-align: center;
+    }
+}
+
+.password-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input {
+        width: 100%;
+        padding-right: 2.5rem; // espace réservé pour l’icône
+    }
+
+    .password-toggle {
+        position: absolute;
+        top: 50%;
+        right: 0.6rem;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        color: variables.$dark-blue;
+        font-size: 1.4rem;
+        line-height: 1;
+        padding: 0; // évite les marges internes moches
 
         &:hover,
-        &:focus-visible {
-            background-color: variables.$saffron;
-            color: variables.$dark-blue;
+        &:focus {
+            color: color.adjust(variables.$dark-blue, $lightness: -10%);
         }
     }
 }
@@ -97,6 +161,7 @@
     color: variables.$beige;
     text-align: center;
     padding: 1rem;
+    margin-top: auto;
 
     @include mixins.responsive-font(0.6rem, 0.8rem, 1rem);
 }

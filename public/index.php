@@ -1,4 +1,12 @@
 <?php
+/**
+ * Application entry point
+ *
+ * - Starts PHP session and initializes CSRF token
+ * - Loads the autoloader
+ * - Registers all application routes (public, stock, users, logs, etc.)
+ * - Dispatches the current request to the correct controller via Router
+ */
 session_start();
 
 if (empty($_SESSION['csrf_token'])) {
@@ -12,9 +20,10 @@ use App\Core\Router;
 $router = new Router();
 
 // === Partials Routes
-$router->addRoute('error404', \App\Controllers\PartialsController::class . '::notFound');
-$router->addRoute('error403', \App\Controllers\PartialsController::class . '::forbidden');
 $router->addRoute('construction', \App\Controllers\PartialsController::class . '::underConstruction');
+
+// === Print route
+$router->addRoute('stock-print', \App\Controllers\StockController::class . '::stockPrint');
 
 // === Log Routes
 $router->addRoute('log-home', \App\Controllers\PublicController::class . '::showLogHome');
@@ -67,5 +76,5 @@ $router->addRoute('customer-search', \App\Controllers\PartialsController::class 
 $router->addRoute('editions-home', \App\Controllers\PartialsController::class . '::underConstruction');
 $router->addRoute('accounting-home', \App\Controllers\PartialsController::class . '::underConstruction');
 
-// En route mauvaise troupe !
+// Let's Go :)
 $router->startRouting();

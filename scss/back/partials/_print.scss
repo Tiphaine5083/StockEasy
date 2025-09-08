@@ -1,62 +1,62 @@
+@use './variables';
+
 @media print {
 
     @page {
         size: landscape;
-        margin: 1cm;
+        margin: 1.5cm;
     }
 
     body {
         font-size: 12px;
-        color: black;
+        color: variables.$dark-blue;
         background: white !important;
+        margin: 0;
+        padding: 0;
     }
 
-    .menu-toggle,
-    .btn-icon,
-    .btn-saffron,
-    .section-header,
-    header,
-    footer,
-    nav {
-        display: none !important;
-    }
 
-    .stock-list table,
-    .stock-list thead,
-    .stock-list tbody,
-    .stock-list tr,
-    .stock-list th,
-    .stock-list td {
+    .stock-print table,
+    .stock-print thead,
+    .stock-print tbody,
+    .stock-print tr,
+    .stock-print th,
+    .stock-print td {
         all: revert !important;
         display: revert !important;
     }
 
-    .stock-list table {
+    .stock-print table {
         border-collapse: collapse !important;
         width: 100% !important;
-        border: 1px solid black !important;
+        border: 1px solid variables.$dark-blue !important;
+        font-family: variables.$text-font, sans-serif;
     }
 
-    .stock-list th {
+    .stock-print th {
+        background-color: variables.$dark-blue !important;
+        color: white !important;
         text-align: center;
+        padding: 0.5rem;
     }
 
-    .stock-list td {
+    .stock-print td {
         text-align: center !important;
         padding: 0.5rem;
+        color: variables.$dark-blue !important;
         border: none;
-        border-bottom: 1px solid #888 !important;
+        border-bottom: 1px solid variables.$beige !important;
     }
 
-    .stock-list td:first-child {
-        text-align: left !important;
+    .stock-print tbody tr:nth-child(even) {
+        background-color: variables.$light-blue !important;
     }
 
-    .stock-list tr:last-child td {
-        border-bottom: none;
+    .stock-print tbody tr:nth-child(odd) {
+        background-color: white;
     }
 
-    .stock-list td::before {
+    .stock-print td::before {
         display: none !important;
         content: none !important;
     }

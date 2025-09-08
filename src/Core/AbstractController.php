@@ -170,6 +170,11 @@ abstract class AbstractController
     {
         http_response_code(403);
 
+        $this->setBreadcrumb([
+            ['label' => 'Accueil', 'url' => '?route=home'],
+            ['label' => 'Accès interdit', 'url' => null]
+        ]);
+        
         $this->display('partials/error403.phtml', [
             'title' => 'Accès refusé',
         ]);
@@ -197,5 +202,4 @@ abstract class AbstractController
 
         $this->redirectToError403();
     }
-
 }

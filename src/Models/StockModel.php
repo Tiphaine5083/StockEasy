@@ -661,4 +661,22 @@ class StockModel extends AbstractModel
         }
     }
 
+    /**
+     * Retrieve all tires for print view without pagination.
+     *
+     * @return array<int, array<string, mixed>> List of tires with all details.
+     * @throws \Exception If the query execution fails.
+     */
+    public function getAllForPrint(): array {
+        try {
+            $query = $this->getPdo()->query("
+                SELECT brand, width, height, diameter, load_index, speed_index, season, quality, quantity_available, unit_price_excluding_tax
+                FROM detail_tire
+                ORDER BY brand ASC
+            ");
+            return $query->fetchAll();
+        } catch (\PDOException $e) {
+            throw new \Exception("Impossible de récupérer les pneus pour l'impression: " . $e->getMessage());
+        }
+    }
 }

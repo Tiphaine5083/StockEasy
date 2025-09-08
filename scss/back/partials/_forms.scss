@@ -71,13 +71,15 @@ td.disabled {
     margin-top: 0.3rem;
     overflow-wrap: break-word;
     color: variables.$info;
-    @include mixins.responsive-font(0.6rem, 0.8rem, 1rem);
+    @include mixins.responsive-font(1rem, 1rem, 1.2rem);
 
     &--valid {
         color: green;
+        font-weight: bold;
     }
 
     &--error {
         color: red;
+        font-weight: bold;
     }
 }

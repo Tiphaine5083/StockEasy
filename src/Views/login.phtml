@@ -24,7 +24,7 @@
 
             if ($success || $error) { ?>
                 <div class="message">
-                    <div class="message__modal <?= $success ? 'message__modal--success' : 'message__modal--error' ?>" role="alert" aria-live="assertive">
+                    <div class="message__modal <?= $success ? 'message__modal--success' : 'message__modal--error' ?>" role="alert" aria-live="assertive" tabindex="-1">
                         <button class="message__close" aria-label="Fermer le message">&times;</button>
                         <p><?= htmlspecialchars($success ?? $error) ?></p>
                     </div>
@@ -32,11 +32,11 @@
             <?php } ?>
 
         <div class="login-container">
-            <div class="logo-band">
-                <img src="/stockeasy/public/assets/img/logos/logo-fond-bleu.webp" alt="logo du logiciel StockEasy avec une écriture stylisée blanche et safran sur un fond bleu nuit accompagné d'un pneu pour l'englober" class="logo-login">
-                <h1>Connexion</h1>
+            <div class="login-container__header">
+                <img src="/stockeasy/public/assets/img/logos/logo-fond-bleu.webp" alt="logo du logiciel StockEasy avec une écriture stylisée blanche et safran sur un fond bleu nuit accompagné d'un pneu pour l'englober" class="login-container__logo">
+                <h1 class="login-container__title">Connexion</h1>
             </div>
-                <h2>Bienvenue</h2>
+                <h2 class="login-container__subtitle">Bienvenue</h2>
             <form id="loginForm" method="POST" action="index.php?route=login-post">
                 <?= $this->getCsrfField(); ?>
                 <div class="form-group">
@@ -45,10 +45,15 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Mot de passe <span class="form__hint">(obligatoire)</span></label>
-                    <input type="password" id="password" name="password" required aria-describedby="error-login">
-                    <small id="error-login" class="form__hint">Identifiants invalides</small>
+                    <div class="password-group">
+                        <input type="password" id="password" name="password" required aria-describedby="error-login">
+                        <button type="button" class="password-toggle" aria-label="Afficher le mot de passe" data-target="password">
+                            <i class="fa-solid fa-eye-slash" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <span id="error-login" class="form__hint">Identifiants invalides</span>
                 </div>
-                <button type="submit" class="btn-login">Se connecter</button>
+                <button type="submit" class="btn--dark">Se connecter</button>
             </form>
         </div>
     </main>
@@ -56,5 +61,6 @@
         <p><em>© 2025 StockEasy — Designed and powered by Tiphaine LE CAM</em></p>
     </footer>
     <script src="/stockeasy/public/assets/js/generic.js" defer></script>
+    <script src="/stockeasy/public/assets/js/password.js" defer></script>
 </body>
 </html>

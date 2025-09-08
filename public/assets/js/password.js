@@ -25,11 +25,14 @@ function togglePasswordVisibility(button) {
 }
 
 function checkPasswordMatch() {
+    if (!newPasswordInput || !confirmPasswordInput || !passwordFeedback) return;
+
     const newPassword = newPasswordInput.value;
     const confirmPassword = confirmPasswordInput.value;
 
     if (!confirmPassword) {
         passwordFeedback.textContent = '';
+        passwordFeedback.classList.remove('form__hint--valid', 'form__hint--error');
         return;
     }
 

@@ -2,7 +2,6 @@
 @use './mixins';
 
 // === SPECIAL PAGES -> Maintenance, Error404
-
 .construction {
     display: flex;
     flex-direction: column;
@@ -21,7 +20,7 @@
     justify-content: center;
 
     &__img {
-        max-height: 80vh;
+        max-height: 65vh;
     }
 
     &__link {
@@ -32,7 +31,7 @@
             text-shadow: variables.$dark-blue 1px 0 10px;
         }
 
-        @include mixins.responsive-font (2rem, 3rem, 4rem, 5rem);
+        @include mixins.responsive-font (3rem, 4rem, 5rem, 5rem);
     }
 }
 
@@ -70,28 +69,7 @@
     }
 }
 
-// === USER-CREATE PAGE 
-.user {
-    .form__grid {
-        grid-template-columns: 1fr !important; // force 1 champ par ligne
-    }
-}
-
-// pour stock-page
-/*  // === pour le tableau 1ère colonne plus large ===
-        &__th:nth-child(1),
-        &__td:nth-child(1) {
-            width: 25%;
-            text-align: left;
-        }
-
-        &__th:not(:nth-child(1)),
-        &__td:not(:nth-child(1)) {
-            width: calc(75% / 6);
-            text-align: center;
-        }
-*/
-
+// === STOCK-LIST PAGE 
 .stock-list {
     &__fieldset {
         flex: 1;
@@ -126,5 +104,21 @@
         gap: 1rem;
         justify-content: flex-end;
         margin: 2rem 3rem;
+    }
+}
+
+// === STOCK-PRINT PAGE 
+.stock-print {
+    margin: 1rem;
+
+    @include mixins.desktop {
+        margin: 2rem;
+    }
+}
+
+// === USER-CREATE PAGE 
+.user {
+    .form__grid {
+        grid-template-columns: 1fr !important; // force 1 champ par ligne
     }
 }
