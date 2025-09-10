@@ -6,11 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="StockEasy assure une gestion de stock de pneus fiable avec traçabilité complète, gestion des utilisateurs et contrôle des accès.">
     <meta name="csrf-token" content="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES) ?>">
+
     <title>StockEasy - <?= htmlspecialchars($pageTitle) ?></title>
+
     <link rel="icon" type="image/x-icon" href="/stockeasy/public/assets/img/logos/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan&display=swap&subset=latin" rel="stylesheet">
-    <link rel="stylesheet" href="/stockeasy/public/assets/css/app.css">
     <link rel="dns-prefetch" href="https://kit.fontawesome.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan&display=swap&subset=latin" rel="stylesheet">
+    <link rel="stylesheet" href="/stockeasy/public/assets/css/app.min.css">
+
     <script src="https://kit.fontawesome.com/8adc571076.js" crossorigin="anonymous"></script>
 </head>
 <body class="layout">
@@ -270,10 +274,10 @@
     <footer class="layout__footer">
         <p><em>© 2025 StockEasy — Designed and powered by Tiphaine LE CAM</em></p>
     </footer>
-    <!-- SCRIPTS SPLITÉS -->
+    <!-- SCRIPTS -->
+    <script src="/stockeasy/public/assets/js/generic.min.js" defer></script>
     <script src="/stockeasy/public/assets/js/burger.js" defer></script>
     <script src="/stockeasy/public/assets/js/stock.js" defer></script>
     <script src="/stockeasy/public/assets/js/user.js" defer></script>
-    <script src="/stockeasy/public/assets/js/generic.js" defer></script>
 </body>
 </html>

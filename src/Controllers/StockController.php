@@ -448,7 +448,7 @@ class StockController extends AbstractController {
                 'dot' => $dot,
                 'season' => $season,
                 'quality' => $quality,
-                'unit_price' => $unitPrice
+                'unit_price_excluding_tax' => $unitPrice
             ]);
 
             if ($duplicateId) {
@@ -463,7 +463,7 @@ class StockController extends AbstractController {
                     'dot' => $dot,
                     'season' => $season,
                     'quality' => $quality,
-                    'unit_price' => $unitPrice,
+                    'unit_price_excluding_tax' => $unitPrice,
                     'quantity_available' => $quantity
                 ]);
                 return;
@@ -490,7 +490,7 @@ class StockController extends AbstractController {
                 'height' => $height,
                 'diameter' => $diameter,
                 'season' => $season,
-                'unit_price' => $unitPrice
+                'unit_price_excluding_tax' => $unitPrice
             ];
 
             $stockModel->createFullStock($detailData, $catalogData, $quantity);

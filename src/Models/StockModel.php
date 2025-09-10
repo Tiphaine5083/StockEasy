@@ -472,7 +472,7 @@ class StockModel extends AbstractModel
                 AND dot = :dot
                 AND season = :season
                 AND quality = :quality
-                AND unit_price_excluding_tax = :unit_price
+                AND unit_price_excluding_tax = :unit_price_excluding_tax
                 LIMIT 1";
 
         $query = $this->getPdo()->prepare($sql);
@@ -486,7 +486,7 @@ class StockModel extends AbstractModel
             'dot' => $data['dot'],
             'season' => $data['season'],
             'quality' => $data['quality'],
-            'unit_price' => $data['unit_price']
+            'unit_price_excluding_tax' => $data['unit_price_excluding_tax']
         ]);
 
         $id = $query->fetchColumn();
@@ -530,7 +530,7 @@ class StockModel extends AbstractModel
         $data = [
             'name' => $name,
             'description' => $description,
-            'unit_price_ht' => $unitPrice,
+            'unit_price_excluding_tax' => $unitPrice,
             'archived' => 0,
             'id_detail_tire' => $tireId
         ];
@@ -594,17 +594,17 @@ class StockModel extends AbstractModel
 
             $tireId = $this->insertDetailTire($detailData);
             if ($tireId === 0) {
-                throw new \Exception("Erreur lors de l'insertion du pneu.");
+                throw new \Exception("Erreur lors de l'insertion du pneu");
             }
 
-            $catalogId = $this->insertCatalog($tireId, $catalogData['brand'], $catalogData['width'], $catalogData['height'], $catalogData['diameter'], $catalogData['season'], $catalogData['unit_price']);
+            $catalogId = $this->insertCatalog($tireId, $catalogData['brand'], $catalogData['width'], $catalogData['height'], $catalogData['diameter'], $catalogData['season'], $catalogData['unit_price_excluding_tax']);
             if ($catalogId === 0) {
-                throw new \Exception("Erreur lors de l'insertion du catalog.");
+                throw new \Exception("Erreur lors de l'insertion dans le catalogue");
             }
 
             $ok = $this->insertStockMovement($tireId, $catalogId, $quantity);
             if (!$ok) {
-                throw new \Exception("Erreur lors de l'insertion du mouvement de stock.");
+                throw new \Exception("Erreur lors de l'insertion du mouvement de stock");
             }
 
             $this->getPdo()->commit();
