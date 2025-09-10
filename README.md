@@ -5,6 +5,24 @@ It is built with a **homemade MVC** structure, using **pure PHP**, no framework,
 
 ---
 
+### Prerequisites
+- PHP 8.0+
+- MySQL 5.7+
+- Apache/Nginx with mod_rewrite enabled
+
+### Installation
+1. Clone the repository
+2. Copy `.env.example` to `.env` and configure your database
+3. Import the database schema (SQL file location: `/database/stockeasy.sql`)
+4. Configure your web server to point to `/public` directory
+5. Access the application at `http://your-domain.com`
+
+### Default Login
+- Email: `test@3wa.fr`
+- Password: `Test123456!!`
+
+---
+
 ## Project Tree
 
 Below is the current structure of the project files, organized by functional area :
@@ -16,6 +34,7 @@ STOCKEASY/
 │ │ ├── css/
 │ │ │ ├── app.css
 │ │ │ ├── app.css.map
+│ │ │ └── app.min.map
 │ │ ├── fonts/
 │ │ │ └── WorkSans-Regular.ttf
 │ │ ├── img/
@@ -24,6 +43,8 @@ STOCKEASY/
 │ │ ├── js/
 │ │ │ ├── burger.js
 │ │ │ ├── generic.js
+│ │ │ ├── generic.min.js
+│ │ │ ├── password.js
 │ │ │ ├── stock.js
 │ │ │ └── user.js
 │ │ └── video/
@@ -43,13 +64,13 @@ STOCKEASY/
 │ │ │ ├── _print.scss
 │ │ │ ├── _tables.scss
 │ │ │ ├── _utilities.scss
-│ │ │ ├── _variables.scss
+│ │ │ └── _variables.scss
 │ │ └── app.scss
 │ ├── front/
 │ │ ├── partials/
 │ │ │ ├── _layout.scss
 │ │ │ ├── _mixins.scss
-│ │ │ ├── _variables.scss
+│ │ │ └── _variables.scss
 │ │ └── style.scss
 │
 ├── src/
@@ -75,15 +96,11 @@ STOCKEASY/
 │ │ └── UserModel.php
 │ ├── Views/
 │ │ ├── customer/
-│ │ │ ├── customer-create.phtml
-│ │ │ ├── customer-edit.phtml
-│ │ │ ├── customer-home.phtml
-│ │ │ ├── customer-list.phtml
-│ │ │ └── customer-search.phtml
+│ │ │ └── customer-home.phtml
 │ │ ├── logs/
 │ │ │ ├── log-home.phtml
-│ │ │ ├── modification.phtml
-│ │ │ └── system.phtml
+│ │ │ ├── log-modification.phtml
+│ │ │ └── log-system.phtml
 │ │ ├── partials/
 │ │ │ ├── construction.phtml
 │ │ │ ├── error403.phtml
@@ -93,6 +110,7 @@ STOCKEASY/
 │ │ │ ├── stock-edit.phtml
 │ │ │ ├── stock-home.phtml
 │ │ │ ├── stock-list.phtml
+│ │ │ ├── stock-print.phtml
 │ │ │ └── stock-search.phtml
 │ │ ├── user/
 │ │ │ ├── user-create.phtml
@@ -104,8 +122,8 @@ STOCKEASY/
 │ │ ├── home.phtml
 │ │ ├── layout.phtml
 │ │ ├── login.phtml
-│ │ ├── password-reset.phtml
-│
+│ │ └── password-reset.phtml
+│ 
 ├── .env
 ├── .env.example
 ├── .gitignore
@@ -131,6 +149,17 @@ It includes:
 - All sensitive operations are wrapped in transactions (`beginTransaction` / `commit` / `rollback`)
 - Database errors trigger a 503 with logging, no sensitive info exposed
 - Session ID is regenerated after each successful login to prevent session fixation
+
+---
+
+## Security Features
+- **CSRF Protection**: Centralized token validation with automatic incident logging
+- **SQL Injection Prevention**: 100% prepared statements with bound parameters
+- **XSS Protection**: All outputs escaped with `htmlspecialchars()`
+- **Password Security**: `password_hash()` with `PASSWORD_DEFAULT` 
+- **Access Control**: Role-based permissions with session validation
+- **Audit Trail**: Complete logging of security incidents and data modifications
+- **WCAG 2.1 AA**: Full accessibility compliance for inclusive security
 
 ---
 
@@ -331,6 +360,11 @@ StockEasy implements a centralized and extensible logging system, ensuring full 
 - Tokens are automatically injected in forms via `AbstractController::getCsrfField()`.
 - Verification is centralized in `AbstractController::requireCsrfToken()`.
 - Any invalid or missing token triggers a 403 error and is logged as a security incident.
+  *Code Example*
+  ```php
+  $this->requireCsrfToken(); // Centralized CSRF validation
+  echo $this->getCsrfField(); // Auto-generates token field
+  ```
 
 ---
 
