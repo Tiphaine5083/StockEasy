@@ -96,7 +96,7 @@
                         <div class="form__actions">
                             <button type="submit" class="btn btn--dark">Enregistrer</button>
                             <button type="reset" class="btn btn--dark">Réinitialiser</button>
-                            <button class="btn btn--dark" id="print-btn" aria-label="Imprimer la page">Imprimer</button>
+                            <button class="btn btn--dark" id="stock-create-print-btn" aria-label="Imprimer la page">Imprimer</button>
                             <button type="button" class="btn btn--dark" id="quitButton">Quitter</button>
                         </div>
 
@@ -148,8 +148,8 @@
             <h2 id="quitModalTitle">Quitter la page ?</h2>
             <p>Vous souhaitez quitter cette page, avez-vous imprimé votre inventaire ?</p>
             <div class="modal__actions">
-                <button type="button" class="btn btn--dark" id="quitConfirmBtn">Oui, quitter</button>
-                <button type="button" class="btn btn--dark" id="quitCancelBtn">Non, rester</button>
+                <button type="button" class="btn btn--dark" id="quitConfirmBtn" aria-label="Oui, quitter">Oui, quitter</button>
+                <button type="button" class="btn btn--dark" id="quitCancelBtn" aria-label="Non, rester">Non, rester</button>
             </div>
         </div>
     </div>
@@ -163,9 +163,9 @@
                 <input class="form__input" type="hidden" name="product_id" id="duplicateProductId" value="">
                 <input class="form__input" type="hidden" name="added_quantity" id="duplicateAddedQty" value="">
                 <?php if (\App\Core\Access::hasOneRole(['super_admin', 'admin', 'secretary', 'user'])) { ?>
-                    <button type="button" id="duplicateConfirmBtn" class="btn btn--dark">Augmenter le stock</button>
+                    <button type="button" id="duplicateConfirmBtn" class="btn btn--dark" aria-label="Augmenter le stock">Augmenter le stock</button>
                 <?php } ?>
-                <button type="button" id="duplicateCancelBtn" class="btn btn--dark">Annuler</button>
+                <button type="button" id="duplicateCancelBtn" class="btn btn--dark" aria-label="Annuler">Annuler</button>
             </form>
         </div>
     </div>

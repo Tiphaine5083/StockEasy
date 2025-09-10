@@ -9,29 +9,56 @@ $dateEnd    = $_POST['date_end'] ?? '';
 
 <!-- Helper for visual JSON diff display (highlight modified values) -->
 <?php
-function highlightDifferences(string $beforeJson, string $afterJson): array
+function highlightDifferences(?string $beforeJson, ?string $afterJson): array
 {
-    $beforeArray = json_decode($beforeJson, true);
-    $afterArray = json_decode($afterJson, true);
+    // Creat : only after
+    if (empty($beforeJson) && !empty($afterJson)) {
+        $afterArray = json_decode($afterJson, true) ?? [];
+        return [
+            'before' => [],
+            'after'  => $afterArray
+        ];
+    }
+
+    // Delete: only before
+    if (!empty($beforeJson) && empty($afterJson)) {
+        $beforeArray = json_decode($beforeJson, true) ?? [];
+        return [
+            'before' => $beforeArray,
+            'after'  => []
+        ];
+    }
+
+    // Both empty
+    if (empty($beforeJson) && empty($afterJson)) {
+        return [
+            'before' => [],
+            'after'  => []
+        ];
+    }
+
+    // Both exist
+    $beforeArray = json_decode($beforeJson, true) ?? [];
+    $afterArray  = json_decode($afterJson, true) ?? [];
 
     $beforeFormatted = [];
-    $afterFormatted = [];
+    $afterFormatted  = [];
 
     foreach ($afterArray as $key => $afterValue) {
         $beforeValue = $beforeArray[$key] ?? null;
 
         $beforeFormatted[$key] = $beforeValue;
-        $afterFormatted[$key] = $afterValue;
+        $afterFormatted[$key]  = $afterValue;
 
         if ($afterValue !== $beforeValue) {
-            $beforeFormatted[$key] = "<span class='log-diff'>" . htmlspecialchars($beforeValue) . "</span>";
-            $afterFormatted[$key] = "<span class='log-diff'>" . htmlspecialchars($afterValue) . "</span>";
+            $beforeFormatted[$key] = "<span class='log-diff'>" . htmlspecialchars((string)$beforeValue) . "</span>";
+            $afterFormatted[$key]  = "<span class='log-diff'>" . htmlspecialchars((string)$afterValue) . "</span>";
         }
     }
 
     return [
         'before' => $beforeFormatted,
-        'after' => $afterFormatted
+        'after'  => $afterFormatted
     ];
 }
 ?>

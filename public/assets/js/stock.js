@@ -78,7 +78,7 @@ async function loadMoreStock(event) {
     try {
         const checkedRadio = document.querySelector('input[name="stockFilter"]:checked');
         filter = checkedRadio ? checkedRadio.value : 'all';
-        const url = `http://localhost/stockeasy/public/index.php?route=ajax-stock-list&stockFilter=${filter}&page=${page}`;
+        const url = `index.php?route=ajax-stock-list&stockFilter=${filter}&page=${page}`;
         const response = await fetch(url);
         const newLines = await response.text();
         stockTableBody.insertAdjacentHTML('beforeend', newLines);
@@ -93,12 +93,12 @@ async function loadMoreStock(event) {
 
 async function loadAllStock(event) {
     event.preventDefault();
-        const btn = event.currentTarget;
+    const btn = event.currentTarget;
     btn.disabled = true;
     try {
         const checkedRadio = document.querySelector('input[name="stockFilter"]:checked');
         filter = checkedRadio ? checkedRadio.value : 'all';
-        const url = `http://localhost/stockeasy/public/index.php?route=ajax-stock-list&stockFilter=${filter}&limit=9999`;
+        const url = `index.php?route=ajax-stock-list&stockFilter=${filter}&limit=9999`;
         const response = await fetch(url);
         const newLines = await response.text();
         stockTableBody.innerHTML = '';
@@ -269,12 +269,6 @@ function handleDot() {
     }
 }
 
-function focusNext(currentInput, nextInput, regex) {
-    if (validateInput(currentInput, regex)) {
-        nextInput.focus();
-    }
-}
-
 function prepareDuplicateForm() {
     const addedQty = createQuantityInput.value.trim();
 
@@ -424,43 +418,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     createQuitButton = document.getElementById('quitButton');
 
+    // Définition des regex pour validation (optionnelle)
     const createWidthRegex = /^\d{3}$/;
     const createHeightRegex = /^(\d{2}|[A-Za-z])$/;
     const createDiameterRegex = /^\d{2}$/;
     const createLoadIndexRegex = /^\d{2,3}$/;
     const createSpeedIndexRegex = /^[A-Za-z]$/;
 
-    if (createWidthInput) {
-        createWidthInput.addEventListener('blur', () => focusNext(createWidthInput, createHeightInput, createWidthRegex));
-        createWidthInput.addEventListener('input', () => {
-            if (validateInput(createWidthInput, createWidthRegex)) createHeightInput.focus();
-        });
-    }
-    if (createHeightInput) {
-        createHeightInput.addEventListener('blur', () => focusNext(createHeightInput, createDiameterInput, createHeightRegex));
-        createHeightInput.addEventListener('input', () => {
-            if (validateInput(createHeightInput, createHeightRegex)) createDiameterInput.focus();
-        });
-    }
-    if (createDiameterInput) {
-        createDiameterInput.addEventListener('blur', () => focusNext(createDiameterInput, createLoadIndexInput, createDiameterRegex));
-        createDiameterInput.addEventListener('input', () => {
-            if (validateInput(createDiameterInput, createDiameterRegex)) createLoadIndexInput.focus();
-        });
-    }
-    if (createLoadIndexInput) {
-        createLoadIndexInput.addEventListener('blur', () => focusNext(createLoadIndexInput, createSpeedIndexInput, createLoadIndexRegex));
-    }
-    if (createSpeedIndexInput) {
-        createSpeedIndexInput.addEventListener('blur', () => focusNext(createSpeedIndexInput, createDotInput, createSpeedIndexRegex));
-        createSpeedIndexInput.addEventListener('input', () => {
-            if (validateInput(createSpeedIndexInput, createSpeedIndexRegex)) createDotInput.focus();
-        });
-    }
+    // Gestion du DOT avec validation sur blur
     if (createDotInput) {
         createDotInput.addEventListener('blur', handleDot);
     }
 
+    // === QUIT MODAL ===
     quitModal = document.getElementById('quitModal');
     quitConfirmBtn = document.getElementById('quitConfirmBtn');
     quitCancelBtn = document.getElementById('quitCancelBtn');
@@ -471,6 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (quitConfirmBtn) quitConfirmBtn.addEventListener('click', confirmQuit);
     if (quitCancelBtn) quitCancelBtn.addEventListener('click', closeQuitModal);
 
+    // === DUPLICATE MODAL ===
     duplicateModal = document.getElementById('duplicateModal');
     duplicateConfirmBtn = document.getElementById('duplicateConfirmBtn');
     duplicateProductId = document.getElementById('duplicateProductId');
@@ -492,6 +463,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (duplicateCancelBtn) {
         duplicateCancelBtn.addEventListener('click', () => {
             duplicateModal.classList.add('is-hidden');
+        });
+    }
+
+    // === PRINT BUTTON === 
+    const printBtn = document.getElementById("stock-create-print-btn");
+    if (printBtn) {
+        printBtn.addEventListener("click", () => {
+            window.print();
         });
     }
 });

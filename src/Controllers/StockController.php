@@ -18,8 +18,12 @@ class StockController extends AbstractController {
      * Output stock list rows as HTML table rows.
      *
      * Only accessible to users except those with 'guest' or 'intern' roles.
-     * Typically called via Ajax to dynamically render stock data.
+     * Typically called via Ajax to dynamically display stock data.
      * Redirects to a 403 error page if access is denied.
+     * 
+     * Logs:
+     * - System log for stock list consultation
+     * - System log on error (DB failure, etc.)
      *
      * @return void
      */
@@ -40,20 +44,44 @@ class StockController extends AbstractController {
             $offset = ($page - 1) * $limit;
         }
 
-        $stockModel = new StockModel();
-        $data = $stockModel->findByStockFilter($filter, $limit, $offset);
+        try {
+            $stockModel = new StockModel();
+            $data = $stockModel->findByStockFilter($filter, $limit, $offset);
 
-        foreach ($data as $key => $value) {
-            echo '<tr>';
-                echo '<td>' . htmlspecialchars($value['brand'], ENT_QUOTES) . '</td>';
-                echo '<td>' . htmlspecialchars($value['width'], ENT_QUOTES) . '/' . htmlspecialchars($value['height'], ENT_QUOTES) . '/' . htmlspecialchars($value['diameter'], ENT_QUOTES) . '</td>';
-                echo '<td>' . htmlspecialchars($value['load_index'], ENT_QUOTES) . htmlspecialchars($value['speed_index'], ENT_QUOTES) . '</td>';
-                echo '<td>' . htmlspecialchars($value['season'], ENT_QUOTES) . '</td>';
-                echo '<td>' . htmlspecialchars($value['quality'], ENT_QUOTES) . '</td>';
-                echo '<td>' . htmlspecialchars($value['quantity_available'], ENT_QUOTES) . '</td>';
-                echo '<td>' . htmlspecialchars($value['unit_price_excluding_tax'], ENT_QUOTES) . ' €</td>';
-            echo '</tr>';
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logSystem(
+                'read_stock',
+                "Consultation du stock avec filtre '$filter'",
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null
+            );
+
+            foreach ($data as $key => $value) {
+                echo '<tr>';
+                    echo '<td>' . htmlspecialchars($value['brand'], ENT_QUOTES) . '</td>';
+                    echo '<td>' . htmlspecialchars($value['width'], ENT_QUOTES) . '/' . htmlspecialchars($value['height'], ENT_QUOTES) . '/' . htmlspecialchars($value['diameter'], ENT_QUOTES) . '</td>';
+                    echo '<td>' . htmlspecialchars($value['load_index'], ENT_QUOTES) . htmlspecialchars($value['speed_index'], ENT_QUOTES) . '</td>';
+                    echo '<td>' . htmlspecialchars($value['season'], ENT_QUOTES) . '</td>';
+                    echo '<td>' . htmlspecialchars($value['quality'], ENT_QUOTES) . '</td>';
+                    echo '<td>' . htmlspecialchars($value['quantity_available'], ENT_QUOTES) . '</td>';
+                    echo '<td>' . htmlspecialchars($value['unit_price_excluding_tax'], ENT_QUOTES) . ' €</td>';
+                echo '</tr>';
+            }
+        } catch (\Exception $e) {
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logSystem(
+                'error',
+                "Erreur lors de la consultation du stock : " . $e->getMessage(),
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null
+            );
+            $_SESSION['error'] = "Une erreur est survenue lors de la consultation du stock";
         }
+
     }
 
     /**
@@ -73,6 +101,10 @@ class StockController extends AbstractController {
      * - Automatic stock movement if the quantity changes (entry/exit with reason)
      * - Synchronizes stock and catalog if needed
      *
+     * Logs:
+     * - Modification log for successful update (before/after states)
+     * - System log on error (with message and user context)
+     * 
      * Redirects back to stock search with appropriate success or error message.
      *
      * @return void
@@ -197,6 +229,19 @@ class StockController extends AbstractController {
                 throw new \Exception('La mise à jour a échoué');
             }
 
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logModification(
+                'detail_tire',
+                (int)$tireId,
+                'update',
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null,
+                $tire,
+                $data
+            );
+
             $params = [
                 'success' => 'Pneu modifié avec succès',
                 'highlight_id' => $tireId
@@ -234,6 +279,16 @@ class StockController extends AbstractController {
             $this->redirectToRoute('stock-search', $params);
 
         } catch (\Exception $e) {
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logSystem(
+                'error',
+                "Erreur stockUpdate : " . $e->getMessage(),
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null
+            );
+
             $_SESSION['error'] = $e->getMessage();
             $_SESSION['form_data'] = $_POST;
             $this->redirectToRoute('stock-search');
@@ -250,7 +305,12 @@ class StockController extends AbstractController {
      * - Direct deletion if the tire is not invoiced
      * - Forced archive if the tire is invoiced
      * - Always records the reason and optional detail
-     * - Redirects back with a proper success or error message
+     *
+     * Logs:
+     * - Modification log for successful delete or archive (before/after states)
+     * - System log on error (with message and user context)
+     *
+     * Redirects back with a proper success or error message.
      *
      * @return void
      */
@@ -287,7 +347,7 @@ class StockController extends AbstractController {
             }
 
             if ($action === 'delete' && $_SESSION['user']['role'] === 'secretary') {
-                $this->denyAccess("Refus de suppression dans stockDelete() : rôle secretary interdit pour delete");
+                $this->denyAccess("Refus de suppression dans stockDelete() : action interdite pour ce rôle (secrétaire)");
             }
 
             $reason = $_POST['movement_reason'] ?? null;
@@ -295,10 +355,10 @@ class StockController extends AbstractController {
 
             if ($action === 'archive') {
                 if (empty($reason)) {
-                    throw new \Exception('Motif requis pour archivage.');
+                    throw new \Exception('Motif requis pour archivage');
                 }
                 if ($reason === 'autre' && empty($reasonDetail)) {
-                    throw new \Exception('Précisez le motif si Autre.');
+                    throw new \Exception('Précisez le motif si Autre');
                 }
 
                 $success = $stockModel->archiveTire((int)$tireId, $reason, $reasonDetail);
@@ -309,8 +369,21 @@ class StockController extends AbstractController {
             }
 
             if (!$success) {
-                throw new \Exception('L\'opération a échoué.');
+                throw new \Exception('L\'opération a échoué');
             }
+
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logModification(
+                'detail_tire',
+                (int)$tireId,
+                $action,
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null,
+                $tire,
+                []
+            );
 
             $_SESSION['success'] = $action === 'archive' ? 'Pneu archivé avec succès' : 'Pneu supprimé avec succès';
 
@@ -337,6 +410,16 @@ class StockController extends AbstractController {
             $this->redirectToRoute('stock-search', $params);
 
         } catch (\Exception $e) {
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logSystem(
+                'error',
+                "Erreur stockDelete : " . $e->getMessage(),
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null
+            );         
+
             $_SESSION['error'] = $e->getMessage();
             $this->redirectToRoute('stock-search');
         }
@@ -362,6 +445,10 @@ class StockController extends AbstractController {
      *
      * Handles duplicate detection and redirects back with form data if a match is found.
      * On success, calls the full creation routine with catalog sync and initial stock movement.
+     *
+     * Logs:
+     * - Modification log for successful create (after state only)
+     * - System log on error (with message and user context)
      *
      * @return void
      */
@@ -493,12 +580,35 @@ class StockController extends AbstractController {
                 'unit_price_excluding_tax' => $unitPrice
             ];
 
-            $stockModel->createFullStock($detailData, $catalogData, $quantity);
+            $newId = $stockModel->createFullStock($detailData, $catalogData, $quantity);
+
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logModification(
+                'detail_tire',
+                (int)$newId,
+                'create',
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null,
+                [],  
+                $detailData
+            );
 
             $_SESSION['success'] = 'Pneu ajouté avec succès';
             $this->redirectToRoute('stock-create');
             
         } catch (\Exception $e) {
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logSystem(
+                'error',
+                "Erreur stockCreate : " . $e->getMessage(),
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null
+            );
+
             $_SESSION['error'] = $e->getMessage();
             $_SESSION['form_data'] = $_POST;
             $this->redirectToRoute('stock-create');
@@ -511,6 +621,11 @@ class StockController extends AbstractController {
      * Accessible to all authenticated users except those with 'guest' or 'intern' roles.
      * Redirects to a 403 error page if access is denied.
      *
+     *
+     * Logs:
+     * - System log for consultation of today's created tires
+     * - System log on error (DB failure, etc.)
+     * 
      * Typically called via Ajax to refresh the create page data table.
      * Escapes all values for safety.
      *
@@ -522,21 +637,45 @@ class StockController extends AbstractController {
             $this->denyAccess("Refus d'accès à stockCreateData() : rôle guest ou stagiaire interdit");
         }
         
-        $stockModel = new StockModel();
-        $tires = $stockModel->findTodayRegistered();
+        try {
+            $stockModel = new StockModel();
+            $tires = $stockModel->findTodayRegistered();
 
-        foreach ($tires as $tire) {
-            echo '<tr>';
-            echo '<td data-label="Marque">' . htmlspecialchars($tire['brand']) . '</td>';
-            echo '<td data-label="Taille commerciale">' . htmlspecialchars($tire['width']) . '/' . htmlspecialchars($tire['height']) . '/' . htmlspecialchars($tire['diameter']) . '</td>';
-            echo '<td data-label="Charge/Vitesse">' . htmlspecialchars($tire['load_index']) . htmlspecialchars($tire['speed_index']) . '</td>';
-            echo '<td data-label="Saison">' . htmlspecialchars($tire['season']) . '</td>';
-            echo '<td data-label="DOT">' . htmlspecialchars($tire['dot']) . '</td>';
-            echo '<td data-label="État">' . htmlspecialchars($tire['quality']) . '</td>';
-            echo '<td data-label="Particularités">' . htmlspecialchars($tire['features']) . '</td>';
-            echo '<td data-label="Quantité">' . htmlspecialchars($tire['quantity_available']) . '</td>';
-            echo '<td data-label="Prix unitaire H.T.">' . htmlspecialchars($tire['unit_price_excluding_tax']) . ' €</td>';
-            echo '</tr>';
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logSystem(
+                'read_stock_create',
+                "Consultation des pneus créés aujourd'hui",
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null
+            );
+
+            foreach ($tires as $tire) {
+                echo '<tr>';
+                echo '<td data-label="Marque">' . htmlspecialchars($tire['brand']) . '</td>';
+                echo '<td data-label="Taille commerciale">' . htmlspecialchars($tire['width']) . '/' . htmlspecialchars($tire['height']) . '/' . htmlspecialchars($tire['diameter']) . '</td>';
+                echo '<td data-label="Charge/Vitesse">' . htmlspecialchars($tire['load_index']) . htmlspecialchars($tire['speed_index']) . '</td>';
+                echo '<td data-label="Saison">' . htmlspecialchars($tire['season']) . '</td>';
+                echo '<td data-label="DOT">' . htmlspecialchars($tire['dot']) . '</td>';
+                echo '<td data-label="État">' . htmlspecialchars($tire['quality']) . '</td>';
+                echo '<td data-label="Particularités">' . htmlspecialchars($tire['features']) . '</td>';
+                echo '<td data-label="Quantité">' . htmlspecialchars($tire['quantity_available']) . '</td>';
+                echo '<td data-label="Prix unitaire H.T.">' . htmlspecialchars($tire['unit_price_excluding_tax']) . ' €</td>';
+                echo '</tr>';
+            }
+        } catch (\Exception $e) {
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logSystem(
+                'error',
+                "Erreur stockCreateData : " . $e->getMessage(),
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null
+            );
+
+            $_SESSION['error'] = "Une erreur est survenue lors de la récupération des pneus créés aujourd'hui";
         }
     }
 
@@ -547,6 +686,10 @@ class StockController extends AbstractController {
      * Redirects to a 403 error page if access is denied.
      *
      * Adds quantity and records the stock movement as an 'entrée' with reason 'achat'.
+     *
+     * Logs:
+     * - Modification log for successful increment (before/after states)
+     * - System log on error (with message and user context)
      *
      * @return void
      */
@@ -592,10 +735,33 @@ class StockController extends AbstractController {
                 throw new \Exception('L\'incrément du stock a échoué.');
             }
 
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logModification(
+                'detail_tire',
+                (int)$tireId,
+                'update',
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null,
+                $tire,
+                ['quantity_available' => $newQty]
+            );
+
             $_SESSION['success'] = 'Stock augmenté avec succès.';
             $this->redirectToRoute('stock-create');
 
         } catch (\Exception $e) {
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logSystem(
+                'error',
+                "Erreur stockIncrement : " . $e->getMessage(),
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null
+            );
+
             $_SESSION['error'] = $e->getMessage();
             $this->redirectToRoute('stock-create');
         }
@@ -603,6 +769,10 @@ class StockController extends AbstractController {
 
     /**
      * Display the full tire inventory in a print-friendly view.
+     *
+     * Logs:
+     * - System log for inventory print consultation
+     * - System log on error (with message and user context)
      *
      * @return void
      */
@@ -613,8 +783,29 @@ class StockController extends AbstractController {
         try {
             $stockModel = new StockModel();
             $tires = $stockModel->getAllForPrint();
+
+            $logModel = new LogModel();
+            $user = $_SESSION['user'] ?? null;
+            $logModel->logSystem(
+                'print_stock',
+                "Consultation de l'inventaire complet pour impression",
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null
+            );
+
             require __DIR__ . '/../Views/stock/stock-print.phtml';
         } catch (\Exception $e) {
+                    $logModel = new LogModel();
+        $user = $_SESSION['user'] ?? null;
+            $logModel->logSystem(
+                'error',
+                "Erreur stockPrint : " . $e->getMessage(),
+                $user['id'] ?? null,
+                $user['first_name'] ?? null,
+                $user['last_name'] ?? null
+            );
+
             $_SESSION['error'] = "Impossible de générer l'inventaire pour impression";
             $this->redirectToRoute('stock-list');
             exit;
